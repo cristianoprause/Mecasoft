@@ -1,5 +1,20 @@
+# Output de classes
 *.class
+bin/
 
-# Package Files #
+#SVN
+.svn/
+
+# Configurações do Eclipse
+.metadata
+.settings/
+
+# Arquivos de build do Java
 *.war
 *.ear
+
+# Cache de imagens do Ruindows
+Thumbs.db 
+
+# Folder config file
+Desktop.ini
