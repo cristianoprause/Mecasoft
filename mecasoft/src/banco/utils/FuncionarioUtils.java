@@ -6,6 +6,7 @@ import banco.modelo.Funcionario;
 
 public interface FuncionarioUtils extends MecasoftUtils<Funcionario>{
 
+	List<Funcionario> findAllAtivos();
 	List<Funcionario> findAllSemUsuario();
 	
 }

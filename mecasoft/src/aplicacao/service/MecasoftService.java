@@ -1,5 +1,7 @@
 package aplicacao.service;
 
+import java.util.List;
+
 import com.google.inject.Injector;
 
 import aplicacao.helper.InjectorHelper;
@@ -18,5 +20,10 @@ public abstract class MecasoftService<T> {
 		return InjectorHelper.getInstance();
 		
 	}
+	
+	public abstract void saveOrUpdate();
+	public abstract void delete();
+	public abstract T find(Long id);
+	public abstract List<T> findAll();
 	
 }

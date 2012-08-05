@@ -110,8 +110,7 @@ public class TipoVeiculoEditor extends MecasoftEditor {
 
 	@Override
 	public boolean isDirty() {
-		// TODO Auto-generated method stub
-		return false;
+		return service.isDirty();
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();

@@ -27,10 +27,10 @@ public class TipoVeiculo implements Serializable{
 	private String nome;
 	
 	@Column
-	private Boolean hodometro = true;
+	private boolean hodometro = true;
 	
 	@Column
-	private Boolean horimetro;
+	private boolean horimetro = false;
 
 	public Long getId() {
 		return id;
@@ -48,19 +48,19 @@ public class TipoVeiculo implements Serializable{
 		this.nome = nome;
 	}
 
-	public Boolean getHodometro() {
+	public boolean getHodometro() {
 		return hodometro;
 	}
 
-	public void setHodometro(Boolean hodometro) {
+	public void setHodometro(boolean hodometro) {
 		this.hodometro = hodometro;
 	}
 
-	public Boolean getHorimetro() {
+	public boolean getHorimetro() {
 		return horimetro;
 	}
 
-	public void setHorimetro(Boolean horimetro) {
+	public void setHorimetro(boolean horimetro) {
 		this.horimetro = horimetro;
 	}
 

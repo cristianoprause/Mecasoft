@@ -38,10 +38,17 @@ public class FuncionarioDAO extends HibernateConnection implements FuncionarioUt
 		return q.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Funcionario> findAllAtivos() {
+		Query q = getSession().createQuery("select f from Funcionario f where f.ativo is true");
+		return q.list();
+	}
+	
 	@Override
 	public List<Funcionario> findAllSemUsuario() {
 		List<Usuario> listaUsuarios = new UsuarioService().findAll();
-		List<Funcionario> listaFuncionarios = findAll();
+		List<Funcionario> listaFuncionarios = findAllAtivos();
 		
 		for(Usuario u : listaUsuarios){
 			listaFuncionarios.remove(u.getFuncionario());
@@ -49,5 +56,6 @@ public class FuncionarioDAO extends HibernateConnection implements FuncionarioUt
 		
 		return listaFuncionarios;
 	}
+
 
 }

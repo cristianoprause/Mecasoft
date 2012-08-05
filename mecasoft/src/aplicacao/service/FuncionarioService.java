@@ -14,16 +14,28 @@ public class FuncionarioService extends MecasoftService<Funcionario>{
 		return getInjector().getInstance(FuncionarioUtils.class);
 	}
 	
+	@Override
 	public void saveOrUpdate(){
 		getDAO().saveOrUpdate(funcionario);
 	}
 	
+	@Override
+	public void delete() {
+		getDAO().delete(funcionario);
+	}
+	
+	@Override
 	public Funcionario find(Long id){
 		return getDAO().find(id);
 	}
 	
+	@Override
 	public List<Funcionario> findAll(){
 		return getDAO().findAll();
+	}
+	
+	public List<Funcionario> findAllAtivos(){
+		return getDAO().findAllAtivos();
 	}
 	
 	public List<Funcionario> findAllSemUsuario(){
@@ -37,5 +49,6 @@ public class FuncionarioService extends MecasoftService<Funcionario>{
 	public void setFuncionario(Funcionario funcionario) {
 		this.funcionario = funcionario;
 	}
+
 
 }

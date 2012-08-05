@@ -48,12 +48,12 @@ public class UsuarioEditor extends MecasoftEditor{
 	private Text txtConfirmarSenha;
 	private Button btnAtivo;
 	
-	private UsuarioService service;
+	private UsuarioService service = new UsuarioService();
 	private List<Papel> papeis;
+	
 	private ComboViewer comboViewer;
 	
 	public UsuarioEditor() {
-		service = new UsuarioService();
 		papeis = new PapelService().findAll();
 	}
 	

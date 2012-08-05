@@ -17,6 +17,11 @@ public class PessoaService extends MecasoftService<Pessoa>{
 	public void saveOrUpdate(){
 		getDAO().saveOrUpdate(pessoa);
 	}
+
+	@Override
+	public void delete() {
+		getDAO().delete(pessoa);
+	}
 	
 	public Pessoa find(Long id){
 		return getDAO().find(id);
@@ -24,6 +29,10 @@ public class PessoaService extends MecasoftService<Pessoa>{
 	
 	public List<Pessoa> findAll(){
 		return getDAO().findAll();
+	}
+	
+	public List<Pessoa> findAllAtivos(){
+		return getDAO().findAllAtivos();
 	}
 
 	public Pessoa getPessoa() {
@@ -33,5 +42,6 @@ public class PessoaService extends MecasoftService<Pessoa>{
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
+
 
 }

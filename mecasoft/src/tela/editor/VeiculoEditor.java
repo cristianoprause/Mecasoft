@@ -1,6 +1,26 @@
 package tela.editor;
 
+import static aplicacao.helper.MessageHelper.openInformation;
+import static aplicacao.helper.ValidatorHelper.validar;
+
+import java.util.List;
+
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -13,6 +33,16 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.dialog.SelecionarItemDialog;
+import tela.editor.editorInput.VeiculoEditorInput;
+import aplicacao.exception.ValidationException;
+import aplicacao.helper.LayoutHelper;
+import aplicacao.service.PessoaService;
+import aplicacao.service.TipoVeiculoService;
+import aplicacao.service.VeiculoService;
+import banco.modelo.Pessoa;
+import banco.modelo.TipoVeiculo;
+
 public class VeiculoEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.VeiculoEditor"; //$NON-NLS-1$
@@ -22,22 +52,53 @@ public class VeiculoEditor extends MecasoftEditor {
 	private Text txtHodometro;
 	private Text txtHorimetro;
 	private Text txtCliente;
+	
+	private List<TipoVeiculo> tipos;
+	
+	private VeiculoService service = new VeiculoService();
+	private ComboViewer cvTipo;
+	private Button btnAtivo;
 
 	public VeiculoEditor() {
-		
+		tipos = new TipoVeiculoService().findAll();
 	}
 
 	@Override
 	public void salvarRegistro() {
-		// TODO Auto-generated method stub
-		
+		try {
+			validar(service.getVeiculo());
+			
+			if(service.getVeiculo().getTipo() != null){
+				
+				if(service.getVeiculo().getTipo().getHodometro()){
+					if(service.getVeiculo().getPlaca() == null){
+						setErroMessage("Placa inválida.");
+						return;
+					}
+					
+					if(service.getVeiculo().getHodometro() == null){
+						setErroMessage("Informe o hodômetro.");
+						return;
+					}
+				}else if(service.getVeiculo().getTipo().getHorimetro()){
+					if(service.getVeiculo().getHorimetro() == null){
+						setErroMessage("Informe o horímetro.");
+						return;
+					}
+				}
+				
+			}
+			
+			service.saveOrUpdate();
+			openInformation("Veículo cadastrado com sucesso!");
+			closeThisEditor();
+		} catch (ValidationException e) {
+			setErroMessage(e.getMessage());
+		}
 	}
 
 	@Override
-	public void excluirRegistro() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void excluirRegistro() {}
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -58,12 +119,20 @@ public class VeiculoEditor extends MecasoftEditor {
 		txtModelo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		Label lblTipo = new Label(compositeConteudo, SWT.NONE);
+		lblTipo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTipo.setText("Tipo:");
 		
-		Combo cbTipo = new Combo(compositeConteudo, SWT.READ_ONLY);
-		cbTipo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		cvTipo = new ComboViewer(compositeConteudo, SWT.READ_ONLY);
+		cvTipo.addPostSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				ativarDesativarComponentes();
+			}
+		});
+		Combo cbTipo = cvTipo.getCombo();
+		cbTipo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		cbTipo.select(0);
 		
-		Button btnAtivo = new Button(compositeConteudo, SWT.CHECK);
+		btnAtivo = new Button(compositeConteudo, SWT.CHECK);
 		btnAtivo.setText("Ativo");
 		new Label(compositeConteudo, SWT.NONE);
 		
@@ -71,6 +140,8 @@ public class VeiculoEditor extends MecasoftEditor {
 		lblPlaca.setText("Placa:");
 		
 		txtPlaca = new Text(compositeConteudo, SWT.BORDER);
+		txtPlaca.setEnabled(false);
+		txtPlaca.setEditable(false);
 		GridData gd_txtPlaca = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_txtPlaca.widthHint = 113;
 		txtPlaca.setLayoutData(gd_txtPlaca);
@@ -82,6 +153,8 @@ public class VeiculoEditor extends MecasoftEditor {
 		lblHodometro.setText("Hod\u00F4metro:");
 		
 		txtHodometro = new Text(compositeConteudo, SWT.BORDER);
+		txtHodometro.setEnabled(false);
+		txtHodometro.setEditable(false);
 		GridData gd_txtHodometro = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_txtHodometro.widthHint = 186;
 		txtHodometro.setLayoutData(gd_txtHodometro);
@@ -91,6 +164,8 @@ public class VeiculoEditor extends MecasoftEditor {
 		lblHormetro.setText("Hor\u00EDmetro:");
 		
 		txtHorimetro = new Text(compositeConteudo, SWT.BORDER);
+		txtHorimetro.setEnabled(false);
+		txtHorimetro.setEditable(false);
 		txtHorimetro.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblCliente = new Label(compositeConteudo, SWT.NONE);
@@ -102,23 +177,121 @@ public class VeiculoEditor extends MecasoftEditor {
 		txtCliente.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Button btnSelecionarCliente = new Button(compositeConteudo, SWT.NONE);
+		btnSelecionarCliente.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Pessoa p = selecionarCliente();
+				if(p != null){
+					service.getVeiculo().setCliente(p);
+					txtCliente.setText(p.getNomeFantasia());
+				}
+			}
+		});
 		btnSelecionarCliente.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnSelecionarCliente.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnSelecionarCliente.setText("Selecionar");
+		
+		initDataBindings();
+		ativarDesativarComponentes();
 		
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
+		VeiculoEditorInput vei = (VeiculoEditorInput)input;
+		
+		if(vei.getVeiculo().getId() == null)
+			service.setVeiculo(vei.getVeiculo());
+		else
+			service.setVeiculo(service.find(vei.getVeiculo().getId()));
+		
+		setShowExcluir(false);
+		
 		setSite(site);
 		setInput(input);
 	}
 
 	@Override
 	public boolean isDirty() {
-		// TODO Auto-generated method stub
-		return false;
+		return service.isDirty();
 	}
-
+	
+	public void ativarDesativarComponentes(){
+		if(service.getVeiculo().getTipo() != null){
+			if(service.getVeiculo().getTipo().getHodometro()){
+				txtHodometro.setEnabled(true);
+				txtHodometro.setEditable(true);
+				txtPlaca.setEnabled(true);
+				txtPlaca.setEditable(true);
+				txtHorimetro.setEnabled(false);
+				txtHorimetro.setEditable(false);
+			}else if(service.getVeiculo().getTipo().getHorimetro()){
+				txtHodometro.setEnabled(false);
+				txtHodometro.setEditable(false);
+				txtPlaca.setEnabled(false);
+				txtPlaca.setEditable(false);
+				txtHorimetro.setEnabled(true);
+				txtHorimetro.setEditable(true);
+			}
+		}
+	}
+	
+	public Pessoa selecionarCliente(){
+		SelecionarItemDialog sid = new SelecionarItemDialog(LayoutHelper.getActiveShell(), new LabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((Pessoa)element).getNomeFantasia();
+			}
+		});
+		sid.setElements(new PessoaService().findAllAtivos().toArray());
+		
+		return (Pessoa) sid.elementoSelecionado();
+	}
+	
+	protected DataBindingContext initDataBindings() {
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableValue txtMarcaObserveTextObserveWidget = SWTObservables.observeText(txtMarca, SWT.Modify);
+		IObservableValue servicegetVeiculoMarcaObserveValue = PojoObservables.observeValue(service.getVeiculo(), "marca");
+		bindingContext.bindValue(txtMarcaObserveTextObserveWidget, servicegetVeiculoMarcaObserveValue, null, null);
+		//
+		IObservableValue txtModeloObserveTextObserveWidget = SWTObservables.observeText(txtModelo, SWT.Modify);
+		IObservableValue servicegetVeiculoModeloObserveValue = PojoObservables.observeValue(service.getVeiculo(), "modelo");
+		bindingContext.bindValue(txtModeloObserveTextObserveWidget, servicegetVeiculoModeloObserveValue, null, null);
+		//
+		IObservableValue btnAtivoObserveSelectionObserveWidget = SWTObservables.observeSelection(btnAtivo);
+		IObservableValue servicegetVeiculoAtivoObserveValue = PojoObservables.observeValue(service.getVeiculo(), "ativo");
+		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, servicegetVeiculoAtivoObserveValue, null, null);
+		//
+		IObservableValue txtPlacaObserveTextObserveWidget = SWTObservables.observeText(txtPlaca, SWT.Modify);
+		IObservableValue servicegetVeiculoPlacaObserveValue = PojoObservables.observeValue(service.getVeiculo(), "placa");
+		bindingContext.bindValue(txtPlacaObserveTextObserveWidget, servicegetVeiculoPlacaObserveValue, null, null);
+		//
+		IObservableValue txtHodometroObserveTextObserveWidget = SWTObservables.observeText(txtHodometro, SWT.Modify);
+		IObservableValue servicegetVeiculoHodometroObserveValue = PojoObservables.observeValue(service.getVeiculo(), "hodometro");
+		bindingContext.bindValue(txtHodometroObserveTextObserveWidget, servicegetVeiculoHodometroObserveValue, null, null);
+		//
+		IObservableValue txtHorimetroObserveTextObserveWidget = SWTObservables.observeText(txtHorimetro, SWT.Modify);
+		IObservableValue servicegetVeiculoHorimetroObserveValue = PojoObservables.observeValue(service.getVeiculo(), "horimetro");
+		bindingContext.bindValue(txtHorimetroObserveTextObserveWidget, servicegetVeiculoHorimetroObserveValue, null, null);
+		//
+		IObservableValue txtClienteObserveTextObserveWidget = SWTObservables.observeText(txtCliente, SWT.Modify);
+		IObservableValue servicegetVeiculoClientenomeFantasiaObserveValue = PojoObservables.observeValue(service.getVeiculo(), "cliente.nomeFantasia");
+		bindingContext.bindValue(txtClienteObserveTextObserveWidget, servicegetVeiculoClientenomeFantasiaObserveValue, null, null);
+		//
+		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
+		IObservableMap observeMap = PojoObservables.observeMap(listContentProvider.getKnownElements(), TipoVeiculo.class, "nome");
+		cvTipo.setLabelProvider(new ObservableMapLabelProvider(observeMap));
+		cvTipo.setContentProvider(listContentProvider);
+		//
+		WritableList writableList = new WritableList(tipos, TipoVeiculo.class);
+		cvTipo.setInput(writableList);
+		//
+		IObservableValue cvTipoObserveSingleSelection = ViewersObservables.observeSingleSelection(cvTipo);
+		IObservableValue servicegetVeiculoTipoObserveValue = PojoObservables.observeValue(service.getVeiculo(), "tipo");
+		bindingContext.bindValue(cvTipoObserveSingleSelection, servicegetVeiculoTipoObserveValue, null, null);
+		//
+		return bindingContext;
+	}
 }

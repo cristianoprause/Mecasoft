@@ -18,7 +18,6 @@ import tela.dialog.ErroDialog;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.MessageHelper;
 import banco.connection.HibernateConnection;
-import org.eclipse.swt.widgets.Label;
 
 public abstract class MecasoftEditor extends EditorPart implements ISaveablePart2{
 	private Boolean showExcluir = true;

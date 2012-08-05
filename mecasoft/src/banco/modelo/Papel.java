@@ -30,34 +30,34 @@ public class Papel implements Serializable{
 	private String nome;
 	
 	@Column
-	private Boolean cadPessoa;
+	private boolean cadPessoa;
 	
 	@Column
-	private Boolean cadVeiculo;
+	private boolean cadVeiculo;
 	
 	@Column
-	private Boolean cadServico;
+	private boolean cadServico;
 	
 	@Column
-	private Boolean cadProduto;
+	private boolean cadProduto;
 	
 	@Column
-	private Boolean cadFormaPagto;
+	private boolean cadFormaPagto;
 	
 	@Column
-	private Boolean cadUsuario;
+	private boolean cadUsuario;
 	
 	@Column
-	private Boolean gerDuplicata;
+	private boolean gerDuplicata;
 	
 	@Column
-	private Boolean gerServico;
+	private boolean gerServico;
 	
 	@Column
-	private Boolean gerCaixa;
+	private boolean gerCaixa;
 	
 	@Column
-	private Boolean gerarRelatorio;
+	private boolean gerarRelatorio;
 	
 	@OneToMany(mappedBy="papel", cascade=CascadeType.ALL)
 	private List<Usuario> listaUsuarios;
@@ -78,83 +78,83 @@ public class Papel implements Serializable{
 		this.nome = nome;
 	}
 
-	public Boolean getCadPessoa() {
+	public boolean getCadPessoa() {
 		return cadPessoa;
 	}
 
-	public void setCadPessoa(Boolean cadPessoa) {
+	public void setCadPessoa(boolean cadPessoa) {
 		this.cadPessoa = cadPessoa;
 	}
 
-	public Boolean getCadVeiculo() {
+	public boolean getCadVeiculo() {
 		return cadVeiculo;
 	}
 
-	public void setCadVeiculo(Boolean cadVeiculo) {
+	public void setCadVeiculo(boolean cadVeiculo) {
 		this.cadVeiculo = cadVeiculo;
 	}
 
-	public Boolean getCadServico() {
+	public boolean getCadServico() {
 		return cadServico;
 	}
 
-	public void setCadServico(Boolean cadServico) {
+	public void setCadServico(boolean cadServico) {
 		this.cadServico = cadServico;
 	}
 
-	public Boolean getCadProduto() {
+	public boolean getCadProduto() {
 		return cadProduto;
 	}
 
-	public void setCadProduto(Boolean cadProduto) {
+	public void setCadProduto(boolean cadProduto) {
 		this.cadProduto = cadProduto;
 	}
 
-	public Boolean getCadFormaPagto() {
+	public boolean getCadFormaPagto() {
 		return cadFormaPagto;
 	}
 
-	public void setCadFormaPagto(Boolean cadFormaPagto) {
+	public void setCadFormaPagto(boolean cadFormaPagto) {
 		this.cadFormaPagto = cadFormaPagto;
 	}
 
-	public Boolean getCadUsuario() {
+	public boolean getCadUsuario() {
 		return cadUsuario;
 	}
 
-	public void setCadUsuario(Boolean cadUsuario) {
+	public void setCadUsuario(boolean cadUsuario) {
 		this.cadUsuario = cadUsuario;
 	}
 
-	public Boolean getGerDuplicata() {
+	public boolean getGerDuplicata() {
 		return gerDuplicata;
 	}
 
-	public void setGerDuplicata(Boolean gerDuplicata) {
+	public void setGerDuplicata(boolean gerDuplicata) {
 		this.gerDuplicata = gerDuplicata;
 	}
 
-	public Boolean getGerServico() {
+	public boolean getGerServico() {
 		return gerServico;
 	}
 
-	public void setGerServico(Boolean gerServico) {
+	public void setGerServico(boolean gerServico) {
 		this.gerServico = gerServico;
 	}
 
-	public Boolean getGerCaixa() {
+	public boolean getGerCaixa() {
 		return gerCaixa;
 	}
 
-	public void setGerCaixa(Boolean gerCaixa) {
+	public void setGerCaixa(boolean gerCaixa) {
 		this.gerCaixa = gerCaixa;
 	}
 
-	public Boolean getGerarRelatorio() {
+	public boolean getGerarRelatorio() {
 		return gerarRelatorio;
 	}
 
-	public void setGerarRelatorio(Boolean gerarRelatorio) {
+	public void setGerarRelatorio(boolean gerarRelatorio) {
 		this.gerarRelatorio = gerarRelatorio;
 	}
 

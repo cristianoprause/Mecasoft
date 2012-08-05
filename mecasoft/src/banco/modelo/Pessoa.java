@@ -28,7 +28,7 @@ public class Pessoa implements Serializable{
 	private Long id;
 	
 	@Column
-	private Boolean ativo = true;
+	private boolean ativo = true;
 	
 	@Column
 	@NotEmpty(message="Informe o nome (fantasia).")
@@ -76,13 +76,13 @@ public class Pessoa implements Serializable{
 	private String complemento;
 	
 	@Column
-	private Boolean tipoCliente;
+	private boolean tipoCliente;
 	
 	@Column
-	private Boolean tipoFornecedor;
+	private boolean tipoFornecedor;
 	
 	@Column
-	private Boolean tipoFuncionario;
+	private boolean tipoFuncionario;
 	
 	@OneToMany(mappedBy="cliente")
 	private List<Veiculo> listaVeiculo;
@@ -98,11 +98,11 @@ public class Pessoa implements Serializable{
 		this.id = id;
 	}
 
-	public Boolean getAtivo() {
+	public boolean getAtivo() {
 		return ativo;
 	}
 
-	public void setAtivo(Boolean ativo) {
+	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
 	}
 
@@ -210,27 +210,27 @@ public class Pessoa implements Serializable{
 		this.complemento = complemento;
 	}
 
-	public Boolean getTipoCliente() {
+	public boolean getTipoCliente() {
 		return tipoCliente;
 	}
 
-	public void setTipoCliente(Boolean tipoCliente) {
+	public void setTipoCliente(boolean tipoCliente) {
 		this.tipoCliente = tipoCliente;
 	}
 
-	public Boolean getTipoFornecedor() {
+	public boolean getTipoFornecedor() {
 		return tipoFornecedor;
 	}
 
-	public void setTipoFornecedor(Boolean tipoFornecedor) {
+	public void setTipoFornecedor(boolean tipoFornecedor) {
 		this.tipoFornecedor = tipoFornecedor;
 	}
 
-	public Boolean getTipoFuncionario() {
+	public boolean getTipoFuncionario() {
 		return tipoFuncionario;
 	}
 
-	public void setTipoFuncionario(Boolean tipoFuncionario) {
+	public void setTipoFuncionario(boolean tipoFuncionario) {
 		this.tipoFuncionario = tipoFuncionario;
 	}
 

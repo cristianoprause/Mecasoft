@@ -35,4 +35,11 @@ public class PessoaDAO extends HibernateConnection implements PessoaUtils{
 		return q.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Pessoa> findAllAtivos() {
+		Query q = getSession().createQuery("select p from Pessoa p where p.ativo is true");
+		return q.list();
+	}
+
 }

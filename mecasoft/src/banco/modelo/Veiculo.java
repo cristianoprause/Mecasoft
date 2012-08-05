@@ -27,7 +27,7 @@ public class Veiculo implements Serializable{
 	private Long id;
 	
 	@Column
-	private Boolean ativo = true;
+	private boolean ativo = true;
 	
 	@Column
 	private String marca;
@@ -62,11 +62,11 @@ public class Veiculo implements Serializable{
 		this.id = id;
 	}
 
-	public Boolean getAtivo() {
+	public boolean getAtivo() {
 		return ativo;
 	}
 
-	public void setAtivo(Boolean ativo) {
+	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
 	}
 

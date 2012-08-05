@@ -27,7 +27,7 @@ public class Usuario implements Serializable{
 	private Long id;
 	
 	@Column
-	private Boolean ativo = true;
+	private boolean ativo = true;
 	
 	@Column(unique=true)
 	@NotEmpty(message="Informe o login.")
@@ -53,11 +53,11 @@ public class Usuario implements Serializable{
 		this.id = id;
 	}
 
-	public Boolean getAtivo() {
+	public boolean getAtivo() {
 		return ativo;
 	}
 
-	public void setAtivo(Boolean ativo) {
+	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
 	}
 

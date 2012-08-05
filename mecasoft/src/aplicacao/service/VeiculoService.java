@@ -18,6 +18,11 @@ public class VeiculoService extends MecasoftService<Veiculo>{
 	public void saveOrUpdate(){
 		getDAO().saveOrUpdate(veiculo);
 	}
+
+	@Override
+	public void delete() {
+		getDAO().delete(veiculo);
+	}
 	
 	public Veiculo find(Long id){
 		return getDAO().find(id);
@@ -38,5 +43,6 @@ public class VeiculoService extends MecasoftService<Veiculo>{
 	public void setVeiculo(Veiculo veiculo) {
 		this.veiculo = veiculo;
 	}
+
 
 }
