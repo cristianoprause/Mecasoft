@@ -47,11 +47,9 @@ public class PapelEditor extends MecasoftEditor {
 	public PapelEditor() {
 		service = new PapelService();
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-		
+	public void addComponentes(Composite compositeConteudo) {
 		compositeConteudo.setLayout(new GridLayout(8, false));
 		
 		Label lblNome = new Label(compositeConteudo, SWT.NONE);
@@ -202,7 +200,7 @@ public class PapelEditor extends MecasoftEditor {
 		new Label(compositeConteudo, SWT.NONE);
 		initDataBindings();
 	}
-
+	
 	@Override
 	public void salvarRegistro() {
 		try {
@@ -298,4 +296,5 @@ public class PapelEditor extends MecasoftEditor {
 		//
 		return bindingContext;
 	}
+
 }

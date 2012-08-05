@@ -27,8 +27,8 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	}
 	
 	public abstract void salvarRegistro();
-	
 	public abstract void excluirRegistro();
+	public abstract void addComponentes(Composite compositeConteudo);
 	
 	/**
 	 * Create contents of the editor part.
@@ -46,10 +46,10 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		Composite composite = new Composite(scrolledComposite, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		
-		compositeConteudo = new Composite(composite, SWT.NONE);
+		compositeConteudo = new Composite(composite, SWT.BORDER);
 		compositeConteudo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Composite compositeBotoes = new Composite(composite, SWT.NONE);
+		Composite compositeBotoes = new Composite(composite, SWT.BORDER);
 		compositeBotoes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		compositeBotoes.setLayout(new GridLayout(2, false));
 		
@@ -74,8 +74,10 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		btnExcluir.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/delete32.png"));
 		btnExcluir.setText("Excluir");
 		
+		addComponentes(compositeConteudo);
+		
 		scrolledComposite.setContent(composite);
-		scrolledComposite.setMinSize(compositeConteudo.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		scrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		scrolledComposite.getVerticalBar().setPageIncrement(15);
 		scrolledComposite.getVerticalBar().setIncrement(15);
 		

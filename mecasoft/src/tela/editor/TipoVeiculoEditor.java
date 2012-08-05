@@ -40,11 +40,10 @@ public class TipoVeiculoEditor extends MecasoftEditor {
 
 	public TipoVeiculoEditor() {
 	}
-	
+
 	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-		
+	public void addComponentes(Composite compositeConteudo) {
+
 		compositeConteudo.setLayout(new GridLayout(2, false));
 		
 		Label lblNome = new Label(compositeConteudo, SWT.NONE);
@@ -63,7 +62,7 @@ public class TipoVeiculoEditor extends MecasoftEditor {
 		btnHormetro.setText("Horímetro");
 		initDataBindings();
 	}
-
+	
 	@Override
 	public void salvarRegistro() {
 		try {
@@ -129,4 +128,5 @@ public class TipoVeiculoEditor extends MecasoftEditor {
 		//
 		return bindingContext;
 	}
+
 }

@@ -58,8 +58,7 @@ public class UsuarioEditor extends MecasoftEditor{
 	}
 	
 	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
+	public void addComponentes(Composite compositeConteudo) {
 
 		compositeConteudo.setLayout(new GridLayout(4, false));
 		
@@ -212,4 +211,5 @@ public class UsuarioEditor extends MecasoftEditor{
 		//
 		return bindingContext;
 	}
+
 }

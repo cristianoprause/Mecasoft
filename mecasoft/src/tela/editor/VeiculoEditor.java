@@ -64,45 +64,7 @@ public class VeiculoEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getVeiculo());
-			
-			if(service.getVeiculo().getTipo() != null){
-				
-				if(service.getVeiculo().getTipo().getHodometro()){
-					if(service.getVeiculo().getPlaca() == null){
-						setErroMessage("Placa inválida.");
-						return;
-					}
-					
-					if(service.getVeiculo().getHodometro() == null){
-						setErroMessage("Informe o hodômetro.");
-						return;
-					}
-				}else if(service.getVeiculo().getTipo().getHorimetro()){
-					if(service.getVeiculo().getHorimetro() == null){
-						setErroMessage("Informe o horímetro.");
-						return;
-					}
-				}
-				
-			}
-			
-			service.saveOrUpdate();
-			openInformation("Veículo cadastrado com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
-		}
-	}
-
-	@Override
-	public void excluirRegistro() {}
-	
-	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
+	public void addComponentes(Composite compositeConteudo) {
 		
 		compositeConteudo.setLayout(new GridLayout(4, false));
 		
@@ -195,6 +157,44 @@ public class VeiculoEditor extends MecasoftEditor {
 		ativarDesativarComponentes();
 		
 	}
+
+	@Override
+	public void salvarRegistro() {
+		try {
+			validar(service.getVeiculo());
+			
+			if(service.getVeiculo().getTipo() != null){
+				
+				if(service.getVeiculo().getTipo().getHodometro()){
+					if(service.getVeiculo().getPlaca() == null){
+						setErroMessage("Placa inválida.");
+						return;
+					}
+					
+					if(service.getVeiculo().getHodometro() == null){
+						setErroMessage("Informe o hodômetro.");
+						return;
+					}
+				}else if(service.getVeiculo().getTipo().getHorimetro()){
+					if(service.getVeiculo().getHorimetro() == null){
+						setErroMessage("Informe o horímetro.");
+						return;
+					}
+				}
+				
+			}
+			
+			service.saveOrUpdate();
+			openInformation("Veículo cadastrado com sucesso!");
+			closeThisEditor();
+		} catch (ValidationException e) {
+			setErroMessage(e.getMessage());
+		}
+	}
+
+	@Override
+	public void excluirRegistro() {}
+	
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
@@ -294,4 +294,5 @@ public class VeiculoEditor extends MecasoftEditor {
 		//
 		return bindingContext;
 	}
+
 }
