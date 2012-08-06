@@ -3,6 +3,7 @@ package aplicacao.service;
 import java.util.List;
 
 import banco.modelo.Funcionario;
+import banco.modelo.TipoFuncionario;
 import banco.utils.FuncionarioUtils;
 
 public class FuncionarioService extends MecasoftService<Funcionario>{
@@ -40,6 +41,10 @@ public class FuncionarioService extends MecasoftService<Funcionario>{
 	
 	public List<Funcionario> findAllSemUsuario(){
 		return getDAO().findAllSemUsuario();
+	}
+	
+	public List<Funcionario> findAllByTipo(TipoFuncionario tipo){
+		return getDAO().findAllByTipo(tipo);
 	}
 
 	public Funcionario getFuncionario() {

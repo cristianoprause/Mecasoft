@@ -59,6 +59,7 @@ public class TipoVeiculoView extends ViewPart {
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Form frmListaDeTipos = formToolkit.createForm(container);
+		frmListaDeTipos.setImage(ResourceManager.getPluginImage("mecasoft", "assents/veiculo/tipoVeiculo32.png"));
 		formToolkit.paintBordersFor(frmListaDeTipos);
 		frmListaDeTipos.setText("Lista de tipos de ve\u00EDculos");
 		frmListaDeTipos.getBody().setLayout(new GridLayout(2, false));

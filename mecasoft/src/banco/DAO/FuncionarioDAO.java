@@ -7,6 +7,7 @@ import org.hibernate.Query;
 import aplicacao.service.UsuarioService;
 import banco.connection.HibernateConnection;
 import banco.modelo.Funcionario;
+import banco.modelo.TipoFuncionario;
 import banco.modelo.Usuario;
 import banco.utils.FuncionarioUtils;
 
@@ -44,6 +45,14 @@ public class FuncionarioDAO extends HibernateConnection implements FuncionarioUt
 		Query q = getSession().createQuery("select f from Funcionario f where f.ativo is true");
 		return q.list();
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Funcionario> findAllByTipo(TipoFuncionario tipo) {
+		Query q = getSession().createQuery("select f from Funcionario f where f.tipo = :tipo");
+		q.setParameter("tipo", tipo);
+		return q.list();
+	}
 	
 	@Override
 	public List<Funcionario> findAllSemUsuario() {
@@ -56,6 +65,7 @@ public class FuncionarioDAO extends HibernateConnection implements FuncionarioUt
 		
 		return listaFuncionarios;
 	}
+
 
 
 }

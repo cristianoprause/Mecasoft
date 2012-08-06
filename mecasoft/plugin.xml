@@ -47,8 +47,14 @@
       </editor>
       <editor
             class="tela.editor.TipoVeiculoEditor"
+            icon="assents/veiculo/tipoVeiculo16.png"
             id="tela.editor.TipoVeiculoEditor"
             name="Tipo de Veículo">
+      </editor>
+      <editor
+            class="tela.editor.TipoFuncionarioEditor"
+            id="tela.editor.TipoFuncionarioEditor"
+            name="Tipo de funcionário">
       </editor>
    </extension>
    <extension
@@ -79,8 +85,14 @@
       </view>
       <view
             class="tela.view.TipoVeiculoView"
+            icon="assents/veiculo/tipoVeiculo16.png"
             id="tela.view.TipoVeiculoView"
             name="Lista de tipos de veículos">
+      </view>
+      <view
+            class="tela.view.TipoFuncionarioView"
+            id="tela.view.TipoFuncionarioView"
+            name="Lista de tipos de funcionário">
       </view>
    </extension>
    <extension
@@ -135,6 +147,15 @@
             </command>
             <command
                   commandId="org.eclipse.ui.views.showView"
+                  id="mecasoft.menuTipoFuncionario"
+                  label="Tipo de funcionário">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.TipoFuncionarioView">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.views.showView"
                   icon="assents/veiculo/veiculo16.png"
                   id="mecasoft.menuVeiculo"
                   label="Veículo">
@@ -145,6 +166,7 @@
             </command>
             <command
                   commandId="org.eclipse.ui.views.showView"
+                  icon="assents/veiculo/tipoVeiculo16.png"
                   id="mecasoft.menuTipoVeiculo"
                   label="Tipo de veículo">
                <parameter
@@ -221,6 +243,15 @@
             activityId="tela.view.activityVeiculo"
             isEqualityPattern="false"
             pattern="mecasoft/mecasoft.menuVeiculo">
+      </activityPatternBinding>
+      <activity
+            id="tela.view.activityTipoFuncionario"
+            name="activity tipo de funcionario">
+      </activity>
+      <activityPatternBinding
+            activityId="tela.view.activityTipoFuncionario"
+            isEqualityPattern="false"
+            pattern="mecasoft/mecasoft.menuTipoFuncionario">
       </activityPatternBinding>
    </extension>
 

@@ -32,8 +32,10 @@ public class PermissaoUsuarioCommand extends AbstractHandler{
 			permissoes.add("tela.view.activityPapel");
 		}
 		
-		if(papel.getCadPessoa())
+		if(papel.getCadPessoa()){
 			permissoes.add("tela.view.activityPessoa");
+			permissoes.add("tela.view.activityTipoFuncionario");
+		}
 		
 		if(papel.getCadVeiculo()){
 			permissoes.add("tela.view.activityVeiculo");
