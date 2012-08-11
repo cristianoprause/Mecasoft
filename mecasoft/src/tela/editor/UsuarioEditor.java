@@ -177,7 +177,7 @@ public class UsuarioEditor extends MecasoftEditor{
 		
 		return (Funcionario) dialog.elementoSelecionado();
 	}
-	
+
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
@@ -208,8 +208,6 @@ public class UsuarioEditor extends MecasoftEditor{
 		IObservableValue txtNomeFuncionarioObserveTextObserveWidget = SWTObservables.observeText(txtNomeFuncionario, SWT.Modify);
 		IObservableValue servicegetUsuarioFuncionarionomeFantasiaObserveValue = PojoObservables.observeValue(service.getUsuario(), "funcionario.nomeFantasia");
 		bindingContext.bindValue(txtNomeFuncionarioObserveTextObserveWidget, servicegetUsuarioFuncionarionomeFantasiaObserveValue, null, null);
-		//
 		return bindingContext;
 	}
-
 }

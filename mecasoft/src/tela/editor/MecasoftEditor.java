@@ -117,6 +117,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		if(MessageHelper.openQuestion("Os dados foram alterados, deseja salvar antes de sair?")){
 			salvarRegistro();
 			return YES;
+			
 		}
 		else{
 			HibernateConnection.rollBack();

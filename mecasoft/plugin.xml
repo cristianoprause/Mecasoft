@@ -94,6 +94,11 @@
             id="tela.view.TipoFuncionarioView"
             name="Lista de tipos de funcionário">
       </view>
+      <view
+            class="tela.view.ProdutoView"
+            id="tela.view.ProdutoView"
+            name="Lista de produtos">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -172,6 +177,16 @@
                <parameter
                      name="org.eclipse.ui.views.showView.viewId"
                      value="tela.view.TipoVeiculoView">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  icon="assents/veiculo/tipoVeiculo16.png"
+                  id="mecasoft.menuProduto"
+                  label="Produtos">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.ProdutoView">
                </parameter>
             </command>
          </menu>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="jars/commons-lang-2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="jars/antlr-2.7.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="jars/aopalliance.jar"/>
 	<classpathentry exported="true" kind="lib" path="jars/classmate-0.5.4.jar"/>
