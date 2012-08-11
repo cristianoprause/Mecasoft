@@ -42,13 +42,13 @@ import aplicacao.service.TipoVeiculoService;
 import aplicacao.service.VeiculoService;
 import banco.modelo.Pessoa;
 import banco.modelo.TipoVeiculo;
+import tela.componentes.MecasoftText;
 
 public class VeiculoEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.VeiculoEditor"; //$NON-NLS-1$
 	private Text txtMarca;
 	private Text txtModelo;
-	private Text txtPlaca;
 	private Text txtHodometro;
 	private Text txtHorimetro;
 	private Text txtCliente;
@@ -58,6 +58,7 @@ public class VeiculoEditor extends MecasoftEditor {
 	private VeiculoService service = new VeiculoService();
 	private ComboViewer cvTipo;
 	private Button btnAtivo;
+	private MecasoftText txtPlaca;
 
 	public VeiculoEditor() {
 		tipos = new TipoVeiculoService().findAll();
@@ -81,7 +82,6 @@ public class VeiculoEditor extends MecasoftEditor {
 		txtModelo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		Label lblTipo = new Label(compositeConteudo, SWT.NONE);
-		lblTipo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTipo.setText("Tipo:");
 		
 		cvTipo = new ComboViewer(compositeConteudo, SWT.READ_ONLY);
@@ -101,12 +101,12 @@ public class VeiculoEditor extends MecasoftEditor {
 		Label lblPlaca = new Label(compositeConteudo, SWT.NONE);
 		lblPlaca.setText("Placa:");
 		
-		txtPlaca = new Text(compositeConteudo, SWT.BORDER);
-		txtPlaca.setEnabled(false);
-		txtPlaca.setEditable(false);
-		GridData gd_txtPlaca = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_txtPlaca.widthHint = 113;
-		txtPlaca.setLayoutData(gd_txtPlaca);
+		txtPlaca = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtPlaca.setOptions(MecasoftText.AMBOS, 8);
+		txtPlaca.addChars("-", new Integer[]{3});
+		txtPlaca.text.setEditable(false);
+		txtPlaca.text.setEnabled(false);
+		txtPlaca.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		new Label(compositeConteudo, SWT.NONE);
 		
@@ -248,7 +248,6 @@ public class VeiculoEditor extends MecasoftEditor {
 		
 		return (Pessoa) sid.elementoSelecionado();
 	}
-	
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
@@ -263,10 +262,6 @@ public class VeiculoEditor extends MecasoftEditor {
 		IObservableValue btnAtivoObserveSelectionObserveWidget = SWTObservables.observeSelection(btnAtivo);
 		IObservableValue servicegetVeiculoAtivoObserveValue = PojoObservables.observeValue(service.getVeiculo(), "ativo");
 		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, servicegetVeiculoAtivoObserveValue, null, null);
-		//
-		IObservableValue txtPlacaObserveTextObserveWidget = SWTObservables.observeText(txtPlaca, SWT.Modify);
-		IObservableValue servicegetVeiculoPlacaObserveValue = PojoObservables.observeValue(service.getVeiculo(), "placa");
-		bindingContext.bindValue(txtPlacaObserveTextObserveWidget, servicegetVeiculoPlacaObserveValue, null, null);
 		//
 		IObservableValue txtHodometroObserveTextObserveWidget = SWTObservables.observeText(txtHodometro, SWT.Modify);
 		IObservableValue servicegetVeiculoHodometroObserveValue = PojoObservables.observeValue(service.getVeiculo(), "hodometro");
@@ -292,7 +287,10 @@ public class VeiculoEditor extends MecasoftEditor {
 		IObservableValue servicegetVeiculoTipoObserveValue = PojoObservables.observeValue(service.getVeiculo(), "tipo");
 		bindingContext.bindValue(cvTipoObserveSingleSelection, servicegetVeiculoTipoObserveValue, null, null);
 		//
+		IObservableValue txtPlacatextObserveTextObserveWidget = SWTObservables.observeText(txtPlaca.text, SWT.Modify);
+		IObservableValue servicegetVeiculoPlacaObserveValue = PojoObservables.observeValue(service.getVeiculo(), "placa");
+		bindingContext.bindValue(txtPlacatextObserveTextObserveWidget, servicegetVeiculoPlacaObserveValue, null, null);
+		//
 		return bindingContext;
 	}
-
 }

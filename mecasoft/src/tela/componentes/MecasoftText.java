@@ -7,6 +7,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.layout.GridLayout;
 
 public class MecasoftText extends Composite {
 
@@ -22,7 +23,7 @@ public class MecasoftText extends Composite {
 	private String texto;
 	private String textoRetorno;
 
-	private Text text;
+	public Text text;
 
 	/**
 	 * Create the composite.
@@ -32,12 +33,18 @@ public class MecasoftText extends Composite {
 	 */
 	public MecasoftText(Composite parent, int style) {
 		super(parent, style);
-		setLayout(null);
 		
 		posicoes = new Integer[0];
 		caracteres = "";
+		aceita = AMBOS;
+		max = -1;
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		setLayout(gridLayout);
 
 		text = new Text(this, SWT.BORDER);
+		text.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		text.addKeyListener(new KeyAdapter() {
 			@Override
@@ -94,7 +101,7 @@ public class MecasoftText extends Composite {
 			return true;
 		}
 
-		if (text.getText().length() < max) {
+		if ((text.getText().length() < max) || (max == -1)) {
 			if (aceita.equals(AMBOS))
 				return true;
 
@@ -119,9 +126,23 @@ public class MecasoftText extends Composite {
 		this.caracteres = caracteres;
 		this.posicoes = posicoes;
 	}
-
+	
 	@Override
-	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
+	public void setEnabled(boolean enabled) {
+		text.setEnabled(enabled);
 	}
+	
+	@Override
+	public boolean getEnabled() {
+		return text.getEnabled();
+	}
+	
+	public void setEditable(boolean editable){
+		text.setEditable(editable);
+	}
+	
+	public boolean getEditable(boolean editable){
+		return text.getEditable();
+	}
+
 }
