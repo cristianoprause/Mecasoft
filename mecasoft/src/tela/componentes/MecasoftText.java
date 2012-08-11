@@ -1,4 +1,4 @@
-package testes;
+package tela.componentes;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
@@ -33,6 +33,9 @@ public class MecasoftText extends Composite {
 	public MecasoftText(Composite parent, int style) {
 		super(parent, style);
 		setLayout(null);
+		
+		posicoes = new Integer[0];
+		caracteres = "";
 
 		text = new Text(this, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
