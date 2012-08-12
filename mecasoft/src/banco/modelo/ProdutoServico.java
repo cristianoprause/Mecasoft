@@ -2,6 +2,7 @@ package banco.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -13,7 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 public class ProdutoServico implements Serializable{
@@ -22,6 +26,9 @@ public class ProdutoServico implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 4257821782999163779L;
+	
+	public static String TIPOPRODUTO = "produto";
+	public static String TIPOSERVICO = "servico";
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -31,26 +38,27 @@ public class ProdutoServico implements Serializable{
 	private boolean ativo = true;
 	
 	@Column
+	@NotEmpty(message="Informe a descrição.")
 	private String descricao;
 	
 	@Column
-	private Integer quantidade;
+	private Integer quantidade = 0;
 	
 	@Column
 	private String tipo;
 	
 	@Column(precision=14, scale=2)
-	@NotNull(message="Informe o valor.")
-	private BigDecimal valorUnitario;
+	private BigDecimal valorUnitario = BigDecimal.ZERO;
 	
 	@Column(precision=14,scale=2)
-	private BigDecimal lucro;
+	private BigDecimal lucro = BigDecimal.ZERO;
 	
 	@Column(precision=14,scale=2)
-	private BigDecimal custo;
+	private BigDecimal custo = BigDecimal.ZERO;
 	
-	@OneToMany(mappedBy="produto")
-	private List<ForneceProduto> listaFornecedores;
+	@OneToMany(mappedBy="id.produto")
+	@Cascade(value= {CascadeType.ALL})
+	private List<ForneceProduto> listaFornecedores = new ArrayList<ForneceProduto>();
 	
 	@ManyToMany
 	@JoinTable(name="prosutoServicoParametrizado",

@@ -37,4 +37,12 @@ public class ProdutoServicoDAO extends HibernateConnection implements ProdutoSer
 		return q.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ProdutoServico> findAllByTipo(String tipo) {
+		Query q = getSession().createQuery("select p from ProdutoServico p where p.tipo like :tipo");
+		q.setParameter("tipo", tipo);
+		return q.list();
+	}
+
 }

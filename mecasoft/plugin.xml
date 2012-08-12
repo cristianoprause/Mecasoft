@@ -56,6 +56,12 @@
             id="tela.editor.TipoFuncionarioEditor"
             name="Tipo de funcionário">
       </editor>
+      <editor
+            class="tela.editor.ProdutoEditor"
+            icon="assents/produto/produto16.png"
+            id="tela.editor.ProdutoEditor"
+            name="Produto">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -96,6 +102,7 @@
       </view>
       <view
             class="tela.view.ProdutoView"
+            icon="assents/produto/produto16.png"
             id="tela.view.ProdutoView"
             name="Lista de produtos">
       </view>
@@ -108,7 +115,7 @@
                label="Arquivo">
             <command
                   commandId="org.eclipse.ui.file.restartWorkbench"
-                  icon="assents/funcoes/exit16.png"
+                  icon="assents/funcoes/reset16.png"
                   label="Reiniciar">
             </command>
             <command
@@ -181,7 +188,7 @@
             </command>
             <command
                   commandId="org.eclipse.ui.views.showView"
-                  icon="assents/veiculo/tipoVeiculo16.png"
+                  icon="assents/produto/produto16.png"
                   id="mecasoft.menuProduto"
                   label="Produtos">
                <parameter

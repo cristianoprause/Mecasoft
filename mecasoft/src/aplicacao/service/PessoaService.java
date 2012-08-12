@@ -31,8 +31,12 @@ public class PessoaService extends MecasoftService<Pessoa>{
 		return getDAO().findAll();
 	}
 	
-	public List<Pessoa> findAllAtivos(){
-		return getDAO().findAllAtivos();
+	public List<Pessoa> findAllClientes(){
+		return getDAO().findAllByTipoAndStatus(Pessoa.CLIENTE, true);
+	}
+	
+	public List<Pessoa> findAllFornecedores(){
+		return getDAO().findAllByTipoAndStatus(Pessoa.FORNECEDOR, true);
 	}
 
 	public Pessoa getPessoa() {

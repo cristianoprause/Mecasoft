@@ -22,6 +22,10 @@ public class Pessoa implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 5104439984829411483L;
+	
+	public static String CLIENTE = "CLIENTE";
+	public static String FORNECEDOR = "FORNECEDOR";
+	public static String FUNCIONARIO  = "FUNCIONARIO";
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -87,7 +91,7 @@ public class Pessoa implements Serializable{
 	@OneToMany(mappedBy="cliente")
 	private List<Veiculo> listaVeiculo;
 	
-	@OneToMany(mappedBy="pessoa")
+	@OneToMany(mappedBy="id.pessoa")
 	private List<ForneceProduto> listaProduto;
 
 	public Long getId() {

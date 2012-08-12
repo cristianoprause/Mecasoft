@@ -244,7 +244,7 @@ public class VeiculoEditor extends MecasoftEditor {
 				return ((Pessoa)element).getNomeFantasia();
 			}
 		});
-		sid.setElements(new PessoaService().findAllAtivos().toArray());
+		sid.setElements(new PessoaService().findAllClientes().toArray());
 		
 		return (Pessoa) sid.elementoSelecionado();
 	}

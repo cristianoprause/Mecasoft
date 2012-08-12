@@ -6,6 +6,7 @@ import banco.modelo.Pessoa;
 
 public interface PessoaUtils extends MecasoftUtils<Pessoa>{
 
-	List<Pessoa> findAllAtivos();
+	List<Pessoa> findAllByTipoAndStatus(String tipo, boolean status);
+	
 	
 }

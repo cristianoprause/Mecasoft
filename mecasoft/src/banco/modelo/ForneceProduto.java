@@ -4,10 +4,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class ForneceProduto implements Serializable{
@@ -15,35 +14,21 @@ public class ForneceProduto implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2207350225950948776L;
+	private static final long serialVersionUID = 3732028380422990967L;
 
-	@Id
-	@ManyToOne
-	@JoinColumn(name="fornecedor_id", nullable=false)
-	private Pessoa pessoa;
-	
-	@Id
-	@ManyToOne
-	@JoinColumn(name="produto_id", nullable = false)
-	private ProdutoServico produto;
+	@EmbeddedId
+	private ForneceProdutoId id = new ForneceProdutoId();
 	
 	@Column(precision=14, scale=2)
+	@NotNull(message="Não foi informado o valor de um mais fornecedores do produto.")
 	private BigDecimal valorUnitario;
 
-	public Pessoa getPessoa() {
-		return pessoa;
+	public ForneceProdutoId getId() {
+		return id;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
-	}
-
-	public ProdutoServico getProduto() {
-		return produto;
-	}
-
-	public void setProduto(ProdutoServico produto) {
-		this.produto = produto;
+	public void setId(ForneceProdutoId id) {
+		this.id = id;
 	}
 
 	public BigDecimal getValorUnitario() {
@@ -52,37 +37,6 @@ public class ForneceProduto implements Serializable{
 
 	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((pessoa == null) ? 0 : pessoa.hashCode());
-		result = prime * result + ((produto == null) ? 0 : produto.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ForneceProduto other = (ForneceProduto) obj;
-		if (pessoa == null) {
-			if (other.pessoa != null)
-				return false;
-		} else if (!pessoa.equals(other.pessoa))
-			return false;
-		if (produto == null) {
-			if (other.produto != null)
-				return false;
-		} else if (!produto.equals(other.produto))
-			return false;
-		return true;
 	}
 	
 }

@@ -12,6 +12,7 @@
 		<mapping class="banco.modelo.Veiculo"/>
 		<mapping class="banco.modelo.ProdutoServico"/>
 		<mapping class="banco.modelo.ForneceProduto"/>
+		<mapping class="banco.modelo.ForneceProdutoId"/>
 		<mapping class="banco.modelo.Pessoa"/>
 		<mapping class="banco.modelo.TipoFuncionario"/>
 		<mapping class="banco.modelo.Funcionario"/>
