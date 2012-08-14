@@ -256,9 +256,9 @@ public class ProdutoEditor extends MecasoftEditor {
 				return ((Pessoa)element).getNomeFantasia();
 			}
 		});
-		sid.setElements(new PessoaService().findAllFornecedores().toArray());
+		sid.setElements(new PessoaService().findAllFornecedoresAtivos().toArray());
 		
-		return (Pessoa) sid.elementoSelecionado();
+		return (Pessoa) sid.getElementoSelecionado();
 	}
 	
 	private void calcularValores(){

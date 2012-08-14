@@ -14,7 +14,7 @@ public class SelecionarItemDialog extends ElementListSelectionDialog{
 		setMessage("Selecione um item ou utilize o filtro");
 	}
 	
-	public Object elementoSelecionado(){
+	public Object getElementoSelecionado(){
 		if(open() == IDialogConstants.OK_ID)
 			return getFirstResult();
 		else

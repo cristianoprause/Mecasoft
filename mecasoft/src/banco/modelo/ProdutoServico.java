@@ -61,6 +61,7 @@ public class ProdutoServico implements Serializable{
 	private List<ForneceProduto> listaFornecedores = new ArrayList<ForneceProduto>();
 	
 	@ManyToMany
+	@Cascade(value={CascadeType.ALL})
 	@JoinTable(name="prosutoServicoParametrizado",
 		joinColumns={
 			@JoinColumn(name="servico_id", referencedColumnName = "id")
@@ -69,7 +70,7 @@ public class ProdutoServico implements Serializable{
 			@JoinColumn(name="produto_id", referencedColumnName = "id")
 		}
 	)
-	private List<ProdutoServico> listaProduto;
+	private List<ProdutoServico> listaProduto = new ArrayList<ProdutoServico>();
 
 	public Long getId() {
 		return id;

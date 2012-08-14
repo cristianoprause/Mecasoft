@@ -34,10 +34,14 @@ public class ProdutoServicoService extends MecasoftService<ProdutoServico>{
 		return getDAO().findAll();
 	}
 	
-	public List<ProdutoServico> findAllProdutos(){
-		return getDAO().findAllByTipo(ProdutoServico.TIPOPRODUTO);
+	public List<ProdutoServico> findAllProdutosAndStatus(){
+		return getDAO().findAllByTipoAndStatus(ProdutoServico.TIPOPRODUTO, null);
 	}
-
+	
+	public List<ProdutoServico> findAllServicosAndStatus(){
+		return getDAO().findAllByTipoAndStatus(ProdutoServico.TIPOSERVICO, null);
+	}
+	
 	public ProdutoServico getProdutoServico() {
 		return produtoServico;
 	}
@@ -45,5 +49,5 @@ public class ProdutoServicoService extends MecasoftService<ProdutoServico>{
 	public void setProdutoServico(ProdutoServico produtoServico) {
 		this.produtoServico = produtoServico;
 	}
-
+	
 }

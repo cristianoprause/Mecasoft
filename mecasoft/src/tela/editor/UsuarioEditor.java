@@ -175,7 +175,7 @@ public class UsuarioEditor extends MecasoftEditor{
 		});
 		dialog.setElements(new FuncionarioService().findAllSemUsuario().toArray());
 		
-		return (Funcionario) dialog.elementoSelecionado();
+		return (Funcionario) dialog.getElementoSelecionado();
 	}
 
 	protected DataBindingContext initDataBindings() {

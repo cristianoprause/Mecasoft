@@ -28,6 +28,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import tela.editor.editorInput.ProdutoEditorInput;
 import tela.filter.ProdutoFilter;
+import aplicacao.helper.FormatterHelper;
 import aplicacao.service.ProdutoServicoService;
 import banco.modelo.ProdutoServico;
 
@@ -139,7 +140,7 @@ public class ProdutoView extends ViewPart {
 					tvcValorUnitario.setLabelProvider(new ColumnLabelProvider(){
 						@Override
 						public String getText(Object element) {
-							return ((ProdutoServico)element).getValorUnitario().toString();
+							return FormatterHelper.DECIMALFORMAT.format(((ProdutoServico)element).getValorUnitario());
 						}
 					});
 					TableColumn tblclmnValorUnitario = tvcValorUnitario.getColumn();
@@ -175,7 +176,7 @@ public class ProdutoView extends ViewPart {
 			actionAtualizar = new Action("Atualizar") {
 				@Override
 				public void run() {
-					tvProduto.setInput(service.findAllProdutos());
+					tvProduto.setInput(service.findAllProdutosAndStatus());
 					tvProduto.refresh();
 				}
 				

@@ -244,9 +244,9 @@ public class VeiculoEditor extends MecasoftEditor {
 				return ((Pessoa)element).getNomeFantasia();
 			}
 		});
-		sid.setElements(new PessoaService().findAllClientes().toArray());
+		sid.setElements(new PessoaService().findAllClientesAtivos().toArray());
 		
-		return (Pessoa) sid.elementoSelecionado();
+		return (Pessoa) sid.getElementoSelecionado();
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();

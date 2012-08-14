@@ -31,11 +31,11 @@ public class PessoaService extends MecasoftService<Pessoa>{
 		return getDAO().findAll();
 	}
 	
-	public List<Pessoa> findAllClientes(){
+	public List<Pessoa> findAllClientesAtivos(){
 		return getDAO().findAllByTipoAndStatus(Pessoa.CLIENTE, true);
 	}
 	
-	public List<Pessoa> findAllFornecedores(){
+	public List<Pessoa> findAllFornecedoresAtivos(){
 		return getDAO().findAllByTipoAndStatus(Pessoa.FORNECEDOR, true);
 	}
 

@@ -42,6 +42,12 @@ public class PermissaoUsuarioCommand extends AbstractHandler{
 			permissoes.add("tela.view.activityTipoVeiculo");
 		}
 		
+		if(papel.getCadProduto())
+			permissoes.add("tela.view.activityProduto");
+		
+		if(papel.getCadServico())
+			permissoes.add("tela.view.activityServico");
+		
 		for(String permissao : permissoes)
 			if (activityManager.getActivity(permissao).isDefined())
 				enabledActivities.add(permissao);
