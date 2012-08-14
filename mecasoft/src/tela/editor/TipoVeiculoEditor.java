@@ -98,9 +98,10 @@ public class TipoVeiculoEditor extends MecasoftEditor {
 		
 		setShowExcluir(tvei.getTipo().getId() != null);
 		
-		if(tvei.getTipo().getId() != null)
+		if(tvei.getTipo().getId() != null){
 			service.setTipoVeiculo(service.find(tvei.getTipo().getId()));
-		else
+			this.setPartName("Tipo de veículo: " + service.getTipoVeiculo().getNome());
+		}else
 			service.setTipoVeiculo(new TipoVeiculo());
 		
 		setSite(site);

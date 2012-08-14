@@ -201,9 +201,10 @@ public class VeiculoEditor extends MecasoftEditor {
 			throws PartInitException {
 		VeiculoEditorInput vei = (VeiculoEditorInput)input;
 		
-		if(vei.getVeiculo().getId() == null)
+		if(vei.getVeiculo().getId() == null){
 			service.setVeiculo(vei.getVeiculo());
-		else
+			this.setPartName("Veículo: " + service.getVeiculo().getModelo());
+		}else
 			service.setVeiculo(service.find(vei.getVeiculo().getId()));
 		
 		setShowExcluir(false);

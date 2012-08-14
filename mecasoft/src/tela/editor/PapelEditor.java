@@ -231,11 +231,13 @@ public class PapelEditor extends MecasoftEditor {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		PapelEditorInput pei = (PapelEditorInput)input;
+		
 		setShowExcluir(pei.getPapel().getId() != null);
 		
-		if(pei.getPapel().getId() != null)
+		if(pei.getPapel().getId() != null){
 			service.setPapel(service.find(pei.getPapel().getId()));
-		else
+			this.setPartName("Papel: " + service.getPapel().getNome());
+		}else
 			service.setPapel(pei.getPapel());
 		
 		setSite(site);

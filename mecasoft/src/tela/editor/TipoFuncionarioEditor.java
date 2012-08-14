@@ -86,9 +86,10 @@ public class TipoFuncionarioEditor extends MecasoftEditor {
 		
 		setShowExcluir(tfei.getTipo().getId() != null);
 		
-		if(tfei.getTipo().getId() != null)
+		if(tfei.getTipo().getId() != null){
 			service.setTipo(service.find(tfei.getTipo().getId()));
-		else
+			this.setPartName("Tipo de funcionário: " + service.getTipo().getNome());
+		}else
 			service.setTipo(tfei.getTipo());
 		
 		setSite(site);

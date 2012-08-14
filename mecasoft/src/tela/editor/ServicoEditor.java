@@ -159,9 +159,10 @@ public class ServicoEditor extends MecasoftEditor {
 			throws PartInitException {
 		ServicoEditorInput sei = (ServicoEditorInput)input;
 		
-		if(sei.getProdutoServico().getId() != null)
+		if(sei.getProdutoServico().getId() != null){
 			service.setProdutoServico(service.find(sei.getProdutoServico().getId()));
-		else{
+			this.setPartName("Serviço: " + service.getProdutoServico().getDescricao());
+		}else{
 			service.setProdutoServico(sei.getProdutoServico());
 			service.getProdutoServico().setTipo(ProdutoServico.TIPOPRODUTO);
 		}

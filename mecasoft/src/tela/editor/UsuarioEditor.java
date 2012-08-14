@@ -151,9 +151,10 @@ public class UsuarioEditor extends MecasoftEditor{
 		UsuarioEditorInput uei = (UsuarioEditorInput)input;
 		setShowExcluir(false);
 		
-		if(uei.getUsuario().getId() != null)
+		if(uei.getUsuario().getId() != null){
 			service.setUsuario(service.find(uei.getUsuario().getId()));
-		else
+			this.setPartName("Usuário: " + service.getUsuario().getFuncionario().getNomeFantasia());
+		}else
 			service.setUsuario(uei.getUsuario());
 		
 		setSite(site);

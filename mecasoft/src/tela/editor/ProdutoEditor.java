@@ -237,9 +237,10 @@ public class ProdutoEditor extends MecasoftEditor {
 		
 		setShowExcluir(false);
 		
-		if(pei.getProdutoServico().getId() != null)
+		if(pei.getProdutoServico().getId() != null){
 			service.setProdutoServico(service.find(pei.getProdutoServico().getId()));
-		else{
+			this.setPartName("Produto: " + service.getProdutoServico().getDescricao());
+		}else{
 			service.setProdutoServico(pei.getProdutoServico());
 			service.getProdutoServico().setTipo(ProdutoServico.TIPOPRODUTO);
 		}

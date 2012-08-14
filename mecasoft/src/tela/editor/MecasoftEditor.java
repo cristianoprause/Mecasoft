@@ -85,7 +85,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 			btnExcluir.dispose();
 
 	}
-
+	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 	}
