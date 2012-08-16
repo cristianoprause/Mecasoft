@@ -68,6 +68,11 @@
             id="tela.editor.ServicoEditor"
             name="Serviço">
       </editor>
+      <editor
+            class="tela.editor.StatusEditor"
+            id="tela.editor.StatusEditor"
+            name="Status">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -117,6 +122,11 @@
             icon="assents/servico/servico16.png"
             id="tela.view.ServicoView"
             name="Lista de serviços">
+      </view>
+      <view
+            class="tela.view.StatusView"
+            id="tela.view.StatusView"
+            name="Lista de status">
       </view>
    </extension>
    <extension
@@ -216,6 +226,15 @@
                <parameter
                      name="org.eclipse.ui.views.showView.viewId"
                      value="tela.view.ServicoView">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  id="mecasoft.menuStatus"
+                  label="Status">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.StatusView">
                </parameter>
             </command>
          </menu>

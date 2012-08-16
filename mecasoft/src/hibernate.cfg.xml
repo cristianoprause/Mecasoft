@@ -18,5 +18,6 @@
 		<mapping class="banco.modelo.Funcionario"/>
 		<mapping class="banco.modelo.Papel"/>
 		<mapping class="banco.modelo.Usuario"/>
+		<mapping class="banco.modelo.Status"/>
 	</session-factory>
 </hibernate-configuration>
