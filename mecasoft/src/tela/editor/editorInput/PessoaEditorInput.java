@@ -1,24 +1,24 @@
 package tela.editor.editorInput;
 
-import banco.modelo.Pessoa;
+import banco.modelo.Funcionario;
 
 public class PessoaEditorInput extends MecasoftEditorInput{
 
-	private Pessoa pessoa;
+	private Funcionario pessoa;
 	
 	public PessoaEditorInput() {
-		pessoa = new Pessoa();
+		pessoa = new Funcionario();
 	}
 	
-	public PessoaEditorInput(Pessoa pessoa){
+	public PessoaEditorInput(Funcionario pessoa){
 		this.pessoa = pessoa;
 	}
 
-	public Pessoa getPessoa() {
+	public Funcionario getPessoa() {
 		return pessoa;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
+	public void setPessoa(Funcionario pessoa) {
 		this.pessoa = pessoa;
 	}
 	

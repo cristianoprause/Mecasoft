@@ -3,6 +3,7 @@ package tela.view;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -26,7 +27,10 @@ import org.eclipse.wb.swt.ResourceManager;
 import tela.editor.editorInput.PessoaEditorInput;
 import tela.filter.PessoaFilter;
 import aplicacao.service.PessoaService;
+import banco.modelo.Funcionario;
 import banco.modelo.Pessoa;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 
 public class PessoaView extends ViewPart {
 
@@ -78,6 +82,21 @@ public class PessoaView extends ViewPart {
 		formToolkit.adapt(txtFiltro, true, true);
 		
 		tvPessoa = new TableViewer(frmListaDePessoas.getBody(), SWT.BORDER | SWT.FULL_SELECTION);
+		tvPessoa.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				try {
+					IStructuredSelection selecao = (IStructuredSelection)tvPessoa.getSelection();
+					
+					if(selecao.isEmpty())
+						return;
+					
+					Funcionario f = (Funcionario)selecao.getFirstElement();
+					getSite().getPage().openEditor(new PessoaEditorInput(f), "tela.editor.PessoaEditor");
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		table = tvPessoa.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);

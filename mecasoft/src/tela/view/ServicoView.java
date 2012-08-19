@@ -159,7 +159,7 @@ public class ServicoView extends ViewPart {
 			actionAtualizar = new Action("Atualizar") {
 				@Override
 				public void run() {
-					tvServico.setInput(service.findAllServicosAndStatus());
+					tvServico.setInput(service.findAllServicos());
 					tvServico.refresh();
 				}
 			};

@@ -180,7 +180,7 @@ public class ServicoEditor extends MecasoftEditor {
 				return ((ProdutoServico)element).getDescricao();
 			}
 		});
-		sid.setElements(service.findAllProdutosAndStatus().toArray());
+		sid.setElements(service.findAllProdutos().toArray());
 		
 		return (ProdutoServico) sid.getElementoSelecionado();
 	}

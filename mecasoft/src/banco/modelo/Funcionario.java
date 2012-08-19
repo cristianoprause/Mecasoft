@@ -11,9 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @PrimaryKeyJoinColumn(name="pessoa_id")
@@ -26,11 +23,9 @@ public class Funcionario extends Pessoa{
 	private static final long serialVersionUID = -8191945343575687545L;
 
 	@Column
-	@NotEmpty(message="Informe a serie da carteira de trabalho.")
-	private String serie;
+	private String serie = "";
 	
 	@Column(precision=14, scale=2)
-	@NotNull(message="Informe o salário.")
 	private BigDecimal salario;
 	
 	@Column
@@ -38,11 +33,9 @@ public class Funcionario extends Pessoa{
 	private Date dataUltimoPagto;
 	
 	@Column
-	@NotEmpty(message="Informe o número da carteira de trabalho.")
-	private String carteiraNum;
+	private String carteiraNum = "";
 	
 	@ManyToOne
-	@NotNull(message="Selecione o tipo de funcionário.")
 	private TipoFuncionario tipo;
 
 	public String getSerie() {

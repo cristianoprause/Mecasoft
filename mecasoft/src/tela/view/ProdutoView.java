@@ -176,7 +176,7 @@ public class ProdutoView extends ViewPart {
 			actionAtualizar = new Action("Atualizar") {
 				@Override
 				public void run() {
-					tvProduto.setInput(service.findAllProdutosAndStatus());
+					tvProduto.setInput(service.findAllProdutos());
 					tvProduto.refresh();
 				}
 				

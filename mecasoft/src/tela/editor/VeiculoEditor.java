@@ -33,16 +33,17 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.componentes.MecasoftText;
 import tela.dialog.SelecionarItemDialog;
 import tela.editor.editorInput.VeiculoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
+import aplicacao.service.FuncionarioService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.TipoVeiculoService;
 import aplicacao.service.VeiculoService;
 import banco.modelo.Pessoa;
 import banco.modelo.TipoVeiculo;
-import tela.componentes.MecasoftText;
 
 public class VeiculoEditor extends MecasoftEditor {
 
@@ -56,9 +57,11 @@ public class VeiculoEditor extends MecasoftEditor {
 	private List<TipoVeiculo> tipos;
 	
 	private VeiculoService service = new VeiculoService();
+	private FuncionarioService funcionarioService;
 	private ComboViewer cvTipo;
 	private Button btnAtivo;
 	private MecasoftText txtPlaca;
+	private Button btnSelecionarCliente;
 
 	public VeiculoEditor() {
 		tipos = new TipoVeiculoService().findAll();
@@ -137,8 +140,11 @@ public class VeiculoEditor extends MecasoftEditor {
 		txtCliente.setEnabled(false);
 		txtCliente.setEditable(false);
 		txtCliente.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		if(funcionarioService != null)
+			if(service.getVeiculo().getCliente().getNomeFantasia() != null)
+				txtCliente.setText(service.getVeiculo().getCliente().getNomeFantasia());
 		
-		Button btnSelecionarCliente = new Button(compositeConteudo, SWT.NONE);
+		btnSelecionarCliente = new Button(compositeConteudo, SWT.NONE);
 		btnSelecionarCliente.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -152,6 +158,8 @@ public class VeiculoEditor extends MecasoftEditor {
 		btnSelecionarCliente.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnSelecionarCliente.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnSelecionarCliente.setText("Selecionar");
+		if(funcionarioService != null)
+			btnSelecionarCliente.setEnabled(false);
 		
 		initDataBindings();
 		ativarDesativarComponentes();
@@ -167,7 +175,7 @@ public class VeiculoEditor extends MecasoftEditor {
 				
 				if(service.getVeiculo().getTipo().getHodometro()){
 					if(service.getVeiculo().getPlaca() == null){
-						setErroMessage("Placa inválida.");
+						setErroMessage("Informe a placa.");
 						return;
 					}
 					
@@ -184,7 +192,11 @@ public class VeiculoEditor extends MecasoftEditor {
 				
 			}
 			
-			service.saveOrUpdate();
+			if(funcionarioService != null)
+				funcionarioService.getFuncionario().getListaVeiculo().add(service.getVeiculo());
+			else
+				service.saveOrUpdate();
+			
 			openInformation("Veículo cadastrado com sucesso!");
 			closeThisEditor();
 		} catch (ValidationException e) {
@@ -203,9 +215,14 @@ public class VeiculoEditor extends MecasoftEditor {
 		
 		if(vei.getVeiculo().getId() == null){
 			service.setVeiculo(vei.getVeiculo());
-			this.setPartName("Veículo: " + service.getVeiculo().getModelo());
-		}else
+		}else{
 			service.setVeiculo(service.find(vei.getVeiculo().getId()));
+			this.setPartName("Veículo: " + service.getVeiculo().getModelo());
+		}
+		
+		funcionarioService = vei.getFuncionarioService();
+		if(vei.getFuncionarioService() != null)
+			service.getVeiculo().setCliente((Pessoa)funcionarioService.getFuncionario());
 		
 		setShowExcluir(false);
 		

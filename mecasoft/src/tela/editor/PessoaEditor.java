@@ -1,22 +1,66 @@
 package tela.editor;
 
+import static aplicacao.helper.MessageHelper.openInformation;
+import static aplicacao.helper.MessageHelper.openQuestion;
+import static aplicacao.helper.ValidatorHelper.validar;
+
+import java.util.List;
+
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.wb.swt.ResourceManager;
+
+import tela.dialog.SelecionarItemDialog;
+import tela.editingSupport.ForneceProdutoEditingSupport;
+import tela.editor.editorInput.PessoaEditorInput;
+import tela.editor.editorInput.VeiculoEditorInput;
+import aplicacao.exception.ValidationException;
+import aplicacao.helper.FormatterHelper;
+import aplicacao.helper.LayoutHelper;
+import aplicacao.service.FuncionarioService;
+import aplicacao.service.PessoaService;
+import aplicacao.service.ProdutoServicoService;
+import aplicacao.service.TipoFuncionarioService;
+import banco.modelo.ForneceProduto;
+import banco.modelo.Funcionario;
+import banco.modelo.Pessoa;
+import banco.modelo.ProdutoServico;
+import banco.modelo.TipoFuncionario;
+import banco.modelo.Veiculo;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
+
 
 public class PessoaEditor extends MecasoftEditor {
 
@@ -39,8 +83,25 @@ public class PessoaEditor extends MecasoftEditor {
 	private Text txtComplemento;
 	private Table tableVeiculos;
 	private Table tableProdutos;
+	private Button btnAdicionarVeiculo;
+	private Button btnDesativarVeiculo;
+	private Button btnAdicionarProduto;
+	private Button btnRemoverProduto;
+	private ComboViewer cvCargo; 
+	private Button btnFuncionrio;
+	private Button btnAtivo;
+	private Button btnCliente;
+	private Button btnFornecedor;
+	
+	private FuncionarioService funcionarioService = new FuncionarioService();
+	private PessoaService pessoaService = new PessoaService();
+	private List<TipoFuncionario> tiposFuncionarios;
+	private TableViewer tvVeiculo;
+	private TableViewer tvProduto;
+	private Combo cbCargo;
 
 	public PessoaEditor() {
+		tiposFuncionarios = new TipoFuncionarioService().findAll();
 	}
 
 	@Override
@@ -53,19 +114,19 @@ public class PessoaEditor extends MecasoftEditor {
 		txtNomeFantasia = new Text(compositeConteudo, SWT.BORDER);
 		txtNomeFantasia.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
 		
-		Button btnAtivo = new Button(compositeConteudo, SWT.CHECK);
+		btnAtivo = new Button(compositeConteudo, SWT.CHECK);
 		btnAtivo.setText("Ativo");
 		
 		Label lblTipo = new Label(compositeConteudo, SWT.NONE);
 		lblTipo.setText("Tipo:");
 		
-		Button btnCliente = new Button(compositeConteudo, SWT.CHECK);
+		btnCliente = new Button(compositeConteudo, SWT.CHECK);
 		btnCliente.setText("Cliente");
 		
-		Button btnFornecedor = new Button(compositeConteudo, SWT.CHECK);
+		btnFornecedor = new Button(compositeConteudo, SWT.CHECK);
 		btnFornecedor.setText("Fornecedor");
 		
-		Button btnFuncionrio = new Button(compositeConteudo, SWT.CHECK);
+		btnFuncionrio = new Button(compositeConteudo, SWT.CHECK);
 		btnFuncionrio.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnFuncionrio.setText("Funcion\u00E1rio");
 		new Label(compositeConteudo, SWT.NONE);
@@ -111,8 +172,8 @@ public class PessoaEditor extends MecasoftEditor {
 		Label lblCargo = new Label(compositeConteudo, SWT.NONE);
 		lblCargo.setText("Cargo:");
 		
-		ComboViewer cvCargo = new ComboViewer(compositeConteudo, SWT.READ_ONLY);
-		Combo cbCargo = cvCargo.getCombo();
+		cvCargo = new ComboViewer(compositeConteudo, SWT.READ_ONLY);
+		cbCargo = cvCargo.getCombo();
 		cbCargo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblFoneFax = new Label(compositeConteudo, SWT.NONE);
@@ -176,95 +237,423 @@ public class PessoaEditor extends MecasoftEditor {
 		lblVeculos.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		lblVeculos.setText("Ve\u00EDculos:");
 		
-		TableViewer tvVeiculo = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
+		tvVeiculo = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
 		tableVeiculos = tvVeiculo.getTable();
+		tableVeiculos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				IStructuredSelection selecao = (IStructuredSelection)tvVeiculo.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				Veiculo v = (Veiculo)selecao.getFirstElement();
+				
+				if(v.getAtivo()){
+					btnDesativarVeiculo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/car/lessCar16.png"));
+					btnDesativarVeiculo.setText("Desativar");
+				}else{
+					btnDesativarVeiculo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/car/plusCar16.png"));
+					btnDesativarVeiculo.setText("Ativar");
+				}
+			}
+		});
 		tableVeiculos.setLinesVisible(true);
 		tableVeiculos.setHeaderVisible(true);
 		GridData gd_tableVeiculos = new GridData(SWT.FILL, SWT.FILL, true, false, 5, 2);
 		gd_tableVeiculos.heightHint = 92;
+		tvVeiculo.setContentProvider(ArrayContentProvider.getInstance());
 		tableVeiculos.setLayoutData(gd_tableVeiculos);
 		
 		TableViewerColumn tvcModelo = new TableViewerColumn(tvVeiculo, SWT.NONE);
+		tvcModelo.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((Veiculo)element).getModelo();
+			}
+		});
 		TableColumn tblclmnModelo = tvcModelo.getColumn();
 		tblclmnModelo.setWidth(100);
 		tblclmnModelo.setText("Modelo");
 		
 		TableViewerColumn tvcPlaca = new TableViewerColumn(tvVeiculo, SWT.NONE);
+		tvcPlaca.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((Veiculo)element).getPlaca();
+			}
+		});
 		TableColumn tblclmnPlaca = tvcPlaca.getColumn();
 		tblclmnPlaca.setWidth(100);
 		tblclmnPlaca.setText("Placa");
 		
 		TableViewerColumn tvcStatus = new TableViewerColumn(tvVeiculo, SWT.NONE);
+		tvcStatus.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				Veiculo v = (Veiculo)element;
+				
+				if(v.getAtivo())
+					return "Ativo";
+				else
+					return "Desativado";
+			}
+		});
 		TableColumn tblclmnStatus = tvcStatus.getColumn();
 		tblclmnStatus.setWidth(100);
 		tblclmnStatus.setText("Status");
 		
-		Button btnAdicionarVeiculo = new Button(compositeConteudo, SWT.NONE);
+		btnAdicionarVeiculo = new Button(compositeConteudo, SWT.NONE);
+		btnAdicionarVeiculo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				try {
+					getSite().getPage().openEditor(new VeiculoEditorInput(funcionarioService), VeiculoEditor.ID);
+				} catch (PartInitException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		btnAdicionarVeiculo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/car/plusCar16.png"));
 		btnAdicionarVeiculo.setText("Adicionar");
 		new Label(compositeConteudo, SWT.NONE);
 		
-		Button btnRemoverVeiculo = new Button(compositeConteudo, SWT.NONE);
-		btnRemoverVeiculo.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		btnRemoverVeiculo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/car/lessCar16.png"));
-		btnRemoverVeiculo.setText("Remover");
+		btnDesativarVeiculo = new Button(compositeConteudo, SWT.NONE);
+		btnDesativarVeiculo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection selecao = (IStructuredSelection)tvVeiculo.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				Veiculo v = (Veiculo)selecao.getFirstElement();
+				v.setAtivo(!v.getAtivo());
+				
+				if(v.getAtivo()){
+					btnDesativarVeiculo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/car/lessCar16.png"));
+					btnDesativarVeiculo.setText("Desativar");
+				}else{
+					btnDesativarVeiculo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/car/plusCar16.png"));
+					btnDesativarVeiculo.setText("Ativar");
+				}
+				
+				tvVeiculo.refresh();
+			}
+		});
+		btnDesativarVeiculo.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		btnDesativarVeiculo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/car/lessCar16.png"));
+		btnDesativarVeiculo.setText("Desativar");
 		
 		Label lblFornece = new Label(compositeConteudo, SWT.NONE);
 		lblFornece.setText("Fornece:");
 		
-		TableViewer tvProduto = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
+		tvProduto = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
 		tableProdutos = tvProduto.getTable();
 		tableProdutos.setLinesVisible(true);
 		tableProdutos.setHeaderVisible(true);
 		GridData gd_tableProdutos = new GridData(SWT.FILL, SWT.FILL, true, true, 5, 2);
 		gd_tableProdutos.heightHint = 92;
+		tvProduto.setContentProvider(ArrayContentProvider.getInstance());
 		tableProdutos.setLayoutData(gd_tableProdutos);
 		
 		TableViewerColumn tvcDescricao = new TableViewerColumn(tvProduto, SWT.NONE);
+		tvcDescricao.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((ForneceProduto)element).getId().getProduto().getDescricao();
+			}
+		});
 		TableColumn tblclmnDescricao = tvcDescricao.getColumn();
 		tblclmnDescricao.setWidth(193);
 		tblclmnDescricao.setText("Descri\u00E7\u00E3o");
 		
 		TableViewerColumn tvcValorUnitario = new TableViewerColumn(tvProduto, SWT.NONE);
+		tvcValorUnitario.setEditingSupport(new ForneceProdutoEditingSupport(tvProduto));
+		tvcValorUnitario.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				try{
+					return FormatterHelper.DECIMALFORMAT.format(((ForneceProduto)element).getValorUnitario());
+				}catch(Exception e){
+					return "";
+				}
+			}
+		});
 		TableColumn tblclmnValorUnitario = tvcValorUnitario.getColumn();
 		tblclmnValorUnitario.setWidth(100);
 		tblclmnValorUnitario.setText("Valor unit\u00E1rio");
 		
-		Button btnAdicionarProduto = new Button(compositeConteudo, SWT.NONE);
+		btnAdicionarProduto = new Button(compositeConteudo, SWT.NONE);
+		btnAdicionarProduto.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ProdutoServico ps = selecionarProduto();
+				if(ps != null){
+					ForneceProduto fp = new ForneceProduto();
+					fp.getId().setPessoa(funcionarioService.getFuncionario());
+					fp.getId().setProduto(ps);
+					funcionarioService.getFuncionario().getListaProduto().add(fp);
+					tvProduto.refresh();
+				}
+			}
+		});
 		btnAdicionarProduto.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/product/productAdd16.png"));
 		btnAdicionarProduto.setText("Adicionar");
 		new Label(compositeConteudo, SWT.NONE);
 		
-		Button btnRemoverProduto = new Button(compositeConteudo, SWT.NONE);
+		btnRemoverProduto = new Button(compositeConteudo, SWT.NONE);
+		btnRemoverProduto.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection selecao = (IStructuredSelection)tvProduto.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				if(openQuestion("Deseja realmente remover este produto da lista?")){
+					ForneceProduto fp = (ForneceProduto)selecao.getFirstElement();
+					funcionarioService.getFuncionario().getListaProduto().remove(fp);
+					tvProduto.refresh();
+				}
+			}
+		});
 		btnRemoverProduto.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/product/productRemove16.png"));
 		btnRemoverProduto.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnRemoverProduto.setText("Remover");
+		
+		initDataBindings();
 	}
 
 	@Override
 	public void salvarRegistro() {
-		// TODO Auto-generated method stub
-		
+		try {
+			validar(funcionarioService.getFuncionario());
+			
+			if(funcionarioService.getFuncionario().getTipoFuncionario()){
+				
+				if(funcionarioService.getFuncionario().getCarteiraNum().isEmpty()){
+					setErroMessage("Informe o número da carteira de trabalho.");
+					return;
+				}
+				
+				if(funcionarioService.getFuncionario().getSerie().isEmpty()){
+					setErroMessage("informe a série.");
+					return;
+				}
+				
+				if(funcionarioService.getFuncionario().getSalario() == null){
+					setErroMessage("Informe o salário.");
+					return;
+				}
+				
+				if(funcionarioService.getFuncionario().getTipo() == null){
+					setErroMessage("Selecione o cargo.");
+					return;
+				}
+				
+				funcionarioService.saveOrUpdate();
+				
+			}else{
+				pessoaService.setPessoa((Pessoa)funcionarioService.getFuncionario());
+				pessoaService.saveOrUpdate();
+			}
+			
+			openInformation("Pessoa cadastrada com sucesso!");
+			closeThisEditor();
+			
+		} catch (ValidationException e) {
+			setErroMessage(e.getMessage());
+		}
 	}
 
 	@Override
-	public void excluirRegistro() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void excluirRegistro() {}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
+		setShowExcluir(false);
+		
+		PessoaEditorInput pei = (PessoaEditorInput)input;
+		
+		if(pei.getPessoa().getTipoFuncionario()){
+			funcionarioService.setFuncionario(funcionarioService.find(pei.getPessoa().getId()));
+		}else if(pei.getPessoa().getId() != null){
+			funcionarioService.setFuncionario((Funcionario)pessoaService.find(pei.getPessoa().getId()));
+		}else{
+			funcionarioService.setFuncionario(pei.getPessoa());
+		}
+		
 		setSite(site);
 		setInput(input);
 	}
-
-	@Override
-	public boolean isDirty() {
-		// TODO Auto-generated method stub
-		return false;
+	
+	private ProdutoServico selecionarProduto(){
+		SelecionarItemDialog sid = new SelecionarItemDialog(LayoutHelper.getActiveShell(), new LabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((ProdutoServico)element).getDescricao();
+			}
+		});
+		sid.setElements(new ProdutoServicoService().findAllProdutos().toArray());
+		
+		return (ProdutoServico) sid.getElementoSelecionado();
 	}
 
-
+	@Override
+	public void setFocus() {
+		tvProduto.refresh();
+		tvVeiculo.refresh();
+	}
+	
+	@Override
+	public boolean isDirty() {
+		return funcionarioService.isDirty();
+	}
+	protected DataBindingContext initDataBindings() {
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableValue txtNomeFantasiaObserveTextObserveWidget = SWTObservables.observeText(txtNomeFantasia, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioNomeFantasiaObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "nomeFantasia");
+		bindingContext.bindValue(txtNomeFantasiaObserveTextObserveWidget, funcionarioServicegetFuncionarioNomeFantasiaObserveValue, null, null);
+		//
+		IObservableValue btnAtivoObserveSelectionObserveWidget = SWTObservables.observeSelection(btnAtivo);
+		IObservableValue funcionarioServicegetFuncionarioAtivoObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "ativo");
+		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, funcionarioServicegetFuncionarioAtivoObserveValue, null, null);
+		//
+		IObservableValue btnClienteObserveSelectionObserveWidget = SWTObservables.observeSelection(btnCliente);
+		IObservableValue funcionarioServicegetFuncionarioTipoClienteObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "tipoCliente");
+		bindingContext.bindValue(btnClienteObserveSelectionObserveWidget, funcionarioServicegetFuncionarioTipoClienteObserveValue, null, null);
+		//
+		IObservableValue btnFornecedorObserveSelectionObserveWidget = SWTObservables.observeSelection(btnFornecedor);
+		IObservableValue funcionarioServicegetFuncionarioTipoFornecedorObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "tipoFornecedor");
+		bindingContext.bindValue(btnFornecedorObserveSelectionObserveWidget, funcionarioServicegetFuncionarioTipoFornecedorObserveValue, null, null);
+		//
+		IObservableValue btnFuncionrioObserveSelectionObserveWidget = SWTObservables.observeSelection(btnFuncionrio);
+		IObservableValue funcionarioServicegetFuncionarioTipoFuncionarioObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "tipoFuncionario");
+		bindingContext.bindValue(btnFuncionrioObserveSelectionObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
+		//
+		IObservableValue txtRazaoSocialObserveTextObserveWidget = SWTObservables.observeText(txtRazaoSocial, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioRazaoSocialObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "razaoSocial");
+		bindingContext.bindValue(txtRazaoSocialObserveTextObserveWidget, funcionarioServicegetFuncionarioRazaoSocialObserveValue, null, null);
+		//
+		IObservableValue txtCpfCnpjObserveTextObserveWidget = SWTObservables.observeText(txtCpfCnpj, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioCpfCnpjObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "cpfCnpj");
+		bindingContext.bindValue(txtCpfCnpjObserveTextObserveWidget, funcionarioServicegetFuncionarioCpfCnpjObserveValue, null, null);
+		//
+		IObservableValue txtRgInscrEstObserveTextObserveWidget = SWTObservables.observeText(txtRgInscrEst, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioRgInscricaoEstObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "rgInscricaoEst");
+		bindingContext.bindValue(txtRgInscrEstObserveTextObserveWidget, funcionarioServicegetFuncionarioRgInscricaoEstObserveValue, null, null);
+		//
+		IObservableValue txtCartTrabNumObserveTextObserveWidget = SWTObservables.observeText(txtCartTrabNum, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioCarteiraNumObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "carteiraNum");
+		bindingContext.bindValue(txtCartTrabNumObserveTextObserveWidget, funcionarioServicegetFuncionarioCarteiraNumObserveValue, null, null);
+		//
+		IObservableValue txtSerieObserveTextObserveWidget = SWTObservables.observeText(txtSerie, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioSerieObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "serie");
+		bindingContext.bindValue(txtSerieObserveTextObserveWidget, funcionarioServicegetFuncionarioSerieObserveValue, null, null);
+		//
+		IObservableValue txtSalarioObserveTextObserveWidget = SWTObservables.observeText(txtSalario, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioSalarioObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "salario");
+		bindingContext.bindValue(txtSalarioObserveTextObserveWidget, funcionarioServicegetFuncionarioSalarioObserveValue, null, null);
+		//
+		IObservableValue txtFoneFaxObserveTextObserveWidget = SWTObservables.observeText(txtFoneFax, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioFoneFaxObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "foneFax");
+		bindingContext.bindValue(txtFoneFaxObserveTextObserveWidget, funcionarioServicegetFuncionarioFoneFaxObserveValue, null, null);
+		//
+		IObservableValue txtCelularObserveTextObserveWidget = SWTObservables.observeText(txtCelular, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioCelularObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "celular");
+		bindingContext.bindValue(txtCelularObserveTextObserveWidget, funcionarioServicegetFuncionarioCelularObserveValue, null, null);
+		//
+		IObservableValue txtEmailObserveTextObserveWidget = SWTObservables.observeText(txtEmail, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioEmailObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "email");
+		bindingContext.bindValue(txtEmailObserveTextObserveWidget, funcionarioServicegetFuncionarioEmailObserveValue, null, null);
+		//
+		IObservableValue txtCepObserveTextObserveWidget = SWTObservables.observeText(txtCep, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioCepObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "cep");
+		bindingContext.bindValue(txtCepObserveTextObserveWidget, funcionarioServicegetFuncionarioCepObserveValue, null, null);
+		//
+		IObservableValue txtCidadeObserveTextObserveWidget = SWTObservables.observeText(txtCidade, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioCidadeObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "cidade");
+		bindingContext.bindValue(txtCidadeObserveTextObserveWidget, funcionarioServicegetFuncionarioCidadeObserveValue, null, null);
+		//
+		IObservableValue txtBairroObserveTextObserveWidget = SWTObservables.observeText(txtBairro, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioBairroObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "bairro");
+		bindingContext.bindValue(txtBairroObserveTextObserveWidget, funcionarioServicegetFuncionarioBairroObserveValue, null, null);
+		//
+		IObservableValue txtRuaObserveTextObserveWidget = SWTObservables.observeText(txtRua, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioRuaObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "rua");
+		bindingContext.bindValue(txtRuaObserveTextObserveWidget, funcionarioServicegetFuncionarioRuaObserveValue, null, null);
+		//
+		IObservableValue txtNumeroObserveTextObserveWidget = SWTObservables.observeText(txtNumero, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioNumeroObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "numero");
+		bindingContext.bindValue(txtNumeroObserveTextObserveWidget, funcionarioServicegetFuncionarioNumeroObserveValue, null, null);
+		//
+		IObservableValue txtComplementoObserveTextObserveWidget = SWTObservables.observeText(txtComplemento, SWT.Modify);
+		IObservableValue funcionarioServicegetFuncionarioComplementoObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "complemento");
+		bindingContext.bindValue(txtComplementoObserveTextObserveWidget, funcionarioServicegetFuncionarioComplementoObserveValue, null, null);
+		//
+		IObservableValue btnAdicionarProdutoObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnAdicionarProduto);
+		bindingContext.bindValue(btnAdicionarProdutoObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFornecedorObserveValue, null, null);
+		//
+		IObservableValue btnRemoverProdutoObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnRemoverProduto);
+		bindingContext.bindValue(btnRemoverProdutoObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFornecedorObserveValue, null, null);
+		//
+		IObservableValue btnAdicionarVeiculoObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnAdicionarVeiculo);
+		bindingContext.bindValue(btnAdicionarVeiculoObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoClienteObserveValue, null, null);
+		//
+		IObservableValue btnRemoverVeiculoObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnDesativarVeiculo);
+		bindingContext.bindValue(btnRemoverVeiculoObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoClienteObserveValue, null, null);
+		//
+		IObservableValue txtSerieObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtSerie);
+		bindingContext.bindValue(txtSerieObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
+		//
+		IObservableValue cbCargoObserveEnabledObserveWidget = SWTObservables.observeEnabled(cbCargo);
+		bindingContext.bindValue(cbCargoObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
+		//
+		IObservableValue txtCartTrabNumObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtCartTrabNum);
+		bindingContext.bindValue(txtCartTrabNumObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
+		//
+		IObservableValue txtSalarioObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtSalario);
+		bindingContext.bindValue(txtSalarioObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
+		//
+		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ForneceProduto.class, new String[]{"id.produto.descricao", "valorUnitario"});
+//		tvProduto.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+		tvProduto.setContentProvider(listContentProvider_1);
+		//
+		IObservableList funcionarioServicegetFuncionarioListaProdutoObserveList = PojoObservables.observeList(Realm.getDefault(), funcionarioService.getFuncionario(), "listaProduto");
+		tvProduto.setInput(funcionarioServicegetFuncionarioListaProdutoObserveList);
+		//
+		ObservableListContentProvider listContentProvider_2 = new ObservableListContentProvider();
+//		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_2.getKnownElements(), Veiculo.class, new String[]{"modelo", "placa"});
+//		tvVeiculo.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
+		tvVeiculo.setContentProvider(listContentProvider_2);
+		//
+		IObservableList funcionarioServicegetFuncionarioListaVeiculoObserveList = PojoObservables.observeList(Realm.getDefault(), funcionarioService.getFuncionario(), "listaVeiculo");
+		tvVeiculo.setInput(funcionarioServicegetFuncionarioListaVeiculoObserveList);
+		//
+		IObservableValue tableVeiculosObserveEnabledObserveWidget = SWTObservables.observeEnabled(tableVeiculos);
+		bindingContext.bindValue(tableVeiculosObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoClienteObserveValue, null, null);
+		//
+		IObservableValue tableProdutosObserveEnabledObserveWidget = SWTObservables.observeEnabled(tableProdutos);
+		bindingContext.bindValue(tableProdutosObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFornecedorObserveValue, null, null);
+		//
+		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
+		IObservableMap observeMap = PojoObservables.observeMap(listContentProvider.getKnownElements(), TipoFuncionario.class, "nome");
+		cvCargo.setLabelProvider(new ObservableMapLabelProvider(observeMap));
+		cvCargo.setContentProvider(listContentProvider);
+		//
+		WritableList writableList = new WritableList(tiposFuncionarios, TipoFuncionario.class);
+		cvCargo.setInput(writableList);
+		//
+		IObservableValue cvCargoObserveSingleSelection = ViewersObservables.observeSingleSelection(cvCargo);
+		IObservableValue funcionarioServicegetFuncionarioTipoObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "tipo");
+		bindingContext.bindValue(cvCargoObserveSingleSelection, funcionarioServicegetFuncionarioTipoObserveValue, null, null);
+		//
+		return bindingContext;
+	}
 }

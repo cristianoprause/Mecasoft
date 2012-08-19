@@ -1,6 +1,7 @@
 package banco.modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -89,10 +92,12 @@ public class Pessoa implements Serializable{
 	private boolean tipoFuncionario;
 	
 	@OneToMany(mappedBy="cliente")
-	private List<Veiculo> listaVeiculo;
+	@Cascade(value={CascadeType.ALL})
+	private List<Veiculo> listaVeiculo = new ArrayList<Veiculo>();
 	
 	@OneToMany(mappedBy="id.pessoa")
-	private List<ForneceProduto> listaProduto;
+//	@Cascade(value= {CascadeType.ALL})
+	private List<ForneceProduto> listaProduto = new ArrayList<ForneceProduto>();
 
 	public Long getId() {
 		return id;

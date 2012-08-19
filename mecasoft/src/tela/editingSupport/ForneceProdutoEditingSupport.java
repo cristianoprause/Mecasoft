@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 
+import aplicacao.helper.FormatterHelper;
 import banco.modelo.ForneceProduto;
 
 public class ForneceProdutoEditingSupport extends EditingSupport{
@@ -35,7 +36,7 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 		ForneceProduto fp = (ForneceProduto)element;
 
 		if(fp.getValorUnitario() != null)
-			return fp.getValorUnitario().toString();
+			return FormatterHelper.DECIMALFORMAT.format(fp.getValorUnitario());
 		else
 			return "";
 	}
@@ -45,8 +46,10 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 		String valor = (String) value;
 		
 		if(!valor.isEmpty()){
-			((ForneceProduto)element).setValorUnitario(new BigDecimal(valor));
-			viewer.refresh();
+			try{
+				((ForneceProduto)element).setValorUnitario(new BigDecimal(valor.replaceAll(",", ".")));
+				viewer.refresh();
+			}catch(Exception e){}
 		}
 	}
 
