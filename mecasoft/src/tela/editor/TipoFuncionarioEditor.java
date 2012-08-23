@@ -23,9 +23,9 @@ import org.eclipse.ui.PartInitException;
 import tela.componentes.MecasoftText;
 import tela.editor.editorInput.TipoFuncionarioEditorInput;
 import aplicacao.exception.ValidationException;
-import aplicacao.service.FuncionarioService;
+import aplicacao.service.PessoaService;
 import aplicacao.service.TipoFuncionarioService;
-import banco.modelo.Funcionario;
+import banco.modelo.Pessoa;
 
 public class TipoFuncionarioEditor extends MecasoftEditor {
 
@@ -51,7 +51,7 @@ public class TipoFuncionarioEditor extends MecasoftEditor {
 
 	@Override
 	public void excluirRegistro() {
-		List<Funcionario> listaFuncionarios = new FuncionarioService().findAllByTipo(service.getTipo());
+		List<Pessoa> listaFuncionarios = new PessoaService().findAllByTipoFuncionario(service.getTipo());
 		if(listaFuncionarios.size() != 0){
 			openError("Não é possível excluir, pois existem funcionários utilizando este tipo.");
 			return;

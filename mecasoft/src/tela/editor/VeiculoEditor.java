@@ -38,7 +38,6 @@ import tela.dialog.SelecionarItemDialog;
 import tela.editor.editorInput.VeiculoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
-import aplicacao.service.FuncionarioService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.TipoVeiculoService;
 import aplicacao.service.VeiculoService;
@@ -57,7 +56,7 @@ public class VeiculoEditor extends MecasoftEditor {
 	private List<TipoVeiculo> tipos;
 	
 	private VeiculoService service = new VeiculoService();
-	private FuncionarioService funcionarioService;
+	private PessoaService pessoaService;
 	private ComboViewer cvTipo;
 	private Button btnAtivo;
 	private MecasoftText txtPlaca;
@@ -140,7 +139,7 @@ public class VeiculoEditor extends MecasoftEditor {
 		txtCliente.setEnabled(false);
 		txtCliente.setEditable(false);
 		txtCliente.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if(funcionarioService != null)
+		if(pessoaService != null)
 			if(service.getVeiculo().getCliente().getNomeFantasia() != null)
 				txtCliente.setText(service.getVeiculo().getCliente().getNomeFantasia());
 		
@@ -158,7 +157,7 @@ public class VeiculoEditor extends MecasoftEditor {
 		btnSelecionarCliente.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnSelecionarCliente.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnSelecionarCliente.setText("Selecionar");
-		if(funcionarioService != null)
+		if(pessoaService != null)
 			btnSelecionarCliente.setEnabled(false);
 		
 		initDataBindings();
@@ -192,8 +191,8 @@ public class VeiculoEditor extends MecasoftEditor {
 				
 			}
 			
-			if(funcionarioService != null)
-				funcionarioService.getFuncionario().getListaVeiculo().add(service.getVeiculo());
+			if(pessoaService != null)
+				pessoaService.getPessoa().getListaVeiculo().add(service.getVeiculo());
 			else
 				service.saveOrUpdate();
 			
@@ -220,9 +219,9 @@ public class VeiculoEditor extends MecasoftEditor {
 			this.setPartName("Veículo: " + service.getVeiculo().getModelo());
 		}
 		
-		funcionarioService = vei.getFuncionarioService();
+		pessoaService = vei.getFuncionarioService();
 		if(vei.getFuncionarioService() != null)
-			service.getVeiculo().setCliente((Pessoa)funcionarioService.getFuncionario());
+			service.getVeiculo().setCliente((Pessoa)pessoaService.getPessoa());
 		
 		setShowExcluir(false);
 		

@@ -16,6 +16,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -49,17 +50,13 @@ import tela.editor.editorInput.VeiculoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
-import aplicacao.service.FuncionarioService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.TipoFuncionarioService;
 import banco.modelo.ForneceProduto;
-import banco.modelo.Funcionario;
-import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
 import banco.modelo.TipoFuncionario;
 import banco.modelo.Veiculo;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
 
 
 public class PessoaEditor extends MecasoftEditor {
@@ -93,8 +90,7 @@ public class PessoaEditor extends MecasoftEditor {
 	private Button btnCliente;
 	private Button btnFornecedor;
 	
-	private FuncionarioService funcionarioService = new FuncionarioService();
-	private PessoaService pessoaService = new PessoaService();
+	private PessoaService service = new PessoaService();
 	private List<TipoFuncionario> tiposFuncionarios;
 	private TableViewer tvVeiculo;
 	private TableViewer tvProduto;
@@ -309,7 +305,7 @@ public class PessoaEditor extends MecasoftEditor {
 			public void widgetSelected(SelectionEvent e) {
 				
 				try {
-					getSite().getPage().openEditor(new VeiculoEditorInput(funcionarioService), VeiculoEditor.ID);
+					getSite().getPage().openEditor(new VeiculoEditorInput(service), VeiculoEditor.ID);
 				} catch (PartInitException e1) {
 					e1.printStackTrace();
 				}
@@ -393,9 +389,9 @@ public class PessoaEditor extends MecasoftEditor {
 				ProdutoServico ps = selecionarProduto();
 				if(ps != null){
 					ForneceProduto fp = new ForneceProduto();
-					fp.getId().setPessoa(funcionarioService.getFuncionario());
+					fp.getId().setPessoa(service.getPessoa());
 					fp.getId().setProduto(ps);
-					funcionarioService.getFuncionario().getListaProduto().add(fp);
+					service.getPessoa().getListaProduto().add(fp);
 					tvProduto.refresh();
 				}
 			}
@@ -415,7 +411,7 @@ public class PessoaEditor extends MecasoftEditor {
 				
 				if(openQuestion("Deseja realmente remover este produto da lista?")){
 					ForneceProduto fp = (ForneceProduto)selecao.getFirstElement();
-					funcionarioService.getFuncionario().getListaProduto().remove(fp);
+					service.getPessoa().getListaProduto().remove(fp);
 					tvProduto.refresh();
 				}
 			}
@@ -430,36 +426,34 @@ public class PessoaEditor extends MecasoftEditor {
 	@Override
 	public void salvarRegistro() {
 		try {
-			validar(funcionarioService.getFuncionario());
+			validar(service.getPessoa());
 			
-			if(funcionarioService.getFuncionario().getTipoFuncionario()){
+			if(service.getPessoa().getTipoFuncionario()){
 				
-				if(funcionarioService.getFuncionario().getCarteiraNum().isEmpty()){
+				if(service.getPessoa().getCarteiraNum().isEmpty()){
 					setErroMessage("Informe o número da carteira de trabalho.");
 					return;
 				}
 				
-				if(funcionarioService.getFuncionario().getSerie().isEmpty()){
+				if(service.getPessoa().getSerie().isEmpty()){
 					setErroMessage("informe a série.");
 					return;
 				}
 				
-				if(funcionarioService.getFuncionario().getSalario() == null){
+				if(service.getPessoa().getSalario() == null){
 					setErroMessage("Informe o salário.");
 					return;
 				}
 				
-				if(funcionarioService.getFuncionario().getTipo() == null){
+				if(service.getPessoa().getTipo() == null){
 					setErroMessage("Selecione o cargo.");
 					return;
 				}
 				
-				funcionarioService.saveOrUpdate();
+				service.saveOrUpdate();
 				
-			}else{
-				pessoaService.setPessoa((Pessoa)funcionarioService.getFuncionario());
-				pessoaService.saveOrUpdate();
-			}
+			}else
+				service.saveOrUpdate();
 			
 			openInformation("Pessoa cadastrada com sucesso!");
 			closeThisEditor();
@@ -479,13 +473,10 @@ public class PessoaEditor extends MecasoftEditor {
 		
 		PessoaEditorInput pei = (PessoaEditorInput)input;
 		
-		if(pei.getPessoa().getTipoFuncionario()){
-			funcionarioService.setFuncionario(funcionarioService.find(pei.getPessoa().getId()));
-		}else if(pei.getPessoa().getId() != null){
-			funcionarioService.setFuncionario((Funcionario)pessoaService.find(pei.getPessoa().getId()));
-		}else{
-			funcionarioService.setFuncionario(pei.getPessoa());
-		}
+		if(pei.getPessoa().getId() != null)
+			service.setPessoa(service.find(pei.getPessoa().getId()));
+		else
+			service.setPessoa(pei.getPessoa());
 		
 		setSite(site);
 		setInput(input);
@@ -511,89 +502,89 @@ public class PessoaEditor extends MecasoftEditor {
 	
 	@Override
 	public boolean isDirty() {
-		return funcionarioService.isDirty();
+		return service.isDirty();
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
 		IObservableValue txtNomeFantasiaObserveTextObserveWidget = SWTObservables.observeText(txtNomeFantasia, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioNomeFantasiaObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "nomeFantasia");
+		IObservableValue funcionarioServicegetFuncionarioNomeFantasiaObserveValue = PojoObservables.observeValue(service.getPessoa(), "nomeFantasia");
 		bindingContext.bindValue(txtNomeFantasiaObserveTextObserveWidget, funcionarioServicegetFuncionarioNomeFantasiaObserveValue, null, null);
 		//
 		IObservableValue btnAtivoObserveSelectionObserveWidget = SWTObservables.observeSelection(btnAtivo);
-		IObservableValue funcionarioServicegetFuncionarioAtivoObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "ativo");
+		IObservableValue funcionarioServicegetFuncionarioAtivoObserveValue = PojoObservables.observeValue(service.getPessoa(), "ativo");
 		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, funcionarioServicegetFuncionarioAtivoObserveValue, null, null);
 		//
 		IObservableValue btnClienteObserveSelectionObserveWidget = SWTObservables.observeSelection(btnCliente);
-		IObservableValue funcionarioServicegetFuncionarioTipoClienteObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "tipoCliente");
+		IObservableValue funcionarioServicegetFuncionarioTipoClienteObserveValue = PojoObservables.observeValue(service.getPessoa(), "tipoCliente");
 		bindingContext.bindValue(btnClienteObserveSelectionObserveWidget, funcionarioServicegetFuncionarioTipoClienteObserveValue, null, null);
 		//
 		IObservableValue btnFornecedorObserveSelectionObserveWidget = SWTObservables.observeSelection(btnFornecedor);
-		IObservableValue funcionarioServicegetFuncionarioTipoFornecedorObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "tipoFornecedor");
+		IObservableValue funcionarioServicegetFuncionarioTipoFornecedorObserveValue = PojoObservables.observeValue(service.getPessoa(), "tipoFornecedor");
 		bindingContext.bindValue(btnFornecedorObserveSelectionObserveWidget, funcionarioServicegetFuncionarioTipoFornecedorObserveValue, null, null);
 		//
 		IObservableValue btnFuncionrioObserveSelectionObserveWidget = SWTObservables.observeSelection(btnFuncionrio);
-		IObservableValue funcionarioServicegetFuncionarioTipoFuncionarioObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "tipoFuncionario");
+		IObservableValue funcionarioServicegetFuncionarioTipoFuncionarioObserveValue = PojoObservables.observeValue(service.getPessoa(), "tipoFuncionario");
 		bindingContext.bindValue(btnFuncionrioObserveSelectionObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
 		//
 		IObservableValue txtRazaoSocialObserveTextObserveWidget = SWTObservables.observeText(txtRazaoSocial, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioRazaoSocialObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "razaoSocial");
+		IObservableValue funcionarioServicegetFuncionarioRazaoSocialObserveValue = PojoObservables.observeValue(service.getPessoa(), "razaoSocial");
 		bindingContext.bindValue(txtRazaoSocialObserveTextObserveWidget, funcionarioServicegetFuncionarioRazaoSocialObserveValue, null, null);
 		//
 		IObservableValue txtCpfCnpjObserveTextObserveWidget = SWTObservables.observeText(txtCpfCnpj, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioCpfCnpjObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "cpfCnpj");
+		IObservableValue funcionarioServicegetFuncionarioCpfCnpjObserveValue = PojoObservables.observeValue(service.getPessoa(), "cpfCnpj");
 		bindingContext.bindValue(txtCpfCnpjObserveTextObserveWidget, funcionarioServicegetFuncionarioCpfCnpjObserveValue, null, null);
 		//
 		IObservableValue txtRgInscrEstObserveTextObserveWidget = SWTObservables.observeText(txtRgInscrEst, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioRgInscricaoEstObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "rgInscricaoEst");
+		IObservableValue funcionarioServicegetFuncionarioRgInscricaoEstObserveValue = PojoObservables.observeValue(service.getPessoa(), "rgInscricaoEst");
 		bindingContext.bindValue(txtRgInscrEstObserveTextObserveWidget, funcionarioServicegetFuncionarioRgInscricaoEstObserveValue, null, null);
 		//
 		IObservableValue txtCartTrabNumObserveTextObserveWidget = SWTObservables.observeText(txtCartTrabNum, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioCarteiraNumObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "carteiraNum");
+		IObservableValue funcionarioServicegetFuncionarioCarteiraNumObserveValue = PojoObservables.observeValue(service.getPessoa(), "carteiraNum");
 		bindingContext.bindValue(txtCartTrabNumObserveTextObserveWidget, funcionarioServicegetFuncionarioCarteiraNumObserveValue, null, null);
 		//
 		IObservableValue txtSerieObserveTextObserveWidget = SWTObservables.observeText(txtSerie, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioSerieObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "serie");
+		IObservableValue funcionarioServicegetFuncionarioSerieObserveValue = PojoObservables.observeValue(service.getPessoa(), "serie");
 		bindingContext.bindValue(txtSerieObserveTextObserveWidget, funcionarioServicegetFuncionarioSerieObserveValue, null, null);
 		//
 		IObservableValue txtSalarioObserveTextObserveWidget = SWTObservables.observeText(txtSalario, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioSalarioObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "salario");
+		IObservableValue funcionarioServicegetFuncionarioSalarioObserveValue = PojoObservables.observeValue(service.getPessoa(), "salario");
 		bindingContext.bindValue(txtSalarioObserveTextObserveWidget, funcionarioServicegetFuncionarioSalarioObserveValue, null, null);
 		//
 		IObservableValue txtFoneFaxObserveTextObserveWidget = SWTObservables.observeText(txtFoneFax, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioFoneFaxObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "foneFax");
+		IObservableValue funcionarioServicegetFuncionarioFoneFaxObserveValue = PojoObservables.observeValue(service.getPessoa(), "foneFax");
 		bindingContext.bindValue(txtFoneFaxObserveTextObserveWidget, funcionarioServicegetFuncionarioFoneFaxObserveValue, null, null);
 		//
 		IObservableValue txtCelularObserveTextObserveWidget = SWTObservables.observeText(txtCelular, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioCelularObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "celular");
+		IObservableValue funcionarioServicegetFuncionarioCelularObserveValue = PojoObservables.observeValue(service.getPessoa(), "celular");
 		bindingContext.bindValue(txtCelularObserveTextObserveWidget, funcionarioServicegetFuncionarioCelularObserveValue, null, null);
 		//
 		IObservableValue txtEmailObserveTextObserveWidget = SWTObservables.observeText(txtEmail, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioEmailObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "email");
+		IObservableValue funcionarioServicegetFuncionarioEmailObserveValue = PojoObservables.observeValue(service.getPessoa(), "email");
 		bindingContext.bindValue(txtEmailObserveTextObserveWidget, funcionarioServicegetFuncionarioEmailObserveValue, null, null);
 		//
 		IObservableValue txtCepObserveTextObserveWidget = SWTObservables.observeText(txtCep, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioCepObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "cep");
+		IObservableValue funcionarioServicegetFuncionarioCepObserveValue = PojoObservables.observeValue(service.getPessoa(), "cep");
 		bindingContext.bindValue(txtCepObserveTextObserveWidget, funcionarioServicegetFuncionarioCepObserveValue, null, null);
 		//
 		IObservableValue txtCidadeObserveTextObserveWidget = SWTObservables.observeText(txtCidade, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioCidadeObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "cidade");
+		IObservableValue funcionarioServicegetFuncionarioCidadeObserveValue = PojoObservables.observeValue(service.getPessoa(), "cidade");
 		bindingContext.bindValue(txtCidadeObserveTextObserveWidget, funcionarioServicegetFuncionarioCidadeObserveValue, null, null);
 		//
 		IObservableValue txtBairroObserveTextObserveWidget = SWTObservables.observeText(txtBairro, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioBairroObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "bairro");
+		IObservableValue funcionarioServicegetFuncionarioBairroObserveValue = PojoObservables.observeValue(service.getPessoa(), "bairro");
 		bindingContext.bindValue(txtBairroObserveTextObserveWidget, funcionarioServicegetFuncionarioBairroObserveValue, null, null);
 		//
 		IObservableValue txtRuaObserveTextObserveWidget = SWTObservables.observeText(txtRua, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioRuaObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "rua");
+		IObservableValue funcionarioServicegetFuncionarioRuaObserveValue = PojoObservables.observeValue(service.getPessoa(), "rua");
 		bindingContext.bindValue(txtRuaObserveTextObserveWidget, funcionarioServicegetFuncionarioRuaObserveValue, null, null);
 		//
 		IObservableValue txtNumeroObserveTextObserveWidget = SWTObservables.observeText(txtNumero, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioNumeroObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "numero");
+		IObservableValue funcionarioServicegetFuncionarioNumeroObserveValue = PojoObservables.observeValue(service.getPessoa(), "numero");
 		bindingContext.bindValue(txtNumeroObserveTextObserveWidget, funcionarioServicegetFuncionarioNumeroObserveValue, null, null);
 		//
 		IObservableValue txtComplementoObserveTextObserveWidget = SWTObservables.observeText(txtComplemento, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioComplementoObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "complemento");
+		IObservableValue funcionarioServicegetFuncionarioComplementoObserveValue = PojoObservables.observeValue(service.getPessoa(), "complemento");
 		bindingContext.bindValue(txtComplementoObserveTextObserveWidget, funcionarioServicegetFuncionarioComplementoObserveValue, null, null);
 		//
 		IObservableValue btnAdicionarProdutoObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnAdicionarProduto);
@@ -621,19 +612,19 @@ public class PessoaEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtSalarioObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ForneceProduto.class, new String[]{"id.produto.descricao", "valorUnitario"});
-//		tvProduto.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ForneceProduto.class, new String[]{"id.produto.descricao", "valorUnitario"});
+		tvProduto.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvProduto.setContentProvider(listContentProvider_1);
 		//
-		IObservableList funcionarioServicegetFuncionarioListaProdutoObserveList = PojoObservables.observeList(Realm.getDefault(), funcionarioService.getFuncionario(), "listaProduto");
+		IObservableList funcionarioServicegetFuncionarioListaProdutoObserveList = PojoObservables.observeList(Realm.getDefault(), service.getPessoa(), "listaProduto");
 		tvProduto.setInput(funcionarioServicegetFuncionarioListaProdutoObserveList);
 		//
 		ObservableListContentProvider listContentProvider_2 = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_2.getKnownElements(), Veiculo.class, new String[]{"modelo", "placa"});
-//		tvVeiculo.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
+		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_2.getKnownElements(), Veiculo.class, new String[]{"modelo", "placa"});
+		tvVeiculo.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
 		tvVeiculo.setContentProvider(listContentProvider_2);
 		//
-		IObservableList funcionarioServicegetFuncionarioListaVeiculoObserveList = PojoObservables.observeList(Realm.getDefault(), funcionarioService.getFuncionario(), "listaVeiculo");
+		IObservableList funcionarioServicegetFuncionarioListaVeiculoObserveList = PojoObservables.observeList(Realm.getDefault(), service.getPessoa(), "listaVeiculo");
 		tvVeiculo.setInput(funcionarioServicegetFuncionarioListaVeiculoObserveList);
 		//
 		IObservableValue tableVeiculosObserveEnabledObserveWidget = SWTObservables.observeEnabled(tableVeiculos);
@@ -651,7 +642,7 @@ public class PessoaEditor extends MecasoftEditor {
 		cvCargo.setInput(writableList);
 		//
 		IObservableValue cvCargoObserveSingleSelection = ViewersObservables.observeSingleSelection(cvCargo);
-		IObservableValue funcionarioServicegetFuncionarioTipoObserveValue = PojoObservables.observeValue(funcionarioService.getFuncionario(), "tipo");
+		IObservableValue funcionarioServicegetFuncionarioTipoObserveValue = PojoObservables.observeValue(service.getPessoa(), "tipo");
 		bindingContext.bindValue(cvCargoObserveSingleSelection, funcionarioServicegetFuncionarioTipoObserveValue, null, null);
 		//
 		return bindingContext;

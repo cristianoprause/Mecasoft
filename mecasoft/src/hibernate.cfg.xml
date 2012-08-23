@@ -15,7 +15,6 @@
 		<mapping class="banco.modelo.ForneceProdutoId"/>
 		<mapping class="banco.modelo.Pessoa"/>
 		<mapping class="banco.modelo.TipoFuncionario"/>
-		<mapping class="banco.modelo.Funcionario"/>
 		<mapping class="banco.modelo.Papel"/>
 		<mapping class="banco.modelo.Usuario"/>
 		<mapping class="banco.modelo.Status"/>

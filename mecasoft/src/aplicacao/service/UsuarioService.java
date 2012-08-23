@@ -33,6 +33,10 @@ public class UsuarioService extends MecasoftService<Usuario>{
 	public List<Usuario> findAll(){
 		return getDAO().findAll();
 	}
+	
+	public List<Usuario> findAllAtivos(){
+		return getDAO().findAllByStatus(true);
+	}
 
 	public Usuario getUsuario() {
 		return usuario;

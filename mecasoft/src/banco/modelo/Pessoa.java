@@ -1,7 +1,9 @@
 package banco.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,7 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -95,9 +100,25 @@ public class Pessoa implements Serializable{
 	@Cascade(value={CascadeType.ALL})
 	private List<Veiculo> listaVeiculo = new ArrayList<Veiculo>();
 	
-	@OneToMany(mappedBy="id.pessoa")
-//	@Cascade(value= {CascadeType.ALL})
+	@OneToMany(mappedBy="id.pessoa", cascade={javax.persistence.CascadeType.ALL})
+	@Cascade(value= {CascadeType.ALL})
 	private List<ForneceProduto> listaProduto = new ArrayList<ForneceProduto>();
+	
+	@Column
+	private String serie = "";
+	
+	@Column(precision=14, scale=2)
+	private BigDecimal salario;
+	
+	@Column
+	@Temporal(value = TemporalType.DATE)
+	private Date dataUltimoPagto;
+	
+	@Column
+	private String carteiraNum = "";
+	
+	@ManyToOne
+	private TipoFuncionario tipo;
 
 	public Long getId() {
 		return id;
@@ -258,7 +279,47 @@ public class Pessoa implements Serializable{
 	public void setListaProduto(List<ForneceProduto> listaProduto) {
 		this.listaProduto = listaProduto;
 	}
+	
+	public String getSerie() {
+		return serie;
+	}
 
+	public void setSerie(String serie) {
+		this.serie = serie;
+	}
+
+	public BigDecimal getSalario() {
+		return salario;
+	}
+
+	public void setSalario(BigDecimal salario) {
+		this.salario = salario;
+	}
+
+	public Date getDataUltimoPagto() {
+		return dataUltimoPagto;
+	}
+
+	public void setDataUltimoPagto(Date dataUltimoPagto) {
+		this.dataUltimoPagto = dataUltimoPagto;
+	}
+
+	public String getCarteiraNum() {
+		return carteiraNum;
+	}
+
+	public void setCarteiraNum(String carteiraNum) {
+		this.carteiraNum = carteiraNum;
+	}
+
+	public TipoFuncionario getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoFuncionario tipo) {
+		this.tipo = tipo;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -283,5 +344,5 @@ public class Pessoa implements Serializable{
 			return false;
 		return true;
 	}
-	
+
 }

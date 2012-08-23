@@ -52,4 +52,12 @@ public class UsuarioDAO extends HibernateConnection implements UsuarioUtils{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Usuario> findAllByStatus(boolean status) {
+		Query q = getSession().createQuery("select u from Usuario u where u.ativo is :status");
+		q.setParameter("status", status);
+		return q.list();
+	}
+
 }

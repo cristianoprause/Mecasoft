@@ -1,26 +1,26 @@
 package tela.editor.editorInput;
 
-import aplicacao.service.FuncionarioService;
+import aplicacao.service.PessoaService;
 import banco.modelo.Veiculo;
 
 public class VeiculoEditorInput extends MecasoftEditorInput{
 
 	private Veiculo veiculo;
-	private FuncionarioService funcionarioService;
+	private PessoaService pessoaService;
 	
 	public VeiculoEditorInput() {
 		veiculo = new Veiculo();
-		funcionarioService = null;
+		pessoaService = null;
 	}
 	
 	public VeiculoEditorInput(Veiculo veiculo){
 		this.veiculo = veiculo;
-		this.funcionarioService = null;
+		this.pessoaService = null;
 	}
 	
-	public VeiculoEditorInput(FuncionarioService funcionarioService){
+	public VeiculoEditorInput(PessoaService pessoaService){
 		this.veiculo = new Veiculo();
-		this.funcionarioService = funcionarioService;
+		this.pessoaService = pessoaService;
 	}
 
 	public Veiculo getVeiculo() {
@@ -31,12 +31,12 @@ public class VeiculoEditorInput extends MecasoftEditorInput{
 		this.veiculo = veiculo;
 	}
 
-	public FuncionarioService getFuncionarioService() {
-		return funcionarioService;
+	public PessoaService getFuncionarioService() {
+		return pessoaService;
 	}
 
-	public void setFuncionarioService(FuncionarioService funcionarioService) {
-		this.funcionarioService = funcionarioService;
+	public void setFuncionarioService(PessoaService pessoaService) {
+		this.pessoaService = pessoaService;
 	}
 	
 }

@@ -33,11 +33,11 @@ import tela.editor.editorInput.UsuarioEditorInput;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.MessageHelper;
 import aplicacao.helper.ValidatorHelper;
-import aplicacao.service.FuncionarioService;
 import aplicacao.service.PapelService;
+import aplicacao.service.PessoaService;
 import aplicacao.service.UsuarioService;
-import banco.modelo.Funcionario;
 import banco.modelo.Papel;
+import banco.modelo.Pessoa;
 
 public class UsuarioEditor extends MecasoftEditor{
 	public static final String ID = "tela.editor.usuarioEditor"; //$NON-NLS-1$
@@ -77,9 +77,9 @@ public class UsuarioEditor extends MecasoftEditor{
 		btnSelecionar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Funcionario f  = selecionarFuncionario();
-				if(f != null)
-					service.getUsuario().setFuncionario(f);
+				Pessoa p  = selecionarPessoa();
+				if(p != null)
+					service.getUsuario().setFuncionario(p);
 				
 				initDataBindings();
 			}
@@ -167,16 +167,16 @@ public class UsuarioEditor extends MecasoftEditor{
 		return service.isDirty();
 	}
 	
-	public Funcionario selecionarFuncionario(){
+	public Pessoa selecionarPessoa(){
 		SelecionarItemDialog dialog = new SelecionarItemDialog(LayoutHelper.getActiveShell(), new LabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return ((Funcionario)element).getNomeFantasia();
+				return ((Pessoa)element).getNomeFantasia();
 			}
 		});
-		dialog.setElements(new FuncionarioService().findAllSemUsuario().toArray());
+		dialog.setElements(new PessoaService().findAllAtivosSemUsuario().toArray());
 		
-		return (Funcionario) dialog.getElementoSelecionado();
+		return (Pessoa) dialog.getElementoSelecionado();
 	}
 
 	protected DataBindingContext initDataBindings() {

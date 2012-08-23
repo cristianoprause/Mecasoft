@@ -38,7 +38,7 @@ public class Usuario implements Serializable{
 	
 	@OneToOne
 	@NotNull(message="Selecione um funcionário.")
-	private Funcionario funcionario;
+	private Pessoa funcionario;
 	
 	@ManyToOne
 	@JoinColumn(name="papel_id", nullable=false)
@@ -77,11 +77,11 @@ public class Usuario implements Serializable{
 		this.senha = senha;
 	}
 
-	public Funcionario getFuncionario() {
+	public Pessoa getFuncionario() {
 		return funcionario;
 	}
 
-	public void setFuncionario(Funcionario funcionario) {
+	public void setFuncionario(Pessoa funcionario) {
 		this.funcionario = funcionario;
 	}
 

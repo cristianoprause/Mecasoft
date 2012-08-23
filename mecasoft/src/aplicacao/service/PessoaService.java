@@ -3,6 +3,8 @@ package aplicacao.service;
 import java.util.List;
 
 import banco.modelo.Pessoa;
+import banco.modelo.TipoFuncionario;
+import banco.modelo.Usuario;
 import banco.utils.PessoaUtils;
 
 public class PessoaService extends MecasoftService<Pessoa>{
@@ -31,12 +33,26 @@ public class PessoaService extends MecasoftService<Pessoa>{
 		return getDAO().findAll();
 	}
 	
+	public List<Pessoa> findAllByTipoFuncionario(TipoFuncionario tipo){
+		return getDAO().findAllByTipoFuncionario(tipo);
+	}
+	
 	public List<Pessoa> findAllClientesAtivos(){
 		return getDAO().findAllByTipoAndStatus(Pessoa.CLIENTE, true);
 	}
 	
 	public List<Pessoa> findAllFornecedoresAtivos(){
 		return getDAO().findAllByTipoAndStatus(Pessoa.FORNECEDOR, true);
+	}
+	
+	public List<Pessoa> findAllAtivosSemUsuario(){
+		List<Pessoa> pessoas = getDAO().findAllByTipoAndStatus(null, true);
+		List<Usuario> usuarios = new UsuarioService().findAllAtivos();
+		
+		for(Usuario u : usuarios)
+			pessoas.remove(u.getFuncionario());
+		
+		return pessoas;
 	}
 
 	public Pessoa getPessoa() {
