@@ -136,12 +136,12 @@
          <menu
                label="Arquivo">
             <command
-                  commandId="org.eclipse.ui.file.restartWorkbench"
+                  commandId="mecasoft.reiniciarCommand"
                   icon="assents/funcoes/reset16.png"
                   label="Reiniciar">
             </command>
             <command
-                  commandId="org.eclipse.ui.file.exit"
+                  commandId="mecasoft.sairCommand"
                   icon="assents/funcoes/exit16.png"
                   label="Sair">
             </command>
@@ -246,6 +246,16 @@
             defaultHandler="aplicacao.command.PermissaoUsuarioCommand"
             id="mecasoft.permissaoUsuarioCommand"
             name="Permissao usuario">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.ReiniciarCommand"
+            id="mecasoft.reiniciarCommand"
+            name="Reiniciar">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.SairCommand"
+            id="mecasoft.sairCommand"
+            name="Sair">
       </command>
    </extension>
    <extension
