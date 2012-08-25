@@ -290,6 +290,10 @@
                name="appName"
                value="MECASOFT">
          </property>
+         <property
+               name="windowImages"
+               value="assents/logo/mecanica16X16.png,assents/logo/mecanica32X32.png,assents/logo/mecanica64X64.png">
+         </property>
       </product>
    </extension>
    <extension
