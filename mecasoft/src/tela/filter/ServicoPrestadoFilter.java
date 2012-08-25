@@ -1,0 +1,34 @@
+package tela.filter;
+
+import org.eclipse.jface.viewers.Viewer;
+
+import banco.modelo.ServicoPrestado;
+
+public class ServicoPrestadoFilter extends MecasoftFilter{
+
+	@Override
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		if(searchNull())
+			return true;
+		
+		ServicoPrestado sp = (ServicoPrestado)element;
+		
+		if(sp.getId().toString().matches(search.toLowerCase()))
+			return true;
+		
+		if(sp.getCliente().getNomeFantasia().toLowerCase().matches(search.toLowerCase()))
+			return true;
+		
+		if(sp.getVeiculo().getModelo().toLowerCase().matches(search.toLowerCase()))
+			return true;
+		
+		if(sp.getListaStatus().get(sp.getListaStatus().size()-1).getFuncionario().getNomeFantasia().toLowerCase().matches(search.toLowerCase()))
+			return true;
+		
+		if(sp.getListaStatus().get(sp.getListaStatus().size()-1).getStatus().getDescricao().toLowerCase().matches(search.toLowerCase()))
+			return true;
+		
+		return false;
+	}
+
+}

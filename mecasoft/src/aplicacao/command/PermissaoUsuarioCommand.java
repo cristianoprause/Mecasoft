@@ -45,6 +45,9 @@ public class PermissaoUsuarioCommand extends AbstractHandler{
 //		if(papel.getCadServico())
 			permissoes.add("tela.view.activityServico");
 		
+//		if(papel.getGerServico())
+			permissoes.add("tela.view.activityStatus");
+
 		for(String permissao : permissoes)
 			if (activityManager.getActivity(permissao).isDefined())
 				enabledActivities.add(permissao);

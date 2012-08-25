@@ -73,6 +73,11 @@
             id="tela.editor.StatusEditor"
             name="Status">
       </editor>
+      <editor
+            class="tela.editor.AbrirOrdemServicoEditor"
+            id="tela.editor.AbrirOrdemServicoEditor"
+            name="New EditorPart">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -127,6 +132,11 @@
             class="tela.view.StatusView"
             id="tela.view.StatusView"
             name="Lista de status">
+      </view>
+      <view
+            class="tela.view.ServicoPrestadoView"
+            id="tela.view.ServicoPrestadoView"
+            name="Serviços Prestados">
       </view>
    </extension>
    <extension
@@ -238,6 +248,18 @@
                </parameter>
             </command>
          </menu>
+         <menu
+               label="Financeiro">
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  id="mecasoft.menuServicoPrestado"
+                  label="Serviço">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.ServicoPrestadoView">
+               </parameter>
+            </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension
@@ -344,6 +366,15 @@
             id="tela.view.activityServico"
             name="activity serviço">
       </activity>
+      <activity
+            id="tela.view.activityStatus"
+            name="activity status">
+      </activity>
+      <activityPatternBinding
+            activityId="tela.view.activityStatus"
+            isEqualityPattern="false"
+            pattern="mecasoft/mecasoft.menuStatus">
+      </activityPatternBinding>
    </extension>
 
 </plugin>
