@@ -10,16 +10,17 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -35,22 +36,20 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.wb.swt.ResourceManager;
 
 import tela.componentes.MecasoftText;
 import tela.dialog.SelecionarItemDialog;
 import tela.editingSupport.ForneceProdutoEditingSupport;
 import tela.editor.editorInput.ProdutoEditorInput;
 import aplicacao.exception.ValidationException;
+import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import banco.modelo.ForneceProduto;
 import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
-
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.wb.swt.ResourceManager;
 
 public class ProdutoEditor extends MecasoftEditor {
 
@@ -178,11 +177,23 @@ public class ProdutoEditor extends MecasoftEditor {
 		tableFornecedores.setLayoutData(gd_tableFornecedores);
 		
 		TableViewerColumn tvcNome = new TableViewerColumn(tvFornecedores, SWT.NONE);
+		tvcNome.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((ForneceProduto)element).getId().getPessoa().getNomeFantasia();
+			}
+		});
 		TableColumn tblclmnNome = tvcNome.getColumn();
 		tblclmnNome.setWidth(274);
 		tblclmnNome.setText("Nome");
 		
 		TableViewerColumn tvcValorUnitario = new TableViewerColumn(tvFornecedores, SWT.NONE);
+		tvcValorUnitario.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return FormatterHelper.getDecimalFormat().format(((ForneceProduto)element).getValorUnitario());
+			}
+		});
 		tvcValorUnitario.setEditingSupport(new ForneceProdutoEditingSupport(tvFornecedores));
 		TableColumn tblclmnValorUnitario = tvcValorUnitario.getColumn();
 		tblclmnValorUnitario.setWidth(100);
@@ -310,8 +321,8 @@ public class ProdutoEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtValorUnitarioObserveTextObserveWidget, servicegetProdutoServicoValorUnitarioObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ForneceProduto.class, new String[]{"id.pessoa.nomeFantasia", "valorUnitario"});
-		tvFornecedores.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ForneceProduto.class, new String[]{"id.pessoa.nomeFantasia", "valorUnitario"});
+//		tvFornecedores.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvFornecedores.setContentProvider(listContentProvider);
 		//
 		IObservableList servicegetProdutoServicoListaFornecedoresObserveList = PojoObservables.observeList(Realm.getDefault(), service.getProdutoServico(), "listaFornecedores");

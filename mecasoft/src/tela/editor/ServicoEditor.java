@@ -8,16 +8,17 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,17 +30,16 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.wb.swt.ResourceManager;
 
 import tela.componentes.MecasoftText;
 import tela.dialog.SelecionarItemDialog;
 import tela.editor.editorInput.ServicoEditorInput;
 import aplicacao.exception.ValidationException;
+import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.service.ProdutoServicoService;
 import banco.modelo.ProdutoServico;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.wb.swt.ResourceManager;
 
 public class ServicoEditor extends MecasoftEditor {
 
@@ -106,11 +106,23 @@ public class ServicoEditor extends MecasoftEditor {
 		tableProdutos.setLayoutData(gd_tableProdutos);
 		
 		TableViewerColumn tvcDescricao = new TableViewerColumn(tvProdutos, SWT.NONE);
+		tvcDescricao.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((ProdutoServico)element).getDescricao();
+			}
+		});
 		TableColumn tblclmnNome = tvcDescricao.getColumn();
 		tblclmnNome.setWidth(163);
 		tblclmnNome.setText("Descri\u00E7\u00E3o");
 		
 		TableViewerColumn tvcValorUnitario = new TableViewerColumn(tvProdutos, SWT.NONE);
+		tvcValorUnitario.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return FormatterHelper.getDecimalFormat().format(((ProdutoServico)element).getValorUnitario());
+			}
+		});
 		TableColumn tblclmnValorUnitrio = tvcValorUnitario.getColumn();
 		tblclmnValorUnitrio.setWidth(100);
 		tblclmnValorUnitrio.setText("Valor unit\u00E1rio");
@@ -201,8 +213,8 @@ public class ServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtValorBasetextObserveTextObserveWidget, servicegetProdutoServicoValorUnitarioObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ProdutoServico.class, new String[]{"descricao", "valorUnitario"});
-		tvProdutos.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ProdutoServico.class, new String[]{"descricao", "valorUnitario"});
+//		tvProdutos.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvProdutos.setContentProvider(listContentProvider);
 		//
 		IObservableList servicegetProdutoServicoListaProdutoObserveList = PojoObservables.observeList(Realm.getDefault(), service.getProdutoServico(), "listaProduto");
