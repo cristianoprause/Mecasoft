@@ -59,10 +59,10 @@ public class Pessoa implements Serializable{
 	private String rgInscricaoEst;
 	
 	@Column
-	private String foneFax;
+	private String foneFax = "";
 	
 	@Column
-	private String celular;
+	private String celular = "";
 	
 	@Column
 	private String email;

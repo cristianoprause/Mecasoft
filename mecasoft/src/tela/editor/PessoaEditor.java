@@ -428,6 +428,11 @@ public class PessoaEditor extends MecasoftEditor {
 		try {
 			validar(service.getPessoa());
 			
+			if(service.getPessoa().getFoneFax().isEmpty() && service.getPessoa().getCelular().isEmpty()){
+				setErroMessage("Informe ao menos um telefone.");
+				return;
+			}
+			
 			if(service.getPessoa().getTipoFuncionario()){
 				
 				if(service.getPessoa().getCarteiraNum().isEmpty()){
@@ -450,10 +455,10 @@ public class PessoaEditor extends MecasoftEditor {
 					return;
 				}
 				
-				service.saveOrUpdate();
 				
-			}else
-				service.saveOrUpdate();
+			}
+			
+			service.saveOrUpdate();
 			
 			openInformation("Pessoa cadastrada com sucesso!");
 			closeThisEditor();

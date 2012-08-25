@@ -18,5 +18,10 @@
 		<mapping class="banco.modelo.Papel"/>
 		<mapping class="banco.modelo.Usuario"/>
 		<mapping class="banco.modelo.Status"/>
+		<mapping class="banco.modelo.FormaPagamento"/>
+		<mapping class="banco.modelo.FormaPagtoUtilizada"/>
+		<mapping class="banco.modelo.ItemServico"/>
+		<mapping class="banco.modelo.StatusServico"/>
+		<mapping class="banco.modelo.ServicoPrestado"/>
 	</session-factory>
 </hibernate-configuration>
