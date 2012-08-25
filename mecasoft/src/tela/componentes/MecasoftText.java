@@ -22,7 +22,9 @@ public class MecasoftText extends Composite {
 	private Integer[] posicoes;
 	private String texto;
 	private String textoRetorno;
-
+	private Character charContinuo;
+	private Integer mediaCharContinuo;
+	
 	public Text text;
 
 	/**
@@ -38,6 +40,7 @@ public class MecasoftText extends Composite {
 		caracteres = "";
 		aceita = AMBOS;
 		max = -1;
+		charContinuo = null;
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
@@ -62,11 +65,14 @@ public class MecasoftText extends Composite {
 
 	}
 
-	public void formatar() {
+	private void formatar() {
 		if(passou){
 			texto = text.getText();
 			for(int c = 0; c < caracteres.length(); c++)
 				texto = StringUtils.remove(texto, caracteres.charAt(c));
+			
+			if(charContinuo != null)
+				texto = StringUtils.remove(texto, charContinuo);
 			
 			textoRetorno = "";
 			for(int c1 = 0; c1 < texto.length(); c1++){
@@ -74,8 +80,15 @@ public class MecasoftText extends Composite {
 					if(posicoes[c2].compareTo(c1) == 0)
 						textoRetorno += caracteres.charAt(c2);
 					
-					else if(c1 == (texto.length() + posicoes[c2]))
+					else if(c1 == (texto.length() + posicoes[c2]) && c1 != 0){
 						textoRetorno += caracteres.charAt(c2);
+					}
+				}
+				
+				if(charContinuo != null){
+					if((texto.length() - c1 + posicoes[0]) % mediaCharContinuo == 0 && c1 > (posicoes[0] * -1 + 2))
+						textoRetorno += charContinuo;
+
 				}
 				
 				textoRetorno += texto.charAt(c1);
@@ -122,9 +135,11 @@ public class MecasoftText extends Composite {
 		this.max = max;
 	}
 
-	public void addChars(String caracteres, Integer posicoes[]) {
+	public void addChars(String caracteres, Integer posicoes[], Character charContinuo, Integer mediaCharContinuo) {
 		this.caracteres = caracteres;
 		this.posicoes = posicoes;
+		this.charContinuo = charContinuo;
+		this.mediaCharContinuo = mediaCharContinuo;
 	}
 	
 	@Override

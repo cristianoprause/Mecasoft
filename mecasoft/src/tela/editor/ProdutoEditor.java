@@ -141,7 +141,7 @@ public class ProdutoEditor extends MecasoftEditor {
 			}
 		});
 		txtLucro.setOptions(MecasoftText.NUMEROS, -1);
-		txtLucro.addChars(",", new Integer[]{-2});
+		txtLucro.addChars(",", new Integer[]{-2}, null, null);
 		txtLucro.setEditable(true);
 		txtLucro.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);

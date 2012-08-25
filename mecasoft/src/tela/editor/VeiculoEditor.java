@@ -105,7 +105,7 @@ public class VeiculoEditor extends MecasoftEditor {
 		
 		txtPlaca = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtPlaca.setOptions(MecasoftText.AMBOS, 8);
-		txtPlaca.addChars("-", new Integer[]{3});
+		txtPlaca.addChars("-", new Integer[]{3}, null, null);
 		txtPlaca.text.setEditable(false);
 		txtPlaca.text.setEnabled(false);
 		txtPlaca.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
