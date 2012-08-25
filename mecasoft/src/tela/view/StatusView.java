@@ -31,8 +31,10 @@ import banco.modelo.Status;
 
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class StatusView extends ViewPart {
 
@@ -112,6 +114,21 @@ public class StatusView extends ViewPart {
 			public String getText(Object element) {
 				return ((Status)element).getDescricao();
 			}
+			
+			@Override
+			public Color getForeground(Object element) {
+				return SWTResourceManager.getColor(SWT.COLOR_BLACK);
+			}
+			
+			@Override
+			public Color getBackground(Object element) {
+				Status s = (Status)element;
+				
+				if(s.isPausar())
+					return SWTResourceManager.getColor(SWT.COLOR_RED);
+				else
+					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
+			}
 		});
 		TableColumn tblclmnDescricao = tvcDescricao.getColumn();
 		tblclmnDescricao.setWidth(381);
@@ -128,6 +145,21 @@ public class StatusView extends ViewPart {
 				else
 					return "Da continuidade ao serviço";
 			}
+			
+			@Override
+			public Color getForeground(Object element) {
+				return SWTResourceManager.getColor(SWT.COLOR_BLACK);
+			}
+			
+			@Override
+			public Color getBackground(Object element) {
+				Status s = (Status)element;
+				
+				if(s.isPausar())
+					return SWTResourceManager.getColor(SWT.COLOR_RED);
+				else
+					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
+			}
 		});
 		TableColumn tblclmnAtuacao = tvcAtuacao.getColumn();
 		tblclmnAtuacao.setWidth(161);
@@ -138,6 +170,21 @@ public class StatusView extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				return ((Status)element).getStatus();
+			}
+			
+			@Override
+			public Color getForeground(Object element) {
+				return SWTResourceManager.getColor(SWT.COLOR_BLACK);
+			}
+			
+			@Override
+			public Color getBackground(Object element) {
+				Status s = (Status)element;
+				
+				if(s.isPausar())
+					return SWTResourceManager.getColor(SWT.COLOR_RED);
+				else
+					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
 			}
 		});
 		TableColumn tblclmnStatus = tvcStatus.getColumn();
