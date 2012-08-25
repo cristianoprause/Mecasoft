@@ -24,6 +24,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.editor.VeiculoEditor;
 import tela.editor.editorInput.VeiculoEditorInput;
 import tela.filter.VeiculoFilter;
 import aplicacao.service.VeiculoService;
@@ -92,7 +93,7 @@ public class VeiculoView extends ViewPart {
 					
 					Veiculo v = (Veiculo)selecao.getFirstElement();
 					
-					getSite().getPage().openEditor(new VeiculoEditorInput(v), "tela.editor.VeiculoEditor");
+					getSite().getPage().openEditor(new VeiculoEditorInput(v), VeiculoEditor.ID);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}
@@ -190,7 +191,7 @@ public class VeiculoView extends ViewPart {
 			actionNovo = new Action("Novo") {				@Override
 				public void run() {
 					try {
-						getSite().getPage().openEditor(new VeiculoEditorInput(), "tela.editor.VeiculoEditor");
+						getSite().getPage().openEditor(new VeiculoEditorInput(), VeiculoEditor.ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}

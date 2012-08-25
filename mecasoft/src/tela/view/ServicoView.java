@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.action.Action;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.editor.ServicoEditor;
 import tela.editor.editorInput.ServicoEditorInput;
 import tela.filter.ServicoFilter;
 
@@ -93,7 +94,7 @@ public class ServicoView extends ViewPart {
 						return;
 					
 					ProdutoServico ps = (ProdutoServico)selecao.getFirstElement();
-					getSite().getPage().openEditor(new ServicoEditorInput(ps), "tela.editor.ServicoEditor");
+					getSite().getPage().openEditor(new ServicoEditorInput(ps), ServicoEditor.ID);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}
@@ -169,7 +170,7 @@ public class ServicoView extends ViewPart {
 			actionNovo = new Action("Novo") {				@Override
 				public void run() {
 					try {
-						getSite().getPage().openEditor(new ServicoEditorInput(), "tela.editor.ServicoEditor");
+						getSite().getPage().openEditor(new ServicoEditorInput(), ServicoEditor.ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}

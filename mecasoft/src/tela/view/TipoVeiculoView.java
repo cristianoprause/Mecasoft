@@ -26,6 +26,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import banco.modelo.TipoVeiculo;
 
+import tela.editor.TipoVeiculoEditor;
 import tela.editor.editorInput.TipoVeiculoEditorInput;
 import tela.filter.TipoVeiculoFilter;
 import aplicacao.service.TipoVeiculoService;
@@ -90,7 +91,7 @@ public class TipoVeiculoView extends ViewPart {
 					if(selecao.isEmpty())
 						return;
 					
-					getSite().getPage().openEditor(new TipoVeiculoEditorInput((TipoVeiculo)selecao.getFirstElement()), "tela.editor.TipoVeiculoEditor");
+					getSite().getPage().openEditor(new TipoVeiculoEditorInput((TipoVeiculo)selecao.getFirstElement()), TipoVeiculoEditor.ID);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}
@@ -153,7 +154,7 @@ public class TipoVeiculoView extends ViewPart {
 			actionNovo = new Action("Novo") {				@Override
 				public void run() {
 					try {
-						getSite().getPage().openEditor(new TipoVeiculoEditorInput(), "tela.editor.TipoVeiculoEditor");
+						getSite().getPage().openEditor(new TipoVeiculoEditorInput(), TipoVeiculoEditor.ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}

@@ -100,7 +100,7 @@ public class Pessoa implements Serializable{
 	@Cascade(value={CascadeType.ALL})
 	private List<Veiculo> listaVeiculo = new ArrayList<Veiculo>();
 	
-	@OneToMany(mappedBy="id.pessoa", cascade={javax.persistence.CascadeType.ALL})
+	@OneToMany(mappedBy="id.pessoa")
 	@Cascade(value= {CascadeType.ALL})
 	private List<ForneceProduto> listaProduto = new ArrayList<ForneceProduto>();
 	

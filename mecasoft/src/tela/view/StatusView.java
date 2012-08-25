@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.action.Action;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.editor.StatusEditor;
 import tela.editor.editorInput.StatusEditorInput;
 import tela.filter.StatusFilter;
 
@@ -91,7 +92,7 @@ public class StatusView extends ViewPart {
 						return;
 					
 					Status s = (Status)selecao.getFirstElement();
-					getSite().getPage().openEditor(new StatusEditorInput(s), "tela.editor.StatusEditor");
+					getSite().getPage().openEditor(new StatusEditorInput(s), StatusEditor.ID);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}
@@ -170,7 +171,7 @@ public class StatusView extends ViewPart {
 			actionNovo = new Action("Novo") {				@Override
 				public void run() {
 					try {
-						getSite().getPage().openEditor(new StatusEditorInput(), "tela.editor.StatusEditor");
+						getSite().getPage().openEditor(new StatusEditorInput(), StatusEditor.ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}

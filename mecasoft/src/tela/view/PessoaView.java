@@ -26,6 +26,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.editor.PessoaEditor;
 import tela.editor.editorInput.PessoaEditorInput;
 import tela.filter.PessoaFilter;
 import aplicacao.service.PessoaService;
@@ -90,7 +91,7 @@ public class PessoaView extends ViewPart {
 						return;
 					
 					Pessoa p = (Pessoa)selecao.getFirstElement();
-					getSite().getPage().openEditor(new PessoaEditorInput(p), "tela.editor.PessoaEditor");
+					getSite().getPage().openEditor(new PessoaEditorInput(p), PessoaEditor.ID);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}
@@ -201,7 +202,7 @@ public class PessoaView extends ViewPart {
 			actionNovo = new Action("Novo") {				@Override
 				public void run() {
 					try {
-						getSite().getPage().openEditor(new PessoaEditorInput(), "tela.editor.PessoaEditor");
+						getSite().getPage().openEditor(new PessoaEditorInput(), PessoaEditor.ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}

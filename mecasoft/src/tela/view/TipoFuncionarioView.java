@@ -26,6 +26,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.editor.TipoFuncionarioEditor;
 import tela.editor.editorInput.TipoFuncionarioEditorInput;
 import tela.filter.TipoFuncionarioFilter;
 import aplicacao.service.TipoFuncionarioService;
@@ -87,7 +88,7 @@ public class TipoFuncionarioView extends ViewPart {
 					if(selecao.isEmpty())
 						return;
 					
-					getSite().getPage().openEditor(new TipoFuncionarioEditorInput((TipoFuncionario)selecao.getFirstElement()), "tela.editor.TipoFuncionarioEditor");
+					getSite().getPage().openEditor(new TipoFuncionarioEditorInput((TipoFuncionario)selecao.getFirstElement()), TipoFuncionarioEditor.ID);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}
@@ -135,7 +136,7 @@ public class TipoFuncionarioView extends ViewPart {
 			actionNovo = new Action("Novo") {				@Override
 				public void run() {
 					try {
-						getSite().getPage().openEditor(new TipoFuncionarioEditorInput(), "tela.editor.TipoFuncionarioEditor");
+						getSite().getPage().openEditor(new TipoFuncionarioEditorInput(), TipoFuncionarioEditor.ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}

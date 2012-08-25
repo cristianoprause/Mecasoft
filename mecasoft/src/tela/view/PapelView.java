@@ -22,6 +22,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.editor.PapelEditor;
 import tela.editor.editorInput.PapelEditorInput;
 import tela.filter.PapelFilter;
 import aplicacao.service.PapelService;
@@ -82,7 +83,7 @@ public class PapelView extends ViewPart {
 					return;
 				
 				try {
-					getSite().getPage().openEditor(new PapelEditorInput((Papel)selecao.getFirstElement()), "tela.editor.PapelEditor");
+					getSite().getPage().openEditor(new PapelEditorInput((Papel)selecao.getFirstElement()), PapelEditor.ID);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}
@@ -129,7 +130,7 @@ public class PapelView extends ViewPart {
 			actionNovo = new Action("Novo") {				@Override
 				public void run() {
 					try {
-						getSite().getPage().openEditor(new PapelEditorInput(), "tela.editor.PapelEditor");
+						getSite().getPage().openEditor(new PapelEditorInput(), PapelEditor.ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}

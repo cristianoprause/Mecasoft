@@ -25,6 +25,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import banco.modelo.Usuario;
 
+import tela.editor.UsuarioEditor;
 import tela.editor.editorInput.UsuarioEditorInput;
 import tela.filter.UsuarioFilter;
 import aplicacao.service.UsuarioService;
@@ -92,7 +93,7 @@ public class UsuarioView extends ViewPart {
 					return;
 				
 				try {
-					getSite().getPage().openEditor(new UsuarioEditorInput((Usuario)selecao.getFirstElement()), "tela.editor.usuarioEditor");
+					getSite().getPage().openEditor(new UsuarioEditorInput((Usuario)selecao.getFirstElement()), UsuarioEditor.ID);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}
@@ -176,7 +177,7 @@ public class UsuarioView extends ViewPart {
 			actionNovo = new Action("Novo") {				@Override
 				public void run() {
 					try {
-						getSite().getPage().openEditor(new UsuarioEditorInput(), "tela.editor.usuarioEditor");
+						getSite().getPage().openEditor(new UsuarioEditorInput(), UsuarioEditor.ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}

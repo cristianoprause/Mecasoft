@@ -26,6 +26,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.editor.ProdutoEditor;
 import tela.editor.editorInput.ProdutoEditorInput;
 import tela.filter.ProdutoFilter;
 import aplicacao.helper.FormatterHelper;
@@ -93,7 +94,7 @@ public class ProdutoView extends ViewPart {
 								return;
 							
 							ProdutoServico ps = (ProdutoServico)selecao.getFirstElement();
-							getSite().getPage().openEditor(new ProdutoEditorInput(ps), "tela.editor.ProdutoEditor");
+							getSite().getPage().openEditor(new ProdutoEditorInput(ps), ProdutoEditor.ID);
 						} catch (PartInitException e) {
 							e.printStackTrace();
 						}
@@ -187,7 +188,7 @@ public class ProdutoView extends ViewPart {
 			actionNovo = new Action("Novo") {				@Override
 				public void run() {
 					try {
-						getSite().getPage().openEditor(new ProdutoEditorInput(), "tela.editor.ProdutoEditor");
+						getSite().getPage().openEditor(new ProdutoEditorInput(), ProdutoEditor.ID);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}
