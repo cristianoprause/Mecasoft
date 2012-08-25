@@ -164,7 +164,7 @@ public class ServicoEditor extends MecasoftEditor {
 			this.setPartName("Serviço: " + service.getProdutoServico().getDescricao());
 		}else{
 			service.setProdutoServico(sei.getProdutoServico());
-			service.getProdutoServico().setTipo(ProdutoServico.TIPOPRODUTO);
+			service.getProdutoServico().setTipo(ProdutoServico.TIPOSERVICO);
 		}
 		
 		setShowExcluir(false);

@@ -372,7 +372,7 @@ public class PessoaEditor extends MecasoftEditor {
 			@Override
 			public String getText(Object element) {
 				try{
-					return FormatterHelper.DECIMALFORMAT.format(((ForneceProduto)element).getValorUnitario());
+					return FormatterHelper.getDecimalFormat().format(((ForneceProduto)element).getValorUnitario());
 				}catch(Exception e){
 					return "";
 				}

@@ -123,7 +123,7 @@ public class ServicoView extends ViewPart {
 		tvcValorBase.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.DECIMALFORMAT.format(((ProdutoServico)element).getValorUnitario());
+				return FormatterHelper.getDecimalFormat().format(((ProdutoServico)element).getValorUnitario());
 			}
 		});
 		TableColumn tblclmnValorBase = tvcValorBase.getColumn();

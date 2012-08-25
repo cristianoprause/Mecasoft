@@ -36,7 +36,7 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 		ForneceProduto fp = (ForneceProduto)element;
 
 		if(fp.getValorUnitario() != null)
-			return FormatterHelper.DECIMALFORMAT.format(fp.getValorUnitario());
+			return FormatterHelper.getDecimalFormat().format(fp.getValorUnitario());
 		else
 			return "";
 	}

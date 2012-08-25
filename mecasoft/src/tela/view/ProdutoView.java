@@ -141,7 +141,7 @@ public class ProdutoView extends ViewPart {
 					tvcValorUnitario.setLabelProvider(new ColumnLabelProvider(){
 						@Override
 						public String getText(Object element) {
-							return FormatterHelper.DECIMALFORMAT.format(((ProdutoServico)element).getValorUnitario());
+							return FormatterHelper.getDecimalFormat().format(((ProdutoServico)element).getValorUnitario());
 						}
 					});
 					TableColumn tblclmnValorUnitario = tvcValorUnitario.getColumn();
