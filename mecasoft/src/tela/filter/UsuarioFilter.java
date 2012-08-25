@@ -22,10 +22,7 @@ public class UsuarioFilter extends MecasoftFilter{
 		if(u.getPapel().getNome().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(u.getAtivo() && "ativo".matches(search.toLowerCase()))
-			return true;
-		
-		if(!u.getAtivo() && "desativado".matches(search.toLowerCase()))
+		if(u.getStatus().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
 		return false;

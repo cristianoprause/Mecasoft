@@ -16,10 +16,7 @@ public class ProdutoFilter extends MecasoftFilter{
 		if(p.getDescricao().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(p.getAtivo() && "ativo".matches(search.toLowerCase()))
-			return true;
-		
-		if(!p.getAtivo() && "desativado".matches(search.toLowerCase()))
+		if(p.getStatus().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
 		if(p.getValorUnitario().toString().toLowerCase().matches(search.toLowerCase()))

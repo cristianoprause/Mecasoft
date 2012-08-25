@@ -16,10 +16,7 @@ public class StatusFilter extends MecasoftFilter{
 		if(status.getDescricao().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(status.isAtivo() && "ativo".matches(search.toLowerCase()))
-			return true;
-		
-		if(!status.isAtivo() && "desativado".matches(search.toLowerCase()))
+		if(status.getStatus().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
 		if(status.isPausar() && "pausa o serviço".matches(search.toLowerCase()))

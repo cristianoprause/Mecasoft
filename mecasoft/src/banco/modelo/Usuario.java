@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import aplicacao.helper.PadraoHelper;
+
 @Entity
 public class Usuario implements Serializable{
 
@@ -44,6 +46,13 @@ public class Usuario implements Serializable{
 	@JoinColumn(name="papel_id", nullable=false)
 	@NotNull(message="Selecione um papel.")
 	private Papel papel;
+	
+	public String getStatus(){
+		if(ativo)
+			return PadraoHelper.ATIVO;
+		else
+			return PadraoHelper.DESATIVADO;
+	}
 
 	public Long getId() {
 		return id;

@@ -17,10 +17,7 @@ public class PessoaFilter extends MecasoftFilter{
 		if(pessoa.getNomeFantasia().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(pessoa.getAtivo() && "ativo".matches(search.toLowerCase()))
-			return true;
-		
-		if(!pessoa.getAtivo() && "desativado".matches(search.toLowerCase()))
+		if(pessoa.getStatus().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
 		if(pessoa.getCelular().toLowerCase().matches(search.toLowerCase()))

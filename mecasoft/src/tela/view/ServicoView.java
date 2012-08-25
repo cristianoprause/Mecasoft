@@ -134,12 +134,7 @@ public class ServicoView extends ViewPart {
 		tvcSituaçao.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				ProdutoServico ps = (ProdutoServico)element;
-				
-				if(ps.getAtivo())
-					return "Ativo";
-				else
-					return "Desativado";
+				return ((ProdutoServico)element).getStatus();
 			}
 		});
 		TableColumn tblclmnSituao = tvcSituaçao.getColumn();

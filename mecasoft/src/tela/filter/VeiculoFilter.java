@@ -22,10 +22,7 @@ public class VeiculoFilter extends MecasoftFilter{
 		if(v.getTipo().getNome().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(v.getAtivo() && "ativo".matches(search.toLowerCase()))
-			return true;
-		
-		if(!v.getAtivo() && "desativado".matches(search.toLowerCase()))
+		if(v.getStatus().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
 		if(v.getCliente().getNomeFantasia().toLowerCase().matches(search.toLowerCase()))

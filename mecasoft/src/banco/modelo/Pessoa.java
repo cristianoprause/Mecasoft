@@ -22,6 +22,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import aplicacao.helper.PadraoHelper;
+
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 public class Pessoa implements Serializable{
@@ -119,6 +121,13 @@ public class Pessoa implements Serializable{
 	
 	@ManyToOne
 	private TipoFuncionario tipo;
+	
+	public String getStatus(){
+		if(ativo)
+			return PadraoHelper.ATIVO;
+		else
+			return PadraoHelper.DESATIVADO;
+	}
 
 	public Long getId() {
 		return id;

@@ -145,12 +145,7 @@ public class VeiculoView extends ViewPart {
 		tvcSituacao.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				Veiculo v = (Veiculo)element;
-				
-				if(v.getAtivo())
-					return "Ativo";
-				else
-					return "Desativado";
+				return ((Veiculo)element).getStatus();
 			}
 		});
 		TableColumn tblclmnSitucao = tvcSituacao.getColumn();

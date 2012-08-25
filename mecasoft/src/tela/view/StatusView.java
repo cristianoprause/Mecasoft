@@ -137,12 +137,7 @@ public class StatusView extends ViewPart {
 		tvcStatus.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				Status s = (Status)element;
-				
-				if(s.isAtivo())
-					return "Ativo";
-				else
-					return "Desativado";
+				return ((Status)element).getStatus();
 			}
 		});
 		TableColumn tblclmnStatus = tvcStatus.getColumn();

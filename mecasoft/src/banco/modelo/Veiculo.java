@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import aplicacao.helper.PadraoHelper;
+
 @Entity
 public class Veiculo implements Serializable{
 
@@ -53,6 +55,13 @@ public class Veiculo implements Serializable{
 	@ManyToOne
 	@NotNull(message="Selecione o tipo de veículo.")
 	private TipoVeiculo tipo;
+	
+	public String getStatus(){
+		if(ativo)
+			return PadraoHelper.ATIVO;
+		else
+			return PadraoHelper.DESATIVADO;
+	}
 
 	public Long getId() {
 		return id;

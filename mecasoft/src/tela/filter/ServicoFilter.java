@@ -19,10 +19,7 @@ public class ServicoFilter extends MecasoftFilter{
 		if(ps.getValorUnitario().toString().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(ps.getAtivo() && "ativo".matches(search.toLowerCase()))
-			return true;
-		
-		if(!ps.getAtivo() && "desativado".matches(search.toLowerCase()))
+		if(ps.getStatus().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
 		return false;

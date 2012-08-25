@@ -10,6 +10,8 @@ import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import aplicacao.helper.PadraoHelper;
+
 @Entity
 public class Status implements Serializable{
 
@@ -32,6 +34,13 @@ public class Status implements Serializable{
 	@Column
 	private boolean pausar = false;
 
+	public String getStatus(){
+		if(ativo)
+			return PadraoHelper.ATIVO;
+		else
+			return PadraoHelper.DESATIVADO;
+	}
+	
 	public Long getId() {
 		return id;
 	}

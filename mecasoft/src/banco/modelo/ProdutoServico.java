@@ -19,6 +19,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import aplicacao.helper.PadraoHelper;
+
 @Entity
 public class ProdutoServico implements Serializable{
 
@@ -72,6 +74,13 @@ public class ProdutoServico implements Serializable{
 	)
 	private List<ProdutoServico> listaProduto = new ArrayList<ProdutoServico>();
 
+	public String getStatus(){
+		if(ativo)
+			return PadraoHelper.ATIVO;
+		else
+			return PadraoHelper.DESATIVADO;
+	}
+	
 	public Long getId() {
 		return id;
 	}
