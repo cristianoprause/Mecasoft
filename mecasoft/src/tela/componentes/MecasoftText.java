@@ -159,5 +159,9 @@ public class MecasoftText extends Composite {
 	public boolean getEditable(boolean editable){
 		return text.getEditable();
 	}
+	
+	public String getText(){
+		return text.getText();
+	}
 
 }

@@ -1,5 +1,6 @@
 package banco.DAO;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -34,6 +35,17 @@ public class ServicoPrestadoDAO extends HibernateConnection implements ServicoPr
 	@Override
 	public List<ServicoPrestado> findAll() {
 		Query q = getSession().createQuery("select s from ServicoPrestado s");
+		return q.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ServicoPrestado> findAllByPeriodo(Date dataInicial,
+			Date dataFinal) {
+		Query q = getSession().createQuery("select s from ServicoPrestado s where s.dataAbertura between :dataInicial and :dataFinal");
+		q.setParameter("dataInicial", dataInicial);
+		q.setParameter("dataFinal", dataFinal);
+		
 		return q.list();
 	}
 

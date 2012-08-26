@@ -1,8 +1,13 @@
 package tela.view;
 
+import static aplicacao.helper.MessageHelper.openError;
+
+import java.util.Date;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -27,8 +32,11 @@ import tela.componentes.MecasoftText;
 import tela.editor.AbrirOrdemServicoEditor;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import tela.filter.ServicoPrestadoFilter;
+import aplicacao.helper.FormatterHelper;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.ServicoPrestado;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 
 public class ServicoPrestadoView extends ViewPart {
 
@@ -100,6 +108,22 @@ public class ServicoPrestadoView extends ViewPart {
 		formToolkit.paintBordersFor(txtDataFinal);
 		
 		tvServicoPrestado = new TableViewer(frmServiosPrestados.getBody(), SWT.BORDER | SWT.FULL_SELECTION);
+		tvServicoPrestado.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				try {
+					IStructuredSelection selecao = (IStructuredSelection)tvServicoPrestado.getSelection();
+					
+					if(selecao.isEmpty())
+						return;
+					
+					ServicoPrestado sp = (ServicoPrestado)selecao.getFirstElement();
+
+					getSite().getPage().openEditor(new AbrirOrdemServicoEditorInput(sp), AbrirOrdemServicoEditor.ID);
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		table = tvServicoPrestado.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -177,8 +201,19 @@ public class ServicoPrestadoView extends ViewPart {
 		{
 			actionAtualizar = new Action("Atualizar") {				@Override
 				public void run() {
-					// TODO Auto-generated method stub
-					super.run();
+					Date dtInicial = null;
+					Date dtFinal = null;
+					
+					try{
+						dtInicial = FormatterHelper.DATEFORMAT.parse(txtDataInicial.getText());
+						dtFinal = FormatterHelper.DATEFORMAT.parse(txtDataFinal.getText());
+					}catch(Exception e){
+						openError("Informe as datas corretamente.");
+						return;
+					}
+
+					tvServicoPrestado.setInput(service.findAllByPeriodo(dtInicial, dtFinal));
+					tvServicoPrestado.refresh();
 				}
 			};
 			actionAtualizar.setImageDescriptor(ResourceManager.getPluginImageDescriptor("mecasoft", "assents/funcoes/refresh16.png"));

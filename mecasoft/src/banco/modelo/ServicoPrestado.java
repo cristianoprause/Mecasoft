@@ -2,6 +2,7 @@ package banco.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class ServicoPrestado implements Serializable{
 	private List<ItemServico> listaProdutos;
 	
 	@OneToMany(mappedBy="servicoPrestado")
-	private List<StatusServico> listaStatus;
+	private List<StatusServico> listaStatus = new ArrayList<StatusServico>();
 	
 	@OneToMany(mappedBy="servicoPrestado")
 	private List<FormaPagtoUtilizada> listaFormaPagto;

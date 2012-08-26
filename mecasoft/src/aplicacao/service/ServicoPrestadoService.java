@@ -1,5 +1,6 @@
 package aplicacao.service;
 
+import java.util.Date;
 import java.util.List;
 
 import banco.modelo.ServicoPrestado;
@@ -32,6 +33,18 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 	@Override
 	public List<ServicoPrestado> findAll() {
 		return getDAO().findAll();
+	}
+	
+	public List<ServicoPrestado> findAllByPeriodo(Date dataInicial, Date dataFinal){
+		return getDAO().findAllByPeriodo(dataInicial, dataFinal);
+	}
+
+	public ServicoPrestado getServicoPrestado() {
+		return servicoPrestado;
+	}
+
+	public void setServicoPrestado(ServicoPrestado servicoPrestado) {
+		this.servicoPrestado = servicoPrestado;
 	}
 
 }

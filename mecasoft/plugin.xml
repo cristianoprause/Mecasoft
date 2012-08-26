@@ -76,7 +76,7 @@
       <editor
             class="tela.editor.AbrirOrdemServicoEditor"
             id="tela.editor.AbrirOrdemServicoEditor"
-            name="New EditorPart">
+            name="Abrir ordem de serviço">
       </editor>
    </extension>
    <extension
