@@ -71,6 +71,8 @@ public class MecasoftText extends Composite {
 			for(int c = 0; c < caracteres.length(); c++)
 				texto = StringUtils.remove(texto, caracteres.charAt(c));
 			
+			texto = StringUtils.deleteWhitespace(texto);
+			
 			if(charContinuo != null)
 				texto = StringUtils.remove(texto, charContinuo);
 			
@@ -161,7 +163,14 @@ public class MecasoftText extends Composite {
 	}
 	
 	public String getText(){
+		if(text.getText() == null)
+			return "";
+					
 		return text.getText();
+	}
+
+	public String getCaracteres() {
+		return caracteres;
 	}
 
 }
