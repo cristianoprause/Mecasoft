@@ -51,9 +51,11 @@ import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.PadraoHelper;
+import aplicacao.service.CepService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.TipoFuncionarioService;
+import banco.modelo.Cep;
 import banco.modelo.ForneceProduto;
 import banco.modelo.ProdutoServico;
 import banco.modelo.TipoFuncionario;
@@ -61,6 +63,8 @@ import banco.modelo.Veiculo;
 import tela.componentes.MecasoftText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 
 
 public class PessoaEditor extends MecasoftEditor {
@@ -229,6 +233,12 @@ public class PessoaEditor extends MecasoftEditor {
 		lblCep.setText("CEP:");
 		
 		txtCep = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtCep.text.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				completarEndereco();
+			}
+		});
 		txtCep.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		txtCep.setOptions(MecasoftText.NUMEROS, 9);
 		txtCep.addChars(PadraoHelper.MECASOFTTXTCEP, new Integer[]{5}, null, null);
@@ -459,6 +469,25 @@ public class PessoaEditor extends MecasoftEditor {
 		btnRemoverProduto.setText("Remover");
 		
 		initDataBindings();
+	}
+	
+	public void completarEndereco(){
+		Cep endereco = new CepService().getEndereco(txtCep.getTextoSemFormatacao());
+		
+		if(endereco != null){
+			txtCidade.setText(endereco.getCidade());
+			txtBairro.setText(endereco.getBairro());
+			String ruaNum[] = endereco.getLogradouro().split(", ");
+			txtRua.setText(ruaNum[0]);
+			
+			if(ruaNum.length > 1)
+				txtNumero.setText(ruaNum[1]);
+			
+		}else{
+			txtCidade.setText("");
+			txtBairro.setText("");
+			txtRua.setText("");
+		}
 	}
 
 	@Override

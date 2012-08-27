@@ -168,9 +168,17 @@ public class MecasoftText extends Composite {
 					
 		return text.getText();
 	}
+	
+	public void setText(String text){
+		this.text.setText(text);
+	}
 
 	public String getCaracteres() {
 		return caracteres;
+	}
+	
+	public String getTextoSemFormatacao(){
+		return texto;
 	}
 
 }
