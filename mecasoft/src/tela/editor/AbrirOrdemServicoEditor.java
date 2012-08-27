@@ -1,6 +1,7 @@
 package tela.editor;
 
 import static aplicacao.helper.LayoutHelper.getActiveShell;
+import static aplicacao.helper.MessageHelper.openWarning;
 
 import java.util.List;
 
@@ -46,6 +47,7 @@ import banco.modelo.ItemServico;
 import banco.modelo.Pessoa;
 import banco.modelo.Status;
 import banco.modelo.StatusServico;
+import banco.modelo.Veiculo;
 
 public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
@@ -116,6 +118,16 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		txtVeiculo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		
 		Button btnSelecionarVeiculo = new Button(compositeConteudo, SWT.NONE);
+		btnSelecionarVeiculo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Veiculo v = selecionarVeiculo();
+				if(v != null){
+					txtVeiculo.setText(v.getModelo());
+					service.getServicoPrestado().setVeiculo(v);
+				}
+			}
+		});
 		btnSelecionarVeiculo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnSelecionarVeiculo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnSelecionarVeiculo.setText("Selecionar");
@@ -398,6 +410,23 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		sid.setElements(new PessoaService().findAllClientesAtivos().toArray());
 		return (Pessoa) sid.getElementoSelecionado();
+	}
+	
+	private Veiculo selecionarVeiculo(){
+		if(service.getServicoPrestado().getCliente() == null){
+			openWarning("Selecione primeiro o cliente para selecionar um veículo.");
+			return null;
+		}
+		
+		SelecionarItemDialog sid = new SelecionarItemDialog(getActiveShell(), new LabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((Veiculo)element).getModelo();
+			}
+		});
+		sid.setElements(service.getServicoPrestado().getCliente().getListaVeiculo().toArray());
+		
+		return (Veiculo) sid.getElementoSelecionado();
 	}
 
 	@Override
