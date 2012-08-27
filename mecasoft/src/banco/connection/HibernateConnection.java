@@ -9,13 +9,13 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 @SuppressWarnings("deprecation")
 public class HibernateConnection {
 	
-	private static SessionFactory sf;
+	private static SessionFactory sf;cdcdcddc
 	private static Session session;
 	private static Transaction tx;
   
 	public void initSystem() {  
   
-        // Cria uma configuração para a classe 
+        // Cria uma configuraï¿½ï¿½o para a classe 
 		AnnotationConfiguration cfg = new AnnotationConfiguration();
 		sf = cfg.configure().buildSessionFactory();
 		create(cfg);
