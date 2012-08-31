@@ -66,10 +66,10 @@ public class ServicoPrestado implements Serializable{
 	private Veiculo veiculo;
 	
 	@OneToMany(mappedBy="servicoPrestado")
-	private List<ItemServico> listaServicos;
+	private List<ItemServico> listaServicos = new ArrayList<ItemServico>();
 	
 	@OneToMany(mappedBy="servicoPrestado")
-	private List<ItemServico> listaProdutos;
+	private List<ItemServico> listaProdutos = new ArrayList<ItemServico>();
 	
 	@OneToMany(mappedBy="servicoPrestado")
 	private List<StatusServico> listaStatus = new ArrayList<StatusServico>();

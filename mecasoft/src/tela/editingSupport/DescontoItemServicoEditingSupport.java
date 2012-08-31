@@ -8,13 +8,13 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 
 import aplicacao.helper.FormatterHelper;
-import banco.modelo.ForneceProduto;
+import banco.modelo.ItemServico;
 
-public class ForneceProdutoEditingSupport extends EditingSupport{
+public class DescontoItemServicoEditingSupport extends EditingSupport{
 
 	private TableViewer viewer;
 	
-	public ForneceProdutoEditingSupport(TableViewer viewer) {
+	public DescontoItemServicoEditingSupport(TableViewer viewer) {
 		super(viewer);
 		this.viewer = viewer;
 	}
@@ -22,7 +22,6 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 	@Override
 	protected CellEditor getCellEditor(Object element) {
 		TextCellEditor textEditor = new TextCellEditor(viewer.getTable());
-		
 		return textEditor;
 	}
 
@@ -33,24 +32,31 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 
 	@Override
 	protected Object getValue(Object element) {
-		ForneceProduto fp = (ForneceProduto)element;
-
-		if(fp.getValorUnitario() != null)
-			return FormatterHelper.getDecimalFormat().format(fp.getValorUnitario());
+		ItemServico item = (ItemServico)element;
+		
+		if(item != null)
+			return FormatterHelper.getDecimalFormat().format(item.getDesconto());
 
 		return "";
 	}
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		String valor = (String) value;
-		
-		if(!valor.isEmpty()){
-			try{
-				((ForneceProduto)element).setValorUnitario(new BigDecimal(valor.replace(".", "").replace(",", ".")));
+		try{
+			String valor = (String) value;
+			ItemServico is = (ItemServico)element;
+			
+			if(!valor.isEmpty()){
+				is.setDesconto(new BigDecimal(valor.replace(",", ".")));
+				
+				BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
+					.subtract(is.getDesconto()).add(is.getAcrescimo());
+				is.setTotal(total);
+				
 				viewer.refresh();
-			}catch(Exception e){}
-		}
+			}
+		}catch(Exception e){}
+				
 	}
 
 }

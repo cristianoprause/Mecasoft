@@ -1,8 +1,10 @@
 package tela.editor;
 
 import static aplicacao.helper.LayoutHelper.getActiveShell;
+import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.MessageHelper.openWarning;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -17,6 +19,7 @@ import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -38,13 +41,18 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
 
 import tela.dialog.SelecionarItemDialog;
+import tela.editingSupport.AcrescimoItemServicoEditingSupport;
+import tela.editingSupport.DescontoItemServicoEditingSupport;
+import tela.editingSupport.QuantidadeItemServicoEditingSupport;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.service.PessoaService;
+import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.ServicoPrestadoService;
 import aplicacao.service.StatusService;
 import banco.modelo.ItemServico;
 import banco.modelo.Pessoa;
+import banco.modelo.ProdutoServico;
 import banco.modelo.Status;
 import banco.modelo.StatusServico;
 import banco.modelo.Veiculo;
@@ -61,11 +69,12 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private Table tableStatus;
 	private TableViewer tvServico;
 	private TableViewer tvItens;
-	
-	private ServicoPrestadoService service = new ServicoPrestadoService();
-	private List<Status> listaStatus;
 	private ComboViewer cvNovoStatus;
 	private TableViewer tvStatus;
+	
+	private ServicoPrestadoService service = new ServicoPrestadoService();
+	private ProdutoServicoService prodServService = new ProdutoServicoService();
+	private List<Status> listaStatus;
 
 	public AbrirOrdemServicoEditor() {
 	}
@@ -141,7 +150,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tableServicos.setLinesVisible(true);
 		tableServicos.setHeaderVisible(true);
 		GridData gd_tableServicos = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 2);
-		gd_tableServicos.widthHint = 608;
+		gd_tableServicos.widthHint = 658;
 		gd_tableServicos.heightHint = 95;
 		tableServicos.setLayoutData(gd_tableServicos);
 		
@@ -168,6 +177,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnValorBase.setText("Valor Base");
 		
 		TableViewerColumn tvcDesconto = new TableViewerColumn(tvServico, SWT.NONE);
+		tvcDesconto.setEditingSupport(new DescontoItemServicoEditingSupport(tvServico));
 		tvcDesconto.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -179,6 +189,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnDesconto.setText("Desconto");
 		
 		TableViewerColumn tvcAcrescimo = new TableViewerColumn(tvServico, SWT.NONE);
+		tvcAcrescimo.setEditingSupport(new AcrescimoItemServicoEditingSupport(tvServico));
 		tvcAcrescimo.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -189,13 +200,60 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnAcrescimo.setWidth(136);
 		tblclmnAcrescimo.setText("Acrescimo");
 		
+		TableViewerColumn tvcTotalServico = new TableViewerColumn(tvServico, SWT.NONE);
+		tvcTotalServico.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return FormatterHelper.getDecimalFormat().format(((ItemServico)element).getTotal());
+			}
+		});
+		TableColumn tblclmnTotalServico = tvcTotalServico.getColumn();
+		tblclmnTotalServico.setWidth(100);
+		tblclmnTotalServico.setText("Total");
+		
 		Button btnAdicionarServio = new Button(compositeConteudo, SWT.NONE);
+		btnAdicionarServio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ProdutoServico ps = selecionarServico();
+				if(ps != null){
+					
+					for(ItemServico is : service.getServicoPrestado().getListaServicos())
+						if(is.getItem().equals(ps))
+							return;
+						
+					ItemServico is = new ItemServico();
+					is.setDescricao(ps.getDescricao());
+					is.setTotal(ps.getValorUnitario());
+					is.setItem(ps);
+					is.setServicoPrestado(service.getServicoPrestado());
+					is.setValorUnitario(ps.getValorUnitario());
+					service.getServicoPrestado().getListaServicos().add(is);
+					tvServico.refresh();
+				}
+			}
+		});
 		btnAdicionarServio.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/servico/plusServico16.png"));
 		btnAdicionarServio.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnAdicionarServio.setText("Adicionar");
 		new Label(compositeConteudo, SWT.NONE);
 		
 		Button btnRemoverServio = new Button(compositeConteudo, SWT.NONE);
+		btnRemoverServio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection selecao = (IStructuredSelection)tvServico.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				if(openQuestion("Deseja realmente remover este serviço da lista?")){
+					ItemServico is = (ItemServico)selecao.getFirstElement();
+					service.getServicoPrestado().getListaServicos().remove(is);
+					tvServico.refresh();
+				}
+			}
+		});
 		btnRemoverServio.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/servico/lessServico16.png"));
 		btnRemoverServio.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRemoverServio.setText("Remover");
@@ -216,7 +274,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tvcDescricao.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.getDecimalFormat().format(((ItemServico)element).getDescricao());
+				return ((ItemServico)element).getDescricao();
 			}
 		});
 		TableColumn tblclmnDescricao = tvcDescricao.getColumn();
@@ -224,6 +282,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnDescricao.setText("Descri\u00E7\u00E3o");
 		
 		TableViewerColumn tvcQuantidade = new TableViewerColumn(tvItens, SWT.NONE);
+		tvcQuantidade.setEditingSupport(new QuantidadeItemServicoEditingSupport(tvItens));
 		tvcQuantidade.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -246,6 +305,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnValorUnitario.setText("Valor Unit\u00E1rio");
 		
 		TableViewerColumn tvcDescontoItens = new TableViewerColumn(tvItens, SWT.NONE);
+		tvcDescontoItens.setEditingSupport(new DescontoItemServicoEditingSupport(tvItens));
 		tvcDescontoItens.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -257,6 +317,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnDesconto_1.setText("Desconto");
 		
 		TableViewerColumn tvcAcrescimoItens = new TableViewerColumn(tvItens, SWT.NONE);
+		tvcAcrescimoItens.setEditingSupport(new AcrescimoItemServicoEditingSupport(tvItens));
 		tvcAcrescimoItens.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -280,12 +341,54 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnTotal.setText("Total");
 		
 		Button btnAdicionarItem = new Button(compositeConteudo, SWT.NONE);
+		btnAdicionarItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ProdutoServico ps = selecionarProduto();
+				if(ps != null){
+					
+					for(ItemServico item : service.getServicoPrestado().getListaProdutos()){
+						if(item.getItem().equals(ps)){
+							item.setQuantidade(item.getQuantidade() + 1);
+							item.setTotal(calculaTotal(item));
+							tvItens.refresh();
+							return;
+						}
+							
+					}
+					
+					ItemServico is = new ItemServico();
+					is.setDescricao(ps.getDescricao());
+					is.setValorUnitario(ps.getValorUnitario());
+					is.setTotal(ps.getValorUnitario());
+					is.setItem(ps);
+					is.setServicoPrestado(service.getServicoPrestado());
+					service.getServicoPrestado().getListaProdutos().add(is);
+					tvItens.refresh();
+				}
+			}
+		});
 		btnAdicionarItem.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnAdicionarItem.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/product/productAdd16.png"));
 		btnAdicionarItem.setText("Adicionar");
 		new Label(compositeConteudo, SWT.NONE);
 		
 		Button btnRemoverItem = new Button(compositeConteudo, SWT.NONE);
+		btnRemoverItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection selecao = (IStructuredSelection)tvItens.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				if(openQuestion("Deseja realmente remover este item da lista?")){
+					ItemServico is = (ItemServico)selecao.getFirstElement();
+					service.getServicoPrestado().getListaProdutos().remove(is);
+					tvItens.refresh();
+				}
+			}
+		});
 		btnRemoverItem.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/product/productRemove16.png"));
 		btnRemoverItem.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRemoverItem.setText("Remover");
@@ -428,7 +531,37 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		return (Veiculo) sid.getElementoSelecionado();
 	}
-
+	
+	private ProdutoServico selecionarServico(){
+		SelecionarItemDialog sid = new SelecionarItemDialog(getActiveShell(), new LabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return((ProdutoServico)element).getDescricao();
+			}
+		});
+		
+		sid.setElements(prodServService.findAllServicosAtivos().toArray());
+		
+		return (ProdutoServico)sid.getElementoSelecionado();
+	}
+	
+	private ProdutoServico selecionarProduto(){
+		SelecionarItemDialog sid = new SelecionarItemDialog(getActiveShell(), new LabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((ProdutoServico)element).getDescricao();
+			}
+		});
+		
+		sid.setElements(prodServService.findAllProdutosAtivos().toArray());
+		return (ProdutoServico)sid.getElementoSelecionado();
+	}
+	
+	public BigDecimal calculaTotal(ItemServico is){
+		return is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
+			.subtract(is.getDesconto()).add(is.getAcrescimo());
+	}
+	
 	@Override
 	public boolean isDirty() {
 		return false;
@@ -445,16 +578,16 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtVeiculoObserveTextObserveWidget, servicegetServicoPrestadoVeiculomodeloObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ItemServico.class, new String[]{"descricao", "valorUnitario", "desconto", "acrescimo"});
-		tvServico.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ItemServico.class, new String[]{"descricao", "valorUnitario", "desconto", "acrescimo"});
+//		tvServico.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvServico.setContentProvider(listContentProvider);
 		//
 		IObservableList servicegetServicoPrestadoListaServicosObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaServicos");
 		tvServico.setInput(servicegetServicoPrestadoListaServicosObserveList);
 		//
 		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ItemServico.class, new String[]{"descricao", "quantidade", "valorUnitario", "desconto", "acrescimo", "total"});
-		tvItens.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
+//		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ItemServico.class, new String[]{"descricao", "quantidade", "valorUnitario", "desconto", "acrescimo", "total"});
+//		tvItens.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
 		tvItens.setContentProvider(listContentProvider_1);
 		//
 		IObservableList servicegetServicoPrestadoListaProdutosObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaProdutos");
@@ -469,8 +602,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		cvNovoStatus.setInput(writableList);
 		//
 		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
-		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
-		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
+//		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
+//		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
 		tvStatus.setContentProvider(listContentProvider_3);
 		//
 		IObservableList servicegetServicoPrestadoListaStatusObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaStatus");

@@ -46,6 +46,10 @@ public class ProdutoServicoService extends MecasoftService<ProdutoServico>{
 		return getDAO().findAllByTipoAndStatus(ProdutoServico.TIPOPRODUTO, true);
 	}
 	
+	public List<ProdutoServico> findAllServicosAtivos(){
+		return getDAO().findAllByTipoAndStatus(ProdutoServico.TIPOSERVICO, true);
+	}
+	
 	public ProdutoServico getProdutoServico() {
 		return produtoServico;
 	}
