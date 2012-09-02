@@ -7,6 +7,6 @@ import banco.modelo.ServicoPrestado;
 
 public interface ServicoPrestadoUtils extends MecasoftUtils<ServicoPrestado>{
 
-	List<ServicoPrestado> findAllByPeriodo(Date dataInicial, Date dataFinal);
+	List<ServicoPrestado> findAllByPeriodoAndStatusAndConclusao(Date dataInicial, Date dataFinal, Boolean status, Boolean emExecucao);
 	
 }

@@ -22,6 +22,7 @@ import banco.connection.HibernateConnection;
 public abstract class MecasoftEditor extends EditorPart implements ISaveablePart2{
 	private Boolean showExcluir = true;
 	protected Composite compositeConteudo;
+	private Composite compositeBotoes;
 
 	public MecasoftEditor() {
 	}
@@ -49,7 +50,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		compositeConteudo = new Composite(composite, SWT.BORDER);
 		compositeConteudo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Composite compositeBotoes = new Composite(composite, SWT.BORDER);
+		compositeBotoes = new Composite(composite, SWT.BORDER);
 		compositeBotoes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		compositeBotoes.setLayout(new GridLayout(2, false));
 		
@@ -126,6 +127,10 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		}
 		
 //		return CANCEL;
+	}
+	
+	public Button createNewButton(){
+		return new Button(compositeBotoes, SWT.NONE);
 	}
 	
 	public void showComponentes(Boolean possuiId){}

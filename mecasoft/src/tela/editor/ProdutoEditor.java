@@ -188,13 +188,17 @@ public class ProdutoEditor extends MecasoftEditor {
 		tblclmnNome.setText("Nome");
 		
 		TableViewerColumn tvcValorUnitario = new TableViewerColumn(tvFornecedores, SWT.NONE);
+		tvcValorUnitario.setEditingSupport(new ForneceProdutoEditingSupport(tvFornecedores));
 		tvcValorUnitario.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.getDecimalFormat().format(((ForneceProduto)element).getValorUnitario());
+				try{
+					return FormatterHelper.getDecimalFormat().format(((ForneceProduto)element).getValorUnitario());
+				}catch(Exception e){
+					return "";
+				}
 			}
 		});
-		tvcValorUnitario.setEditingSupport(new ForneceProdutoEditingSupport(tvFornecedores));
 		TableColumn tblclmnValorUnitario = tvcValorUnitario.getColumn();
 		tblclmnValorUnitario.setWidth(100);
 		tblclmnValorUnitario.setText("Valor Unitário");

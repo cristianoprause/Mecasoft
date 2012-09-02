@@ -13,6 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 public class ServicoPrestado implements Serializable{
@@ -25,6 +30,12 @@ public class ServicoPrestado implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column
+	private boolean ativo = true;
+	
+	@Column
+	private boolean emExecucao = true;
 	
 	@Column
 	private BigDecimal totalServico;
@@ -54,24 +65,30 @@ public class ServicoPrestado implements Serializable{
 	private BigDecimal juros;
 	
 	@Column
-	private Date dataAbertura;
+	private Date dataAbertura = new Date();
 	
 	@Column
 	private Date dataFechamento;
 	
 	@ManyToOne
+	@NotNull(message="Selecione o cliente.")
 	private Pessoa cliente;
 	
 	@ManyToOne
+	@NotNull(message="Selecione o veículo")
 	private Veiculo veiculo;
 	
 	@OneToMany(mappedBy="servicoPrestado")
+	@Cascade(value={CascadeType.ALL})
 	private List<ItemServico> listaServicos = new ArrayList<ItemServico>();
 	
 	@OneToMany(mappedBy="servicoPrestado")
+	@Cascade(value={CascadeType.ALL})
 	private List<ItemServico> listaProdutos = new ArrayList<ItemServico>();
 	
 	@OneToMany(mappedBy="servicoPrestado")
+	@NotEmpty(message="Adicione ao menos um status.")
+	@Cascade(value={CascadeType.ALL})
 	private List<StatusServico> listaStatus = new ArrayList<StatusServico>();
 	
 	@OneToMany(mappedBy="servicoPrestado")
@@ -244,6 +261,22 @@ public class ServicoPrestado implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	public boolean isEmExecucao() {
+		return emExecucao;
+	}
+
+	public void setEmExecucao(boolean emExecucao) {
+		this.emExecucao = emExecucao;
 	}
 
 }

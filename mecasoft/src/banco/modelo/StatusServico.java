@@ -24,7 +24,7 @@ public class StatusServico implements Serializable{
 	private Long id;
 	
 	@Column
-	private Date data;
+	private Date data = new Date();
 	
 	@ManyToOne
 	private Pessoa funcionario;

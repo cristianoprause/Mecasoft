@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.hibernate.Query;
 
+import com.ibm.icu.util.Calendar;
+
 import banco.connection.HibernateConnection;
 import banco.modelo.ServicoPrestado;
 import banco.utils.ServicoPrestadoUtils;
@@ -40,11 +42,31 @@ public class ServicoPrestadoDAO extends HibernateConnection implements ServicoPr
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ServicoPrestado> findAllByPeriodo(Date dataInicial,
-			Date dataFinal) {
-		Query q = getSession().createQuery("select s from ServicoPrestado s where s.dataAbertura between :dataInicial and :dataFinal");
+	public List<ServicoPrestado> findAllByPeriodoAndStatusAndConclusao(Date dataInicial, Date dataFinal, Boolean status, Boolean emExecucao) {
+		
+		if(dataInicial != null && dataFinal != null){
+			Calendar c = Calendar.getInstance();
+			
+			c.setTime(dataInicial);
+			c.set(Calendar.HOUR_OF_DAY, 0);
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.SECOND, 0);
+			dataInicial = c.getTime();
+			
+			c.setTime(dataFinal);
+			c.set(Calendar.HOUR_OF_DAY, 23);
+			c.set(Calendar.MINUTE, 59);
+			c.set(Calendar.SECOND, 59);
+			dataFinal = c.getTime();
+		}
+		
+		Query q = getSession().createQuery("select s from ServicoPrestado s where (s.dataAbertura between :dataInicial and :dataFinal) " +
+				                           		"and (s.ativo is :status or :status is null) " +
+				                                "and (s.emExecucao is :emExecucao or :emExecucao is null)");
 		q.setParameter("dataInicial", dataInicial);
 		q.setParameter("dataFinal", dataFinal);
+		q.setParameter("status", status);
+		q.setParameter("emExecucao", emExecucao);
 		
 		return q.list();
 	}

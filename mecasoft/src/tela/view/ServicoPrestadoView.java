@@ -38,6 +38,8 @@ import banco.modelo.ServicoPrestado;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 
+import com.ibm.icu.util.Calendar;
+
 public class ServicoPrestadoView extends ViewPart {
 
 	public static final String ID = "tela.view.ServicoPrestadoView"; //$NON-NLS-1$
@@ -97,6 +99,10 @@ public class ServicoPrestadoView extends ViewPart {
 		formToolkit.adapt(txtDataInicial);
 		formToolkit.paintBordersFor(txtDataInicial);
 		
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, -1);
+		txtDataInicial.setText(FormatterHelper.DATEFORMAT.format(c.getTime()));
+		
 		Label lblAte = new Label(frmServiosPrestados.getBody(), SWT.NONE);
 		formToolkit.adapt(lblAte, true, true);
 		lblAte.setText("at\u00E9");
@@ -106,6 +112,8 @@ public class ServicoPrestadoView extends ViewPart {
 		txtDataFinal.addChars("//", new Integer[]{2, 4}, null, null);
 		formToolkit.adapt(txtDataFinal);
 		formToolkit.paintBordersFor(txtDataFinal);
+
+		txtDataFinal.setText(FormatterHelper.DATEFORMAT.format(new Date()));
 		
 		tvServicoPrestado = new TableViewer(frmServiosPrestados.getBody(), SWT.BORDER | SWT.FULL_SELECTION);
 		tvServicoPrestado.addDoubleClickListener(new IDoubleClickListener() {
@@ -170,7 +178,10 @@ public class ServicoPrestadoView extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				ServicoPrestado sp = (ServicoPrestado)element;
-				return sp.getListaStatus().get(sp.getListaStatus().size()-1).getFuncionario().getNomeFantasia();
+				if(!sp.getListaStatus().isEmpty())
+					return sp.getListaStatus().get(sp.getListaStatus().size()-1).getFuncionario().getNomeFantasia();
+				
+				return "";
 			}
 		});
 		TableColumn tblclmnMecnico = tvcMecanico.getColumn();
@@ -182,7 +193,12 @@ public class ServicoPrestadoView extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				ServicoPrestado sp = (ServicoPrestado)element;
-				return sp.getListaStatus().get(sp.getListaStatus().size()-1).getStatus().getDescricao();
+				if(!sp.isEmExecucao())
+					return "Concluido";
+				else if(!sp.getListaStatus().isEmpty())
+					return sp.getListaStatus().get(sp.getListaStatus().size()-1).getStatus().getDescricao();
+				
+				return "";
 			}
 		});
 		TableColumn tblclmnStatusAtual = tvcStatus.getColumn();
@@ -212,7 +228,7 @@ public class ServicoPrestadoView extends ViewPart {
 						return;
 					}
 
-					tvServicoPrestado.setInput(service.findAllByPeriodo(dtInicial, dtFinal));
+					tvServicoPrestado.setInput(service.findAllAtivosByPeriodo(dtInicial, dtFinal));
 					tvServicoPrestado.refresh();
 				}
 			};
@@ -234,7 +250,7 @@ public class ServicoPrestadoView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		// Set the focus
+		actionAtualizar.run();
 	}
 
 }

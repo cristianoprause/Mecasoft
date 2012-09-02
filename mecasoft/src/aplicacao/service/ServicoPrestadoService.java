@@ -35,14 +35,14 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 		return getDAO().findAll();
 	}
 	
-	public List<ServicoPrestado> findAllByPeriodo(Date dataInicial, Date dataFinal){
-		return getDAO().findAllByPeriodo(dataInicial, dataFinal);
+	public List<ServicoPrestado> findAllAtivosByPeriodo(Date dataInicial, Date dataFinal){
+		return getDAO().findAllByPeriodoAndStatusAndConclusao(dataInicial, dataFinal, true, null);
 	}
-
+	
 	public ServicoPrestado getServicoPrestado() {
 		return servicoPrestado;
 	}
-
+	
 	public void setServicoPrestado(ServicoPrestado servicoPrestado) {
 		this.servicoPrestado = servicoPrestado;
 	}
