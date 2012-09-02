@@ -1,5 +1,7 @@
 package tela.editingSupport;
 
+import static aplicacao.helper.MessageHelper.openWarning;
+
 import java.math.BigDecimal;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -47,10 +49,17 @@ public class DescontoItemServicoEditingSupport extends EditingSupport{
 			ItemServico is = (ItemServico)element;
 			
 			if(!valor.isEmpty()){
-				is.setDesconto(new BigDecimal(valor.replace(",", ".")));
 				
+				BigDecimal desconto = new BigDecimal(valor.replace(",", "."));
 				BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
-					.subtract(is.getDesconto()).add(is.getAcrescimo());
+					.subtract(desconto).add(is.getAcrescimo());
+				
+				if(total.compareTo(BigDecimal.ZERO) < 0){
+					openWarning("O desconto não pode ser superior ao valor total.");
+					return;
+				}
+				
+				is.setDesconto(desconto);
 				is.setTotal(total);
 				
 				viewer.refresh();

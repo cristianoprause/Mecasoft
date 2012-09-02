@@ -43,6 +43,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.dialog.SelecionarItemDialog;
 import tela.editingSupport.AcrescimoItemServicoEditingSupport;
@@ -63,7 +64,6 @@ import banco.modelo.ProdutoServico;
 import banco.modelo.Status;
 import banco.modelo.StatusServico;
 import banco.modelo.Veiculo;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
@@ -251,6 +251,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					ItemServico is = new ItemServico();
 					is.setDescricao(ps.getDescricao());
 					is.setTotal(ps.getValorUnitario());
+					is.setQuantidade(1);
 					is.setItem(ps);
 					is.setServicoPrestado(service.getServicoPrestado());
 					is.setValorUnitario(ps.getValorUnitario());
@@ -702,13 +703,13 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				tvItens.refresh();
 				return;
 			}
-				
 		}
-		
+
 		ItemServico is = new ItemServico();
 		is.setDescricao(ps.getDescricao());
 		is.setValorUnitario(ps.getValorUnitario());
-		is.setTotal(ps.getValorUnitario());
+		is.setQuantidade(0);
+		is.setTotal(BigDecimal.ZERO);
 		is.setItem(ps);
 		is.setServicoPrestado(service.getServicoPrestado());
 		service.getServicoPrestado().getListaProdutos().add(is);

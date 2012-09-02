@@ -24,7 +24,7 @@ public class ItemServico implements Serializable{
 	private Long id;
 	
 	@Column
-	private Integer quantidade = 1;
+	private Integer quantidade;
 	
 	@Column
 	private BigDecimal total;

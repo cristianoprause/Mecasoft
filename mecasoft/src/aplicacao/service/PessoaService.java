@@ -50,7 +50,7 @@ public class PessoaService extends MecasoftService<Pessoa>{
 	}
 	
 	public List<Pessoa> findAllAtivosSemUsuario(){
-		List<Pessoa> pessoas = getDAO().findAllByTipoAndStatus(null, true);
+		List<Pessoa> pessoas = getDAO().findAllByTipoAndStatus(Pessoa.FUNCIONARIO, true);
 		List<Usuario> usuarios = new UsuarioService().findAllAtivos();
 		
 		for(Usuario u : usuarios)

@@ -1,5 +1,7 @@
 package tela.editingSupport;
 
+import static aplicacao.helper.MessageHelper.openWarning;
+
 import java.math.BigDecimal;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -46,7 +48,14 @@ public class QuantidadeItemServicoEditingSupport extends EditingSupport{
 			String quantidade = (String) value;
 			
 			if(!quantidade.isEmpty()){
-				is.setQuantidade(Integer.parseInt(quantidade));
+				Integer valorQuantidade = Integer.parseInt(quantidade);
+				
+				if(is.getItem().isEstocavel() && is.getItem().getQuantidade().compareTo(valorQuantidade) < 0){
+					openWarning("Quantidade insuficiente em estoque.");
+					return;
+				}
+				
+				is.setQuantidade(valorQuantidade);
 				
 				BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
 					.subtract(is.getDesconto()).add(is.getAcrescimo());

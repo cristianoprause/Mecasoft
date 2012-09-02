@@ -30,6 +30,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import tela.dialog.SelecionarItemDialog;
 import tela.editor.editorInput.UsuarioEditorInput;
+import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.MessageHelper;
 import aplicacao.helper.ValidatorHelper;
@@ -137,8 +138,12 @@ public class UsuarioEditor extends MecasoftEditor{
 			service.saveOrUpdate();
 			MessageHelper.openInformation("Usuário salvo com sucesso!");
 			closeThisEditor();
-		} catch (aplicacao.exception.ValidationException e) {
+		} catch (ValidationException e) {
 			setErroMessage(e.getMessage());
+		}catch(Exception ex){
+			if(ex.getMessage().contains("(login)=(admin) já existe"))
+				setErroMessage("Já existe um usuário com o login informado.");
+			return;
 		}
 	}
 

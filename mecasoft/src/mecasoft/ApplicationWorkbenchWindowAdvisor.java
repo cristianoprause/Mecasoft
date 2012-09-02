@@ -1,5 +1,7 @@
 package mecasoft;
 
+import static aplicacao.helper.MessageHelper.openQuestion;
+
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -35,6 +37,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public boolean preWindowShellClose() {
+		return openQuestion("Tem certeza que deseja finalizar o sistema?");
 	}
 	
 	@Override
