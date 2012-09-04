@@ -138,4 +138,5 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	public void setErroMessage(String erro){
 		new ErroDialog(LayoutHelper.getActiveShell(), erro).open();
 	}
+	
 }

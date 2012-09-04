@@ -25,6 +25,10 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -43,6 +47,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.componentes.MecasoftText;
 import tela.dialog.SelecionarItemDialog;
 import tela.editingSupport.ForneceProdutoEditingSupport;
 import tela.editor.editorInput.PessoaEditorInput;
@@ -60,11 +65,6 @@ import banco.modelo.ForneceProduto;
 import banco.modelo.ProdutoServico;
 import banco.modelo.TipoFuncionario;
 import banco.modelo.Veiculo;
-import tela.componentes.MecasoftText;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 
 
 public class PessoaEditor extends MecasoftEditor {
@@ -88,9 +88,6 @@ public class PessoaEditor extends MecasoftEditor {
 	private Button btnAtivo;
 	private Button btnCliente;
 	private Button btnFornecedor;
-	
-	private PessoaService service = new PessoaService();
-	private List<TipoFuncionario> tiposFuncionarios;
 	private TableViewer tvVeiculo;
 	private TableViewer tvProduto;
 	private Combo cbCargo;
@@ -103,9 +100,13 @@ public class PessoaEditor extends MecasoftEditor {
 	private MecasoftText txtCelular;
 	private MecasoftText txtCep;
 	private MecasoftText txtNumero;
+	
+	private PessoaService service = new PessoaService();
+	private TipoFuncionarioService tipoFuncionarioService = new TipoFuncionarioService();
+	private List<TipoFuncionario> tiposFuncionarios;
 
 	public PessoaEditor() {
-		tiposFuncionarios = new TipoFuncionarioService().findAll();
+		tiposFuncionarios = tipoFuncionarioService.findAll();
 	}
 
 	@Override
@@ -552,6 +553,12 @@ public class PessoaEditor extends MecasoftEditor {
 		
 		setSite(site);
 		setInput(input);
+	}
+	
+	@Override
+	public void setFocus() {
+		tvProduto.refresh();
+		tvVeiculo.refresh();
 	}
 	
 	private ProdutoServico selecionarProduto(){
