@@ -180,7 +180,7 @@ public class PessoaEditor extends MecasoftEditor {
 		Label lblCartTrabalhoN = new Label(compositeConteudo, SWT.NONE);
 		lblCartTrabalhoN.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCartTrabalhoN.setText("Cart. trabalho N\u00BA:");
-		
+		 
 		txtCartNum = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtCartNum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		txtCartNum.setOptions(MecasoftText.NUMEROS, 7);
