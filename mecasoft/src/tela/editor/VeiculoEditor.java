@@ -52,6 +52,7 @@ public class VeiculoEditor extends MecasoftEditor {
 	private List<TipoVeiculo> tipos;
 	
 	private VeiculoService service = new VeiculoService();
+	private TipoVeiculoService tipoService = new TipoVeiculoService();
 	private PessoaService pessoaService;
 	private ComboViewer cvTipo;
 	private Button btnAtivo;
@@ -61,7 +62,7 @@ public class VeiculoEditor extends MecasoftEditor {
 	private MecasoftText txtHorimetro;
 
 	public VeiculoEditor() {
-		tipos = new TipoVeiculoService().findAll();
+		tipos = tipoService.findAll();
 	}
 
 	@Override
@@ -240,6 +241,15 @@ public class VeiculoEditor extends MecasoftEditor {
 		
 		return (Pessoa) sid.getElementoSelecionado();
 	}
+	
+	@Override
+	public void setFocus() {
+		
+		tipos = tipoService.findAll();
+		initDataBindings();
+		
+	}
+	
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//

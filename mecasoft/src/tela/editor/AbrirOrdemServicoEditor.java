@@ -82,6 +82,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	
 	private ServicoPrestadoService service = new ServicoPrestadoService();
 	private ProdutoServicoService prodServService = new ProdutoServicoService();
+	private StatusService statusService = new StatusService();
 	private PessoaService pessoaService = new PessoaService();
 	private List<Status> listaStatus;
 	private Pessoa funcionario;
@@ -97,6 +98,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private Button btnCancelarOrdem;
 
 	public AbrirOrdemServicoEditor() {
+		listaStatus = statusService.findAllAtivos();
 	}
 
 	@Override
@@ -603,7 +605,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		else
 			service.setServicoPrestado(aosei.getServicoPrestado());
 		
-		listaStatus = new StatusService().findAllAtivos();
 		organizarListas();
 		
 		setSite(site);
@@ -722,6 +723,13 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	public boolean isDirty() {
 		return service.isDirty();
 	}
+	
+	@Override
+	public void setFocus() {
+		listaStatus = statusService.findAllAtivos();
+		initDataBindings();
+	}
+	
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//

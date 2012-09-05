@@ -33,6 +33,7 @@ public class TipoFuncionarioDAO extends HibernateConnection implements TipoFunci
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TipoFuncionario> findAll() {
+//		Query q = createQueryClearSession("select t from TipoFuncionario t");
 		Query q = getSession().createQuery("select t from TipoFuncionario t");
 		return q.list();
 	}

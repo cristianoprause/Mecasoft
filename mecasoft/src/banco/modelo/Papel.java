@@ -1,6 +1,7 @@
 package banco.modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -60,7 +61,7 @@ public class Papel implements Serializable{
 	private boolean gerarRelatorio;
 	
 	@OneToMany(mappedBy="papel", cascade=CascadeType.ALL)
-	private List<Usuario> listaUsuarios;
+	private List<Usuario> listaUsuarios = new ArrayList<Usuario>();
 
 	public Long getId() {
 		return id;

@@ -50,12 +50,13 @@ public class UsuarioEditor extends MecasoftEditor{
 	private Button btnAtivo;
 	
 	private UsuarioService service = new UsuarioService();
+	private PapelService papelService = new PapelService();
 	private List<Papel> papeis;
 	
 	private ComboViewer comboViewer;
 	
 	public UsuarioEditor() {
-		papeis = new PapelService().findAll();
+		papeis = papelService.findAll();
 	}
 	
 	@Override
@@ -182,6 +183,14 @@ public class UsuarioEditor extends MecasoftEditor{
 		dialog.setElements(new PessoaService().findAllAtivosSemUsuario().toArray());
 		
 		return (Pessoa) dialog.getElementoSelecionado();
+	}
+	
+	@Override
+	public void setFocus() {
+		
+		papeis = papelService.findAll();
+		initDataBindings();
+		
 	}
 
 	protected DataBindingContext initDataBindings() {

@@ -546,9 +546,10 @@ public class PessoaEditor extends MecasoftEditor {
 		
 		PessoaEditorInput pei = (PessoaEditorInput)input;
 		
-		if(pei.getPessoa().getId() != null)
+		if(pei.getPessoa().getId() != null){
 			service.setPessoa(service.find(pei.getPessoa().getId()));
-		else
+			setPartName("Pessoa: " + service.getPessoa().getNomeFantasia());
+		}else
 			service.setPessoa(pei.getPessoa());
 		
 		setSite(site);
@@ -559,6 +560,10 @@ public class PessoaEditor extends MecasoftEditor {
 	public void setFocus() {
 		tvProduto.refresh();
 		tvVeiculo.refresh();
+		
+		tiposFuncionarios = tipoFuncionarioService.findAll();
+		initDataBindings();
+		
 	}
 	
 	private ProdutoServico selecionarProduto(){
