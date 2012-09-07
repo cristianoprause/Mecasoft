@@ -49,6 +49,7 @@ public class HibernateConnection {
 	
 	public static void commit(){
 		tx.commit();
+		session.clear();
 		tx = session.beginTransaction();
 	}
 	
