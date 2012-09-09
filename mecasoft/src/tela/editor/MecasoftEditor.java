@@ -20,9 +20,11 @@ import aplicacao.helper.MessageHelper;
 import banco.connection.HibernateConnection;
 
 public abstract class MecasoftEditor extends EditorPart implements ISaveablePart2{
-	private Boolean showExcluir = true;
+	
 	protected Composite compositeConteudo;
 	private Composite compositeBotoes;
+	private Boolean showExcluir = true;
+	private Boolean showSalvar = true;
 
 	public MecasoftEditor() {
 	}
@@ -84,6 +86,8 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		
 		if(!showExcluir)
 			btnExcluir.dispose();
+		if(!showSalvar)
+			btnSalvar.dispose();
 
 	}
 	
@@ -102,6 +106,10 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	
 	public void setShowExcluir(Boolean showExcluir){
 		this.showExcluir = showExcluir;
+	}
+
+	public void setShowSalvar(Boolean showSalvar){
+		this.showSalvar = showSalvar;
 	}
 	
 	public void closeThisEditor(){

@@ -78,6 +78,11 @@
             id="tela.editor.AbrirOrdemServicoEditor"
             name="Abrir ordem de serviço">
       </editor>
+      <editor
+            class="tela.editor.FecharOrdemServicoEditor"
+            id="tela.editor.FecharOrdemServicoEditor"
+            name="New EditorPart">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.views">

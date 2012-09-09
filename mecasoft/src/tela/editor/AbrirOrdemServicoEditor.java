@@ -50,6 +50,8 @@ import tela.editingSupport.AcrescimoItemServicoEditingSupport;
 import tela.editingSupport.DescontoItemServicoEditingSupport;
 import tela.editingSupport.QuantidadeItemServicoEditingSupport;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
+import tela.editor.editorInput.FecharOrdemServicoEditorInput;
+import tela.viewerSorter.TableStatusServicoViewerSorter;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
@@ -259,7 +261,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					is.setValorUnitario(ps.getValorUnitario());
 					service.getServicoPrestado().getListaServicos().add(is);
 					
-					btnCancelarOrdem.setEnabled(false);
+					setEnableButtonCancel();
 					
 					for(ProdutoServico item : ps.getListaProduto())
 						adicionarItens(item);
@@ -286,8 +288,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					ItemServico is = (ItemServico)selecao.getFirstElement();
 					service.getServicoPrestado().getListaServicos().remove(is);
 					
-					btnCancelarOrdem.setEnabled(service.getServicoPrestado().getListaServicos().size() == 0
-						&& service.getServicoPrestado().getListaProdutos().size() == 0);
+					setEnableButtonCancel();
 					
 					tvServico.refresh();
 				}
@@ -407,8 +408,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					ItemServico is = (ItemServico)selecao.getFirstElement();
 					service.getServicoPrestado().getListaProdutos().remove(is);
 					
-					btnCancelarOrdem.setEnabled(service.getServicoPrestado().getListaServicos().size() == 0
-							&& service.getServicoPrestado().getListaProdutos().size() == 0);
+					setEnableButtonCancel();
 					
 					tvItens.refresh();
 				}
@@ -418,8 +418,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		btnRemoverItem.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRemoverItem.setText("Remover");
 		
-		Label lblMecanico = new Label(compositeConteudo, SWT.NONE);
-		lblMecanico.setText("Mec\u00E2nico:");
+		Label lblFuncionario = new Label(compositeConteudo, SWT.NONE);
+		lblFuncionario.setText("Funcion\u00E1rio:");
 		
 		txtFuncionario = new Text(compositeConteudo, SWT.BORDER);
 		txtFuncionario.setEnabled(false);
@@ -467,14 +467,15 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				
 				Status status = (Status)selecao.getFirstElement();
 				ss.setStatus(status);
-				
 				ss.setUsuarioRegistro(UsuarioHelper.getUsuarioLogado());
 				
 				service.getServicoPrestado().getListaStatus().add(ss);
 				txtStatusAtual.setText(status.getDescricao());
 				tvStatus.refresh();
 				txtFuncionario.setText("");
-				funcionario = null; 
+				funcionario = null;
+				
+				
 			}
 		});
 		btnAlterarStatus.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
@@ -507,6 +508,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		gd_tableStatus.widthHint = 593;
 		gd_tableStatus.heightHint = 95;
 		tableStatus.setLayoutData(gd_tableStatus);
+		tvStatus.setSorter(new TableStatusServicoViewerSorter());
 		
 		TableViewerColumn tvcStatus = new TableViewerColumn(tvStatus, SWT.NONE);
 		tvcStatus.setLabelProvider(new ColumnLabelProvider(){
@@ -533,7 +535,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tvcData.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.DATEFORMAT.format(((StatusServico)element).getData());
+				return FormatterHelper.DATEFORMATDATAHORA.format(((StatusServico)element).getData());
 			}
 
 			@Override
@@ -550,8 +552,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnData.setWidth(159);
 		tblclmnData.setText("Data");
 		
-		TableViewerColumn tvcMecanico = new TableViewerColumn(tvStatus, SWT.NONE);
-		tvcMecanico.setLabelProvider(new ColumnLabelProvider(){
+		TableViewerColumn tvcFuncionario = new TableViewerColumn(tvStatus, SWT.NONE);
+		tvcFuncionario.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
 				return ((StatusServico)element).getFuncionario().getNomeFantasia();
@@ -567,9 +569,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
 			}
 		});
-		TableColumn tblclmnMecanico = tvcMecanico.getColumn();
-		tblclmnMecanico.setWidth(299);
-		tblclmnMecanico.setText("Mec\u00E2nico");
+		TableColumn tblclmnFuncionario = tvcFuncionario.getColumn();
+		tblclmnFuncionario.setWidth(299);
+		tblclmnFuncionario.setText("Funcion\u00E1rio");
 		new Label(compositeConteudo, SWT.NONE);
 		
 		btnCancelarOrdem = createNewButton();
@@ -586,9 +588,21 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		});
 		btnCancelarOrdem.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/cancel32.png"));
 		btnCancelarOrdem.setText("Cancelar ordem");
-		btnCancelarOrdem.setEnabled(service.getServicoPrestado().isAtivo()
-			&& service.getServicoPrestado().getListaProdutos().size() == 0
-			&& service.getServicoPrestado().getListaServicos().size() == 0);
+		
+		Button btnFecharOrdem = createNewButton();
+		btnFecharOrdem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					getSite().getPage().openEditor(new FecharOrdemServicoEditorInput(service.getServicoPrestado()), FecharOrdemServicoEditor.ID);
+				} catch (PartInitException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnFecharOrdem.setText("Fechar Ordem");
+		
+		setEnableButtonCancel();
 		
 		initDataBindings();
 		
@@ -715,7 +729,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		is.setServicoPrestado(service.getServicoPrestado());
 		service.getServicoPrestado().getListaProdutos().add(is);
 		
-		btnCancelarOrdem.setEnabled(false);
+		setEnableButtonCancel();
 		tvItens.refresh();
 	}
 	
@@ -728,6 +742,13 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	public void setFocus() {
 		listaStatus = statusService.findAllAtivos();
 		initDataBindings();
+	}
+	
+	public void setEnableButtonCancel(){
+		btnCancelarOrdem.setEnabled(service.getServicoPrestado().isAtivo()
+				&& service.getServicoPrestado().getId() != null
+				&& service.getServicoPrestado().getListaProdutos().size() == 0
+				&& service.getServicoPrestado().getListaServicos().size() == 0);
 	}
 	
 	protected DataBindingContext initDataBindings() {
