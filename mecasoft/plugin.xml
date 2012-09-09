@@ -81,7 +81,13 @@
       <editor
             class="tela.editor.FecharOrdemServicoEditor"
             id="tela.editor.FecharOrdemServicoEditor"
-            name="New EditorPart">
+            name="Fechar ordem de serviço">
+      </editor>
+      <editor
+            class="tela.editor.FormaPagamentoEditor"
+            icon="assents/formaPagamento/formaPagamento16.png"
+            id="tela.editor.FormaPagamentoEditor"
+            name="Forma de pagamento">
       </editor>
    </extension>
    <extension
@@ -142,6 +148,12 @@
             class="tela.view.ServicoPrestadoView"
             id="tela.view.ServicoPrestadoView"
             name="Serviços Prestados">
+      </view>
+      <view
+            class="tela.view.FormaPagamentoView"
+            icon="assents/formaPagamento/formaPagamento16.png"
+            id="tela.view.FormaPagamentoView"
+            name="Lista de formas de pagamento">
       </view>
    </extension>
    <extension
@@ -250,6 +262,16 @@
                <parameter
                      name="org.eclipse.ui.views.showView.viewId"
                      value="tela.view.StatusView">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  icon="assents/formaPagamento/formaPagamento16.png"
+                  id="mecasoft.menuFormaPagamento"
+                  label="Forma de pagamento">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.FormaPagamentoView">
                </parameter>
             </command>
          </menu>

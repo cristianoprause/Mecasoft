@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import aplicacao.helper.PadraoHelper;
 
 @Entity
@@ -23,10 +25,11 @@ public class FormaPagamento implements Serializable{
 	private Long id;
 	
 	@Column
+	@NotEmpty(message="Informe o nome.")
 	private String nome;
 	
 	@Column
-	private boolean geraPagVista;
+	private boolean geraPagVista = true;
 	
 	@Column
 	private boolean geraDuplicata;
