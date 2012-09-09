@@ -1,5 +1,13 @@
 package tela.editor;
 
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -16,8 +24,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.componentes.MecasoftText;
+import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.PadraoHelper;
 import aplicacao.service.ServicoPrestadoService;
+import banco.modelo.FormaPagtoUtilizada;
 
 public class FecharOrdemServicoEditor extends MecasoftEditor {
 
@@ -26,6 +36,13 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	private Table table;
 	
 	private ServicoPrestadoService service = new ServicoPrestadoService();
+	private MecasoftText txtTotalServico;
+	private MecasoftText txtTotalItem;
+	private MecasoftText txtLocomocao;
+	private MecasoftText txtMaoObra;
+	private MecasoftText txtDesconto;
+	private MecasoftText txtTroco;
+	private TableViewer tableViewer;
 
 	public FecharOrdemServicoEditor() {
 	}
@@ -37,10 +54,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void excluirRegistro() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void excluirRegistro() {}
 
 	@Override
 	public void addComponentes(Composite compositeConteudo) {
@@ -49,7 +63,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		Label lblTotalServicos = new Label(compositeConteudo, SWT.NONE);
 		lblTotalServicos.setText("Total servi\u00E7os:");
 		
-		MecasoftText txtTotalServico = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtTotalServico = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtTotalServico.setEnabled(false);
 		txtTotalServico.setOptions(MecasoftText.NUMEROS, -1);
 		txtTotalServico.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
@@ -59,7 +73,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		Label lblTotalItens = new Label(compositeConteudo, SWT.NONE);
 		lblTotalItens.setText("Total itens:");
 		
-		MecasoftText txtTotalItem = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtTotalItem = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtTotalItem.setEnabled(false);
 		txtTotalItem.setOptions(MecasoftText.NUMEROS, -1);
 		txtTotalItem.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
@@ -69,8 +83,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		Label lblLocomocao = new Label(compositeConteudo, SWT.NONE);
 		lblLocomocao.setText("Locomo\u00E7\u00E3o:");
 		
-		MecasoftText txtLocomocao = new MecasoftText(compositeConteudo, SWT.NONE);
-		txtLocomocao.setEnabled(false);
+		txtLocomocao = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtLocomocao.setOptions(MecasoftText.NUMEROS, -1);
 		txtLocomocao.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtLocomocao.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -79,8 +92,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		Label lblMaoDeObra = new Label(compositeConteudo, SWT.NONE);
 		lblMaoDeObra.setText("M\u00E3o de obra:");
 		
-		MecasoftText txtMaoObra = new MecasoftText(compositeConteudo, SWT.NONE);
-		txtMaoObra.setEnabled(false);
+		txtMaoObra = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtMaoObra.setOptions(MecasoftText.NUMEROS, -1);
 		txtMaoObra.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtMaoObra.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -89,7 +101,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		Label lblDesconto = new Label(compositeConteudo, SWT.NONE);
 		lblDesconto.setText("Desconto:");
 		
-		MecasoftText txtDesconto = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtDesconto = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtDesconto.setOptions(MecasoftText.NUMEROS, -1);
 		txtDesconto.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtDesconto.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -106,7 +118,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		Label lblFormasDePagamento = new Label(compositeConteudo, SWT.NONE);
 		lblFormasDePagamento.setText("Formas de pagamento:");
 		
-		TableViewer tableViewer = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewer = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
 		table = tableViewer.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -115,11 +127,23 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		table.setLayoutData(gd_table);
 		
 		TableViewerColumn tvcForma = new TableViewerColumn(tableViewer, SWT.NONE);
+		tvcForma.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((FormaPagtoUtilizada)element).getFormaPagamento().getNome();
+			}
+		});
 		TableColumn tblclmnForma = tvcForma.getColumn();
 		tblclmnForma.setWidth(310);
 		tblclmnForma.setText("Forma");
 		
 		TableViewerColumn tvcValor = new TableViewerColumn(tableViewer, SWT.NONE);
+		tvcValor.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return FormatterHelper.getDecimalFormat().format(((FormaPagtoUtilizada)element).getValor());
+			}
+		});
 		TableColumn tblclmnValor = tvcValor.getColumn();
 		tblclmnValor.setWidth(100);
 		tblclmnValor.setText("Valor");
@@ -136,10 +160,11 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		Label lblTroco = new Label(compositeConteudo, SWT.NONE);
 		lblTroco.setText("Troco:");
 		
-		MecasoftText txtTroco = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtTroco = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtTroco.setEnabled(false);
 		txtTroco.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
+		initDataBindings();
 	}
 
 	@Override
@@ -156,5 +181,45 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	public boolean isDirty() {
 		return service.isDirty();
 	}
-
+	protected DataBindingContext initDataBindings() {
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableValue txtTotalServicotextObserveTextObserveWidget = SWTObservables.observeText(txtTotalServico.text, SWT.Modify);
+		IObservableValue servicegetServicoPrestadoTotalServicoObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "totalServico");
+		bindingContext.bindValue(txtTotalServicotextObserveTextObserveWidget, servicegetServicoPrestadoTotalServicoObserveValue, null, null);
+		//
+		IObservableValue txtTotalItemtextObserveTextObserveWidget = SWTObservables.observeText(txtTotalItem.text, SWT.Modify);
+		IObservableValue servicegetServicoPrestadoTotalItensObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "totalItens");
+		bindingContext.bindValue(txtTotalItemtextObserveTextObserveWidget, servicegetServicoPrestadoTotalItensObserveValue, null, null);
+		//
+		IObservableValue txtLocomocaotextObserveTextObserveWidget = SWTObservables.observeText(txtLocomocao.text, SWT.Modify);
+		IObservableValue servicegetServicoPrestadoTotalLocomocaoObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "totalLocomocao");
+		bindingContext.bindValue(txtLocomocaotextObserveTextObserveWidget, servicegetServicoPrestadoTotalLocomocaoObserveValue, null, null);
+		//
+		IObservableValue txtMaoObratextObserveTextObserveWidget = SWTObservables.observeText(txtMaoObra.text, SWT.Modify);
+		IObservableValue servicegetServicoPrestadoTotalMaoObraObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "totalMaoObra");
+		bindingContext.bindValue(txtMaoObratextObserveTextObserveWidget, servicegetServicoPrestadoTotalMaoObraObserveValue, null, null);
+		//
+		IObservableValue txtDescontotextObserveTextObserveWidget = SWTObservables.observeText(txtDesconto.text, SWT.Modify);
+		IObservableValue servicegetServicoPrestadoDescontoObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "desconto");
+		bindingContext.bindValue(txtDescontotextObserveTextObserveWidget, servicegetServicoPrestadoDescontoObserveValue, null, null);
+		//
+		IObservableValue lblValorTotalObserveTextObserveWidget = SWTObservables.observeText(lblValorTotal);
+		IObservableValue servicegetServicoPrestadoValorTotalObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "valorTotal");
+		bindingContext.bindValue(lblValorTotalObserveTextObserveWidget, servicegetServicoPrestadoValorTotalObserveValue, null, null);
+		//
+		IObservableValue txtTrocotextObserveTextObserveWidget = SWTObservables.observeText(txtTroco.text, SWT.Modify);
+		IObservableValue servicegetServicoPrestadoTrocoObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "troco");
+		bindingContext.bindValue(txtTrocotextObserveTextObserveWidget, servicegetServicoPrestadoTrocoObserveValue, null, null);
+		//
+		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), FormaPagtoUtilizada.class, new String[]{"formaPagamento.nome", "valor"});
+//		tableViewer.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+		tableViewer.setContentProvider(listContentProvider);
+		//
+		IObservableList servicegetServicoPrestadoListaFormaPagtoObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaFormaPagto");
+		tableViewer.setInput(servicegetServicoPrestadoListaFormaPagtoObserveList);
+		//
+		return bindingContext;
+	}
 }
