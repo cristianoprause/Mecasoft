@@ -1,6 +1,13 @@
 package tela.editor;
 
+import static aplicacao.helper.MessageHelper.openInformation;
+import static aplicacao.helper.MessageHelper.openQuestion;
+import static aplicacao.helper.ValidatorHelper.validar;
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -9,7 +16,9 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -32,10 +41,13 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import tela.componentes.MecasoftText;
 import tela.dialog.AdicionarFormaPagamentoDialog;
 import tela.editor.editorInput.FecharOrdemServicoEditorInput;
+import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.PadraoHelper;
+import aplicacao.service.DuplicataService;
 import aplicacao.service.ServicoPrestadoService;
+import banco.modelo.Duplicata;
 import banco.modelo.FormaPagtoUtilizada;
 
 public class FecharOrdemServicoEditor extends MecasoftEditor {
@@ -43,8 +55,6 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	public static final String ID = "tela.editor.FecharOrdemServicoEditor"; //$NON-NLS-1$
 	private Label lblValorTotal;
 	private Table table;
-	
-	private ServicoPrestadoService service = new ServicoPrestadoService();
 	private MecasoftText txtTotalServico;
 	private MecasoftText txtTotalItem;
 	private MecasoftText txtLocomocao;
@@ -53,14 +63,50 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	private MecasoftText txtTroco;
 	private TableViewer tvFormaPagamento;
 	private MecasoftText txtJuros;
+	private Button btnAdicionar;
+	
+	private ServicoPrestadoService service = new ServicoPrestadoService();
+	private DuplicataService duplicataService = new DuplicataService();
+	private BigDecimal totalPago = BigDecimal.ZERO;
+	private List<Duplicata> listaDuplicatas = new ArrayList<Duplicata>();
 
 	public FecharOrdemServicoEditor() {
 	}
 
 	@Override
 	public void salvarRegistro() {
-		// TODO Auto-generated method stub
-		
+		try {
+			validar(service.getServicoPrestado());
+			
+			if(service.getServicoPrestado().getListaFormaPagto().isEmpty()){
+				setErroMessage("Adicione ao menos uma forma de pagamento");
+				return;
+			}
+			
+			if(totalPago.compareTo(service.getServicoPrestado().getValorTotal()) < 0){
+				setErroMessage("A soma do valor das formas de pagamento não pode ser inferior ao total da nota.");
+				return;
+			}
+			
+			//salva as duplicatas, caso geradas
+			if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraDuplicata()){
+				for(Duplicata duplicata : listaDuplicatas){
+					duplicataService.setDuplicata(duplicata);
+					duplicataService.saveOrUpdate();
+				}
+			}
+			
+			//serviço concluido
+			service.getServicoPrestado().setEmExecucao(false);
+			service.getServicoPrestado().setDataFechamento(new Date());
+			
+			service.saveOrUpdate();
+			openInformation("Ordem de serviço fechada com sucesso!");
+			closeThisEditor();
+			
+		} catch (ValidationException e) {
+			setErroMessage(e.getMessage());
+		}
 	}
 
 	@Override
@@ -192,18 +238,52 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		tblclmnValor.setWidth(100);
 		tblclmnValor.setText("Valor");
 		
-		Button btnAdicionar = new Button(compositeConteudo, SWT.NONE);
+		btnAdicionar = new Button(compositeConteudo, SWT.NONE);
 		btnAdicionar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AdicionarFormaPagamentoDialog afpd = new AdicionarFormaPagamentoDialog(LayoutHelper.getActiveShell(), service.getServicoPrestado());
-				afpd.open();
+				if(afpd.open() == IDialogConstants.OK_ID){
+					calcularTotais();
+					tvFormaPagamento.refresh();
+					
+					//verifica se foram adicionadas duplicatas
+					btnAdicionar.setEnabled(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraPagVista());
+					
+					if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraDuplicata())
+						listaDuplicatas = afpd.getListaDuplicatas();
+					
+				}
 			}
 		});
 		btnAdicionar.setText("Adicionar");
 		new Label(compositeConteudo, SWT.NONE);
 		
 		Button btnRemover = new Button(compositeConteudo, SWT.NONE);
+		btnRemover.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection selecao = (IStructuredSelection) tvFormaPagamento.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				FormaPagtoUtilizada formaUtilizada = (FormaPagtoUtilizada)selecao.getFirstElement();
+				
+				if(openQuestion("Deseja realmente remover esta forma de pagamento da lista?")){
+					service.getServicoPrestado().getListaFormaPagto().remove(formaUtilizada);
+					calcularTotais();
+					tvFormaPagamento.refresh();
+					
+					if(service.getServicoPrestado().getListaFormaPagto().isEmpty()){
+						btnAdicionar.setEnabled(true);
+						return;
+					}
+					
+					btnAdicionar.setEnabled(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraPagVista());
+				}
+			}
+		});
 		btnRemover.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnRemover.setText("Remover");
 		
@@ -214,6 +294,16 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		txtTroco.setEnabled(false);
 		txtTroco.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
+		
+		Button btnFecharOrdem = createNewButton();
+		btnFecharOrdem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				salvarRegistro();
+			}
+		});
+		btnFecharOrdem.setText("Fechar Ordem");
+		
 		initDataBindings();
 	}
 
@@ -248,10 +338,11 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		service.getServicoPrestado().setValorTotal(service.getServicoPrestado().getValorTotal().subtract(desconto));
 		
 		BigDecimal troco = BigDecimal.ZERO;
+		totalPago = BigDecimal.ZERO;
 		for(FormaPagtoUtilizada pagto : service.getServicoPrestado().getListaFormaPagto()){
-			troco = troco.add(pagto.getValor());
+			totalPago = totalPago.add(pagto.getValor());
 		}
-		troco = troco.subtract(service.getServicoPrestado().getValorTotal());
+		troco = totalPago.subtract(service.getServicoPrestado().getValorTotal());
 		
 		service.getServicoPrestado().setTroco(troco.compareTo(BigDecimal.ZERO) > 0 ? troco : BigDecimal.ZERO);
 		

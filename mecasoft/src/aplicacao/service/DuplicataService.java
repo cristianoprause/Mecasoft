@@ -38,4 +38,12 @@ public class DuplicataService extends MecasoftService<Duplicata>{
 		return getDAO().findAll();
 	}
 
+	public Duplicata getDuplicata() {
+		return duplicata;
+	}
+
+	public void setDuplicata(Duplicata duplicata) {
+		this.duplicata = duplicata;
+	}
+
 }

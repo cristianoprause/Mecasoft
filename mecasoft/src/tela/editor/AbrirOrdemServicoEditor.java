@@ -603,6 +603,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		btnFecharOrdem.setText("Fechar Ordem");
+		btnFecharOrdem.setEnabled(service.getServicoPrestado().isEmExecucao());
 		
 		setEnableButtonCancel();
 		
@@ -613,7 +614,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
-		setShowExcluir(false);
 		AbrirOrdemServicoEditorInput aosei = (AbrirOrdemServicoEditorInput)input;
 		
 		if(aosei.getServicoPrestado().getId() != null)
@@ -621,6 +621,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		else
 			service.setServicoPrestado(aosei.getServicoPrestado());
 		
+		setShowExcluir(false);
+		setShowSalvar(service.getServicoPrestado().isEmExecucao());
 		organizarListas();
 		
 		setSite(site);

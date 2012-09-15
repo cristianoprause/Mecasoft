@@ -214,6 +214,23 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		TableColumn tblclmnValor = tvcValor.getColumn();
 		tblclmnValor.setWidth(137);
 		tblclmnValor.setText("Valor");
+		
+		//remove as formas de pagamento que geram duplicatas
+		//caso a ordem ja tenha uma forma a vista
+		if(!servico.getListaFormaPagto().isEmpty()){
+			if(servico.getListaFormaPagto().get(0).getFormaPagamento().isGeraPagVista()){
+				//clone da lista pq nao é possivel editala no loop
+				List<FormaPagamento> listaClone = new ArrayList<FormaPagamento>();
+				listaClone.addAll(listaFormaPagto);
+				
+				for(FormaPagamento forma : listaClone){
+					if(forma.isGeraDuplicata())
+						listaFormaPagto.remove(forma);
+				}
+			}
+		}
+		
+		initDataBindings();
 
 		return area;
 	}
@@ -228,22 +245,28 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 				true);
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
-		initDataBindings();
 	}
 	
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(buttonId == OK){
 			try {
-				validar(formaUtilizada);
+				validar(formaUtilizada);				
+				
+				atualizarValores();
+				
+				if(servico.getValorEntrada().compareTo(servico.getValorTotal()) > 0){
+					setErrorMessage("O valor de entrada não pode ser superior ao valor total");
+				}
 				
 				servico.getListaFormaPagto().add(formaUtilizada);
-				
-				super.buttonPressed(buttonId);
 			} catch (ValidationException e) {
-				e.printStackTrace();
+				setErrorMessage(e.getMessage());
+				return;
 			}
 		}
+		
+		super.buttonPressed(buttonId);
 	}
 	
 	private void atualizarValores(){
@@ -375,4 +398,13 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		//
 		return bindingContext;
 	}
+
+	public List<Duplicata> getListaDuplicatas() {
+		return listaDuplicatas;
+	}
+
+	public void setListaDuplicatas(List<Duplicata> listaDuplicatas) {
+		this.listaDuplicatas = listaDuplicatas;
+	}	
+	
 }

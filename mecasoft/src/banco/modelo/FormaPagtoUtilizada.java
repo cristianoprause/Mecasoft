@@ -29,6 +29,7 @@ public class FormaPagtoUtilizada implements Serializable{
 	private BigDecimal valor = BigDecimal.ZERO;
 	
 	@ManyToOne
+	@NotNull(message="Selecione uma forma de pagamento.")
 	private FormaPagamento formaPagamento;
 	
 	@ManyToOne
