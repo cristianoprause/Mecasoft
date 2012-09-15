@@ -2,37 +2,40 @@ package banco.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 
 @Entity
-public class FormaPagtoUtilizada implements Serializable{
+public class Duplicata implements Serializable{
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2216864617210689815L;
+	private static final long serialVersionUID = -8776365347618416726L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column
-	@NotNull(message="Informe o valor.")
-	private BigDecimal valor = BigDecimal.ZERO;
+	private String numero;
+	
+	@Column
+	private BigDecimal valor;
+	
+	@Column
+	private Date dataVencimento;
+	
+	@Column
+	private boolean pago = false;
 	
 	@ManyToOne
-	private FormaPagamento formaPagamento;
-	
-	@ManyToOne
-	@JoinColumn(name="servicoPrestado_id")
 	private ServicoPrestado servicoPrestado;
 
 	public Long getId() {
@@ -43,6 +46,14 @@ public class FormaPagtoUtilizada implements Serializable{
 		this.id = id;
 	}
 
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
 	public BigDecimal getValor() {
 		return valor;
 	}
@@ -51,12 +62,20 @@ public class FormaPagtoUtilizada implements Serializable{
 		this.valor = valor;
 	}
 
-	public FormaPagamento getFormaPagamento() {
-		return formaPagamento;
+	public Date getDataVencimento() {
+		return dataVencimento;
 	}
 
-	public void setFormaPagamento(FormaPagamento formaPagamento) {
-		this.formaPagamento = formaPagamento;
+	public void setDataVencimento(Date dataVencimento) {
+		this.dataVencimento = dataVencimento;
+	}
+
+	public boolean isPago() {
+		return pago;
+	}
+
+	public void setPago(boolean pago) {
+		this.pago = pago;
 	}
 
 	public ServicoPrestado getServicoPrestado() {
@@ -83,7 +102,7 @@ public class FormaPagtoUtilizada implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FormaPagtoUtilizada other = (FormaPagtoUtilizada) obj;
+		Duplicata other = (Duplicata) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

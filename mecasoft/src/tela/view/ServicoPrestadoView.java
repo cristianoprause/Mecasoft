@@ -33,6 +33,7 @@ import tela.editor.AbrirOrdemServicoEditor;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import tela.filter.ServicoPrestadoFilter;
 import aplicacao.helper.FormatterHelper;
+import aplicacao.helper.PadraoHelper;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.ServicoPrestado;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -95,7 +96,7 @@ public class ServicoPrestadoView extends ViewPart {
 		
 		txtDataInicial = new MecasoftText(frmServiosPrestados.getBody(), SWT.NONE);
 		txtDataInicial.setOptions(MecasoftText.NUMEROS, 10);
-		txtDataInicial.addChars("//", new Integer[]{2, 4}, null, null);
+		txtDataInicial.addChars(PadraoHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
 		formToolkit.adapt(txtDataInicial);
 		formToolkit.paintBordersFor(txtDataInicial);
 		
@@ -109,7 +110,7 @@ public class ServicoPrestadoView extends ViewPart {
 		
 		txtDataFinal = new MecasoftText(frmServiosPrestados.getBody(), SWT.NONE);
 		txtDataFinal.setOptions(MecasoftText.NUMEROS, 10);
-		txtDataFinal.addChars("//", new Integer[]{2, 4}, null, null);
+		txtDataFinal.addChars(PadraoHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
 		formToolkit.adapt(txtDataFinal);
 		formToolkit.paintBordersFor(txtDataFinal);
 

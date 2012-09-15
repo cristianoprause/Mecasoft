@@ -44,19 +44,19 @@ public class ServicoPrestado implements Serializable{
 	private BigDecimal totalItens;
 	
 	@Column
-	private BigDecimal totalLocomocao;
+	private BigDecimal totalLocomocao = BigDecimal.ZERO;
 	
 	@Column
-	private BigDecimal totalMaoObra;
+	private BigDecimal totalMaoObra = BigDecimal.ZERO;
 	
 	@Column
 	private BigDecimal valorTotal;
 	
 	@Column
-	private BigDecimal desconto;
+	private BigDecimal desconto = BigDecimal.ZERO;
 	
 	@Column
-	private BigDecimal troco;
+	private BigDecimal troco = BigDecimal.ZERO;
 	
 	@Column
 	private BigDecimal valorEntrada;

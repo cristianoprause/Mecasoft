@@ -37,4 +37,12 @@ public class FormaPagamentoDAO extends HibernateConnection implements FormaPagam
 		return q.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<FormaPagamento> findAllByStatus(Boolean status) {
+		Query q = getSession().createQuery("select f from FormaPagamento f where f.ativo is :status");
+		q.setParameter("status", status);
+		return q.list();
+	}
+
 }

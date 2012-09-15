@@ -12,5 +12,6 @@ public class PadraoHelper {
 	public static String MECASOFTTXTMOEDA = ",";
 	public static String MECASOFTTXTTELEFONE = "() -";
 	public static String MECASOFTTXTCEP = "-";
+	public static String MECASOFTTXTDATA = "//";
 	
 }

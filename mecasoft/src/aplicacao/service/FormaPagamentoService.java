@@ -33,6 +33,10 @@ public class FormaPagamentoService extends MecasoftService<FormaPagamento>{
 	public List<FormaPagamento> findAll() {
 		return getDAO().findAll();
 	}
+	
+	public List<FormaPagamento> findAllAtivos(){
+		return getDAO().findAllByStatus(true);
+	}
 
 	public FormaPagamento getForma() {
 		return forma;

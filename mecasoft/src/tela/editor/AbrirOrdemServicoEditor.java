@@ -594,6 +594,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
+					calcularTotais();
+					
 					getSite().getPage().openEditor(new FecharOrdemServicoEditorInput(service.getServicoPrestado()), FecharOrdemServicoEditor.ID);
 				} catch (PartInitException e1) {
 					e1.printStackTrace();
@@ -749,6 +751,27 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				&& service.getServicoPrestado().getId() != null
 				&& service.getServicoPrestado().getListaProdutos().size() == 0
 				&& service.getServicoPrestado().getListaServicos().size() == 0);
+	}
+	
+	private void calcularTotais(){
+		BigDecimal totalServicos = BigDecimal.ZERO;
+		BigDecimal totalItens = BigDecimal.ZERO;
+		BigDecimal total;
+		
+		for(ItemServico servico : service.getServicoPrestado().getListaServicos()){
+			totalServicos = totalServicos.add(servico.getTotal());
+		}
+		
+		for(ItemServico item : service.getServicoPrestado().getListaProdutos()){
+			totalItens = totalItens.add(item.getTotal());
+		}
+		
+		total = totalServicos.add(totalItens);
+		
+		service.getServicoPrestado().setTotalItens(totalItens);
+		service.getServicoPrestado().setTotalServico(totalServicos);
+		service.getServicoPrestado().setValorTotal(total);
+		
 	}
 	
 	protected DataBindingContext initDataBindings() {
