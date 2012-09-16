@@ -18,6 +18,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -29,9 +30,11 @@ import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ConfiguracaoService;
 import aplicacao.service.PessoaService;
+import aplicacao.service.UsuarioService;
 import banco.connection.HibernateConnection;
 import banco.modelo.Configuracao;
 import banco.modelo.Pessoa;
+import banco.modelo.Usuario;
 
 public class ConfiguracaoDialog extends TitleAreaDialog {
 	private Text txtEmpresa;
@@ -41,6 +44,10 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 	private MecasoftText txtFinalTarde;
 	
 	private ConfiguracaoService service = new ConfiguracaoService();
+	private UsuarioService usuarioService = new UsuarioService();
+	private Text txtSenhaAtual;
+	private Text txtNovaSenha;
+	private Text txtConfirmarSenha;
 
 	/**
 	 * Create the dialog.
@@ -53,6 +60,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			service.setConfiguracao(new Configuracao());
 		else
 			service.setConfiguracao(service.find(UsuarioHelper.getConfiguracaoPadrao().getId()));
+		
 	}
 
 	/**
@@ -64,19 +72,21 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		setMessage("Selecione a pessoa cadastrada que representa a empresa e informe os horarios de espediente");
 		setTitle("Configura\u00E7\u00F5es");
 		Composite area = (Composite) super.createDialogArea(parent);
-		Composite container = new Composite(area, SWT.NONE);
-		container.setLayout(new GridLayout(5, false));
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+		area.setLayout(new GridLayout(1, false));
 		
-		Label lblEmpresa = new Label(container, SWT.NONE);
-		lblEmpresa.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		Group grpEmpresa = new Group(area, SWT.NONE);
+		grpEmpresa.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		grpEmpresa.setLayout(new GridLayout(6, false));
+		grpEmpresa.setText("Empresa");
+		
+		Label lblEmpresa = new Label(grpEmpresa, SWT.NONE);
 		lblEmpresa.setText("Empresa:");
 		
-		txtEmpresa = new Text(container, SWT.BORDER);
+		txtEmpresa = new Text(grpEmpresa, SWT.BORDER);
 		txtEmpresa.setEnabled(false);
 		txtEmpresa.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
-		Button btnSelecionar = new Button(container, SWT.NONE);
+		Button btnSelecionar = new Button(grpEmpresa, SWT.NONE);
 		btnSelecionar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -89,11 +99,12 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		});
 		btnSelecionar.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnSelecionar.setText("Selecionar");
+		new Label(grpEmpresa, SWT.NONE);
 		
-		Label lblPeriodoManh = new Label(container, SWT.NONE);
+		Label lblPeriodoManh = new Label(grpEmpresa, SWT.NONE);
 		lblPeriodoManh.setText("Per\u00EDodo manh\u00E3:");
 		
-		txtInicioManha = new MecasoftText(container, SWT.NONE);
+		txtInicioManha = new MecasoftText(grpEmpresa, SWT.NONE);
 		GridData gridData = (GridData) txtInicioManha.text.getLayoutData();
 		gridData.widthHint = 100;
 		gridData.grabExcessHorizontalSpace = false;
@@ -103,10 +114,10 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtInicioManha.setText(service.getConfiguracao().getDtInicioManha() == null ? "" :
 			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtInicioManha()));
 		
-		Label lblAte = new Label(container, SWT.NONE);
+		Label lblAte = new Label(grpEmpresa, SWT.NONE);
 		lblAte.setText("at\u00E9");
 		
-		txtFinalManha = new MecasoftText(container, SWT.NONE);
+		txtFinalManha = new MecasoftText(grpEmpresa, SWT.NONE);
 		GridData gridData_1 = (GridData) txtFinalManha.text.getLayoutData();
 		gridData_1.widthHint = 100;
 		gridData_1.grabExcessHorizontalSpace = false;
@@ -116,23 +127,24 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtFinalManha.setText(service.getConfiguracao().getDtFinalManha() == null ? "" :
 			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtFinalManha()));
 		
-		new Label(container, SWT.NONE);
+		new Label(grpEmpresa, SWT.NONE);
+		new Label(grpEmpresa, SWT.NONE);
 		
-		Label lblPeriodoTarde = new Label(container, SWT.NONE);
+		Label lblPeriodoTarde = new Label(grpEmpresa, SWT.NONE);
 		lblPeriodoTarde.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPeriodoTarde.setText("Per\u00EDodo tarde:");
 		
-		txtInicioTarde = new MecasoftText(container, SWT.BORDER);
+		txtInicioTarde = new MecasoftText(grpEmpresa, SWT.NONE);
 		txtInicioTarde.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		txtInicioTarde.setOptions(MecasoftText.NUMEROS, 5);
 		txtInicioTarde.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
 		txtInicioTarde.setText(service.getConfiguracao().getDtInicioTarde() == null ? "" :
 			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtInicioTarde()));
 		
-		Label lblAt = new Label(container, SWT.NONE);
+		Label lblAt = new Label(grpEmpresa, SWT.NONE);
 		lblAt.setText("at\u00E9");
 		
-		txtFinalTarde = new MecasoftText(container, SWT.NONE);
+		txtFinalTarde = new MecasoftText(grpEmpresa, SWT.NONE);
 		GridData gridData_2 = (GridData) txtFinalTarde.text.getLayoutData();
 		gridData_2.grabExcessHorizontalSpace = false;
 		gridData_2.widthHint = 100;
@@ -140,7 +152,32 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtFinalTarde.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
 		txtFinalTarde.setText(service.getConfiguracao().getDtFinalTarde() == null ? "" :
 			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtFinalTarde()));
-		new Label(container, SWT.NONE);
+		new Label(grpEmpresa, SWT.NONE);
+		new Label(grpEmpresa, SWT.NONE);
+		
+		Group grpSenha = new Group(area, SWT.NONE);
+		grpSenha.setLayout(new GridLayout(2, false));
+		grpSenha.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		grpSenha.setText("Senha");
+		
+		Label lblSenhaAtual = new Label(grpSenha, SWT.NONE);
+		lblSenhaAtual.setText("Senha atual:");
+		
+		txtSenhaAtual = new Text(grpSenha, SWT.BORDER | SWT.PASSWORD);
+		txtSenhaAtual.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblNovaSenha = new Label(grpSenha, SWT.NONE);
+		lblNovaSenha.setText("Nova senha:");
+		
+		txtNovaSenha = new Text(grpSenha, SWT.BORDER | SWT.PASSWORD);
+		txtNovaSenha.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblConfirmarSenha = new Label(grpSenha, SWT.NONE);
+		lblConfirmarSenha.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblConfirmarSenha.setText("Confirmar senha:");
+		
+		txtConfirmarSenha = new Text(grpSenha, SWT.BORDER | SWT.PASSWORD);
+		txtConfirmarSenha.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		initDataBindings();
 
@@ -163,6 +200,25 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		
 		try{
+			//verificar senha do usuario
+			if(!txtSenhaAtual.getText().isEmpty() || !txtNovaSenha.getText().isEmpty()){
+				if(!txtSenhaAtual.getText().equals(UsuarioHelper.getUsuarioLogado().getSenha())){
+					setErrorMessage("Senha incorreta. Informe a senha atual corretamente para alterar a senha ou apague o campo \"Senha atual\".");
+					return;
+				}
+				
+				if(!txtNovaSenha.getText().equals(txtConfirmarSenha.getText())){
+					setErrorMessage("Nova senha e confirmar senha não estão batendo.");
+					return;
+				}
+				
+				Usuario user = UsuarioHelper.getUsuarioLogado();
+				user.setSenha(txtNovaSenha.getText());
+				usuarioService.setUsuario(user);
+				usuarioService.saveOrUpdate();
+			}
+			
+			//verificar horario
 			if(!txtInicioManha.getText().isEmpty())
 				service.getConfiguracao().setDtInicioManha(FormatterHelper.DATEFOTMATHORA.parse(txtInicioManha.getText()));
 			
@@ -206,7 +262,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 238);
+		return new Point(462, 386);
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();

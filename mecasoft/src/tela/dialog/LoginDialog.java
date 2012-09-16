@@ -98,11 +98,6 @@ public class LoginDialog extends TitleAreaDialog {
 				txtUsuario.setFocus();
 				return;
 			}
-			if(txtSenha.getText().isEmpty()){
-				setErrorMessage("Senha não informada");
-				txtSenha.setFocus();
-				return;
-			}
 			
 			usuario = service.login(txtUsuario.getText(), txtSenha.getText());
 			
