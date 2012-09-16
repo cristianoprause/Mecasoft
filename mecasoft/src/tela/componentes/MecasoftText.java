@@ -5,9 +5,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridLayout;
 
 public class MecasoftText extends Composite {
 
@@ -16,6 +16,7 @@ public class MecasoftText extends Composite {
 	public static Integer LETRAS = 1;
 
 	private boolean passou;
+	private Integer posicaoCursor;
 	private Integer max;
 	private Integer aceita;
 	private String caracteres;
@@ -61,12 +62,16 @@ public class MecasoftText extends Composite {
 			public void keyReleased(KeyEvent e) {
 				formatar();
 			}
+			
 		});
 
 	}
 
 	private void formatar() {
 		if(passou){
+			//pega posicao do cursor para ele nao sair do lugar
+			posicaoCursor = text.getCaretPosition();
+			
 			texto = text.getText();
 			for(int c = 0; c < caracteres.length(); c++)
 				texto = StringUtils.remove(texto, caracteres.charAt(c));
@@ -97,7 +102,9 @@ public class MecasoftText extends Composite {
 			}
 			
 			text.setText(textoRetorno);
-			text.setSelection(textoRetorno.length());
+			
+			//seta a posiçao do cursor onde ela deveria ficar
+			text.setSelection(posicaoCursor, posicaoCursor);
 			
 		}
 		

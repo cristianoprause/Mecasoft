@@ -123,6 +123,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	
 	@Override
 	public int promptToSaveOnClose() {
+		
 		if(MessageHelper.openQuestion("Os dados foram alterados, deseja salvar antes de sair?")){
 			salvarRegistro();
 			return YES;
@@ -134,7 +135,6 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 			return NO;
 		}
 		
-//		return CANCEL;
 	}
 	
 	public Button createNewButton(){
