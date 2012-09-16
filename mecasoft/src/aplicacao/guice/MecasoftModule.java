@@ -1,5 +1,6 @@
 package aplicacao.guice;
 
+import banco.DAO.ConfiguracaoDAO;
 import banco.DAO.DuplicataDAO;
 import banco.DAO.FormaPagamentoDAO;
 import banco.DAO.PapelDAO;
@@ -11,6 +12,7 @@ import banco.DAO.TipoFuncionarioDAO;
 import banco.DAO.TipoVeiculoDAO;
 import banco.DAO.UsuarioDAO;
 import banco.DAO.VeiculoDAO;
+import banco.utils.ConfiguracaoUtils;
 import banco.utils.DuplicataUtils;
 import banco.utils.FormaPagamentoUtils;
 import banco.utils.PapelUtils;
@@ -40,6 +42,7 @@ public class MecasoftModule extends AbstractModule{
 		bind(ServicoPrestadoUtils.class).to(ServicoPrestadoDAO.class);
 		bind(FormaPagamentoUtils.class).to(FormaPagamentoDAO.class);
 		bind(DuplicataUtils.class).to(DuplicataDAO.class);
+		bind(ConfiguracaoUtils.class).to(ConfiguracaoDAO.class);
 	}
 
 }

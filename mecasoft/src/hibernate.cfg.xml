@@ -24,5 +24,6 @@
 		<mapping class="banco.modelo.StatusServico"/>
 		<mapping class="banco.modelo.ServicoPrestado"/>
 		<mapping class="banco.modelo.Duplicata"/>
+		<mapping class="banco.modelo.Configuracao"/>
 	</session-factory>
 </hibernate-configuration>
