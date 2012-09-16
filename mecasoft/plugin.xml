@@ -163,6 +163,16 @@
          <menu
                label="Arquivo">
             <command
+                  commandId="mecasoft.configuracaoCommand"
+                  icon="assents/funcoes/config16.png"
+                  label="Configurações"
+                  style="push">
+            </command>
+            <separator
+                  name="mecasoft.separator1"
+                  visible="true">
+            </separator>
+            <command
                   commandId="mecasoft.reiniciarCommand"
                   icon="assents/funcoes/reset16.png"
                   label="Reiniciar">
@@ -305,6 +315,11 @@
             defaultHandler="aplicacao.command.SairCommand"
             id="mecasoft.sairCommand"
             name="Sair">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.ConfiguracaoCommand"
+            id="mecasoft.configuracaoCommand"
+            name="Configuração">
       </command>
    </extension>
    <extension

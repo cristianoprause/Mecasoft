@@ -55,7 +55,6 @@ import tela.editor.editorInput.VeiculoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
-import aplicacao.helper.PadraoHelper;
 import aplicacao.service.CepService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
@@ -150,15 +149,15 @@ public class PessoaEditor extends MecasoftEditor {
 		txtCpfCnpj.text.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(txtCpfCnpj.getText().length() > 14 && txtCpfCnpj.getCaracteres().equals(PadraoHelper.MECASOFTTXTCPF))
-					txtCpfCnpj.addChars(PadraoHelper.MECASOFTTXTCNPJ, new Integer[]{2, 5, 8, 12}, null, null);
-				else if(txtCpfCnpj.getText().length() <= 14 && txtCpfCnpj.getCaracteres().equals(PadraoHelper.MECASOFTTXTCNPJ))
-					txtCpfCnpj.addChars(PadraoHelper.MECASOFTTXTCPF, new Integer[]{3, 6, 9}, null, null);
+				if(txtCpfCnpj.getText().length() > 14 && txtCpfCnpj.getCaracteres().equals(FormatterHelper.MECASOFTTXTCPF))
+					txtCpfCnpj.addChars(FormatterHelper.MECASOFTTXTCNPJ, new Integer[]{2, 5, 8, 12}, null, null);
+				else if(txtCpfCnpj.getText().length() <= 14 && txtCpfCnpj.getCaracteres().equals(FormatterHelper.MECASOFTTXTCNPJ))
+					txtCpfCnpj.addChars(FormatterHelper.MECASOFTTXTCPF, new Integer[]{3, 6, 9}, null, null);
 			}
 		});
 		txtCpfCnpj.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 6, 1));
 		txtCpfCnpj.setOptions(MecasoftText.NUMEROS, 18);
-		txtCpfCnpj.addChars(PadraoHelper.MECASOFTTXTCPF, new Integer[]{3, 6, 9}, null, null);
+		txtCpfCnpj.addChars(FormatterHelper.MECASOFTTXTCPF, new Integer[]{3, 6, 9}, null, null);
 		
 		Label lblRginscricaoEst = new Label(compositeConteudo, SWT.NONE);
 		lblRginscricaoEst.setText("RG/Inscri\u00E7\u00E3o Est:");
@@ -167,15 +166,15 @@ public class PessoaEditor extends MecasoftEditor {
 		txtRgInscrEst.text.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(txtRgInscrEst.getText().length() > 11 && txtRgInscrEst.getCaracteres().equals(PadraoHelper.MECASOFTTXTRG))
-					txtRgInscrEst.addChars(PadraoHelper.MECASOFTTXTINSCRICAOESTADUAL, new Integer[]{3, 6, 9}, null, null);
-				else if(txtRgInscrEst.getText().length() <= 11 && txtRgInscrEst.getCaracteres().equals(PadraoHelper.MECASOFTTXTINSCRICAOESTADUAL))
-					txtRgInscrEst.addChars(PadraoHelper.MECASOFTTXTRG, new Integer[]{1, 4, 7}, null, null);
+				if(txtRgInscrEst.getText().length() > 11 && txtRgInscrEst.getCaracteres().equals(FormatterHelper.MECASOFTTXTRG))
+					txtRgInscrEst.addChars(FormatterHelper.MECASOFTTXTINSCRICAOESTADUAL, new Integer[]{3, 6, 9}, null, null);
+				else if(txtRgInscrEst.getText().length() <= 11 && txtRgInscrEst.getCaracteres().equals(FormatterHelper.MECASOFTTXTINSCRICAOESTADUAL))
+					txtRgInscrEst.addChars(FormatterHelper.MECASOFTTXTRG, new Integer[]{1, 4, 7}, null, null);
 			}
 		});
 		txtRgInscrEst.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 6, 1));
 		txtRgInscrEst.setOptions(MecasoftText.NUMEROS, 15);
-		txtRgInscrEst.addChars(PadraoHelper.MECASOFTTXTRG, new Integer[]{1, 4, 7}, null, null);
+		txtRgInscrEst.addChars(FormatterHelper.MECASOFTTXTRG, new Integer[]{1, 4, 7}, null, null);
 		
 		Label lblCartTrabalhoN = new Label(compositeConteudo, SWT.NONE);
 		lblCartTrabalhoN.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -191,7 +190,7 @@ public class PessoaEditor extends MecasoftEditor {
 		txtSerie = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtSerie.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		txtSerie.setOptions(MecasoftText.NUMEROS, 5);
-		txtSerie.addChars(PadraoHelper.MECASOFTTXTSERIECARTEIRATRABALHO, new Integer[]{3}, null, null);
+		txtSerie.addChars(FormatterHelper.MECASOFTTXTSERIECARTEIRATRABALHO, new Integer[]{3}, null, null);
 		
 		Label lblSalario = new Label(compositeConteudo, SWT.NONE);
 		lblSalario.setText("Sal\u00E1rio:");
@@ -199,7 +198,7 @@ public class PessoaEditor extends MecasoftEditor {
 		txtSalario = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtSalario.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		txtSalario.setOptions(MecasoftText.NUMEROS, -1);
-		txtSalario.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtSalario.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		
 		Label lblCargo = new Label(compositeConteudo, SWT.NONE);
 		lblCargo.setText("Cargo:");
@@ -214,7 +213,7 @@ public class PessoaEditor extends MecasoftEditor {
 		txtFoneFax = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtFoneFax.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		txtFoneFax.setOptions(MecasoftText.NUMEROS, 14);
-		txtFoneFax.addChars(PadraoHelper.MECASOFTTXTTELEFONE, new Integer[]{0, 2, 2, 6}, null, null);
+		txtFoneFax.addChars(FormatterHelper.MECASOFTTXTTELEFONE, new Integer[]{0, 2, 2, 6}, null, null);
 		
 		Label lblCelular = new Label(compositeConteudo, SWT.NONE);
 		lblCelular.setText("Celular:");
@@ -222,7 +221,7 @@ public class PessoaEditor extends MecasoftEditor {
 		txtCelular = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtCelular.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		txtCelular.setOptions(MecasoftText.NUMEROS, 14);
-		txtCelular.addChars(PadraoHelper.MECASOFTTXTTELEFONE, new Integer[]{0, 2, 2, 6}, null, null);
+		txtCelular.addChars(FormatterHelper.MECASOFTTXTTELEFONE, new Integer[]{0, 2, 2, 6}, null, null);
 		
 		Label lblEmail = new Label(compositeConteudo, SWT.NONE);
 		lblEmail.setText("E-mail:");
@@ -242,7 +241,7 @@ public class PessoaEditor extends MecasoftEditor {
 		});
 		txtCep.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		txtCep.setOptions(MecasoftText.NUMEROS, 9);
-		txtCep.addChars(PadraoHelper.MECASOFTTXTCEP, new Integer[]{5}, null, null);
+		txtCep.addChars(FormatterHelper.MECASOFTTXTCEP, new Integer[]{5}, null, null);
 		
 		Label lblCidade = new Label(compositeConteudo, SWT.NONE);
 		lblCidade.setText("Cidade:");

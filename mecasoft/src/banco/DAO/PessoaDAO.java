@@ -54,11 +54,13 @@ public class PessoaDAO extends HibernateConnection implements PessoaUtils{
 		Query q = getSession().createQuery("select p from Pessoa p where (p.ativo is :status or :status is null) " +
 			"and ((p.tipoCliente is :cliente and :cliente is true) " +
 			       "or (p.tipoFornecedor is :fornecedor and :fornecedor is true) " +
-			       "or (p.tipoFuncionario is :funcionario and :funcionario is true))");
+			       "or (p.tipoFuncionario is :funcionario and :funcionario is true) " +
+			       "or (:tipo like ''))");
 		q.setParameter("status", status)
 		.setParameter("cliente", cliente)
 		.setParameter("fornecedor", fornecedor)
-		.setParameter("funcionario", funcionario);
+		.setParameter("funcionario", funcionario)
+		.setParameter("tipo", tipo);
 		return q.list();
 	}
 

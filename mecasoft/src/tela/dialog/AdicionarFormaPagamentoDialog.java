@@ -43,7 +43,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import tela.componentes.MecasoftText;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
-import aplicacao.helper.PadraoHelper;
 import aplicacao.service.DuplicataService;
 import aplicacao.service.FormaPagamentoService;
 import banco.modelo.Duplicata;
@@ -111,7 +110,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		
 		txtValor = new MecasoftText(container, SWT.NONE);
 		txtValor.setOptions(MecasoftText.NUMEROS, -1);
-		txtValor.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtValor.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtValor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNParcelas = new Label(container, SWT.NONE);
@@ -140,7 +139,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		});
 		txtValorEntrada.setEnabled(false);
 		txtValorEntrada.setOptions(MecasoftText.NUMEROS, -1);
-		txtValorEntrada.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtValorEntrada.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtValorEntrada.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDiasEntreParcelas = new Label(container, SWT.NONE);
@@ -170,7 +169,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		});
 		txtDataParcela.setEnabled(false);
 		txtDataParcela.setOptions(MecasoftText.NUMEROS, 10);
-		txtDataParcela.addChars(PadraoHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
+		txtDataParcela.addChars(FormatterHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
 		txtDataParcela.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		tvDuplicatas = new TableViewer(container, SWT.BORDER | SWT.FULL_SELECTION);

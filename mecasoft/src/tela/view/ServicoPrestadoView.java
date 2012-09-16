@@ -7,6 +7,8 @@ import java.util.Date;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -33,11 +35,8 @@ import tela.editor.AbrirOrdemServicoEditor;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import tela.filter.ServicoPrestadoFilter;
 import aplicacao.helper.FormatterHelper;
-import aplicacao.helper.PadraoHelper;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.ServicoPrestado;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.DoubleClickEvent;
 
 import com.ibm.icu.util.Calendar;
 
@@ -96,7 +95,7 @@ public class ServicoPrestadoView extends ViewPart {
 		
 		txtDataInicial = new MecasoftText(frmServiosPrestados.getBody(), SWT.NONE);
 		txtDataInicial.setOptions(MecasoftText.NUMEROS, 10);
-		txtDataInicial.addChars(PadraoHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
+		txtDataInicial.addChars(FormatterHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
 		formToolkit.adapt(txtDataInicial);
 		formToolkit.paintBordersFor(txtDataInicial);
 		
@@ -110,7 +109,7 @@ public class ServicoPrestadoView extends ViewPart {
 		
 		txtDataFinal = new MecasoftText(frmServiosPrestados.getBody(), SWT.NONE);
 		txtDataFinal.setOptions(MecasoftText.NUMEROS, 10);
-		txtDataFinal.addChars(PadraoHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
+		txtDataFinal.addChars(FormatterHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
 		formToolkit.adapt(txtDataFinal);
 		formToolkit.paintBordersFor(txtDataFinal);
 

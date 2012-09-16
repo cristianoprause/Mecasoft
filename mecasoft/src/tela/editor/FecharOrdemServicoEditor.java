@@ -44,7 +44,6 @@ import tela.editor.editorInput.FecharOrdemServicoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
-import aplicacao.helper.PadraoHelper;
 import aplicacao.service.DuplicataService;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.Duplicata;
@@ -122,7 +121,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		txtTotalServico = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtTotalServico.setEnabled(false);
 		txtTotalServico.setOptions(MecasoftText.NUMEROS, -1);
-		txtTotalServico.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtTotalServico.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtTotalServico.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		
@@ -132,7 +131,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		txtTotalItem = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtTotalItem.setEnabled(false);
 		txtTotalItem.setOptions(MecasoftText.NUMEROS, -1);
-		txtTotalItem.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtTotalItem.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtTotalItem.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		
@@ -147,7 +146,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		txtLocomocao.setOptions(MecasoftText.NUMEROS, -1);
-		txtLocomocao.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtLocomocao.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtLocomocao.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		
@@ -162,7 +161,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		txtMaoObra.setOptions(MecasoftText.NUMEROS, -1);
-		txtMaoObra.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtMaoObra.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtMaoObra.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		
@@ -177,7 +176,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		txtJuros.setOptions(MecasoftText.NUMEROS, -1);
-		txtJuros.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtJuros.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtJuros.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		
@@ -192,7 +191,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		txtDesconto.setOptions(MecasoftText.NUMEROS, -1);
-		txtDesconto.addChars(PadraoHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtDesconto.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtDesconto.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		

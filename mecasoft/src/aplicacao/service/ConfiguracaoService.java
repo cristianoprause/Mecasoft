@@ -34,4 +34,12 @@ public class ConfiguracaoService extends MecasoftService<Configuracao>{
 		return getDAO().findAll();
 	}
 
+	public Configuracao getConfiguracao() {
+		return configuracao;
+	}
+
+	public void setConfiguracao(Configuracao configuracao) {
+		this.configuracao = configuracao;
+	}
+
 }
