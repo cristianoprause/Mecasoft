@@ -53,6 +53,7 @@
       </editor>
       <editor
             class="tela.editor.TipoFuncionarioEditor"
+            icon="assents/tipoFuncionario/tipoFuncionario16.png"
             id="tela.editor.TipoFuncionarioEditor"
             name="Tipo de funcionário">
       </editor>
@@ -70,6 +71,7 @@
       </editor>
       <editor
             class="tela.editor.StatusEditor"
+            icon="assents/status/status16.png"
             id="tela.editor.StatusEditor"
             name="Status">
       </editor>
@@ -124,6 +126,7 @@
       </view>
       <view
             class="tela.view.TipoFuncionarioView"
+            icon="assents/tipoFuncionario/tipoFuncionario16.png"
             id="tela.view.TipoFuncionarioView"
             name="Lista de tipos de funcionário">
       </view>
@@ -141,6 +144,7 @@
       </view>
       <view
             class="tela.view.StatusView"
+            icon="assents/status/status16.png"
             id="tela.view.StatusView"
             name="Lista de status">
       </view>
@@ -218,6 +222,7 @@
             </command>
             <command
                   commandId="org.eclipse.ui.views.showView"
+                  icon="assents/tipoFuncionario/tipoFuncionario16.png"
                   id="mecasoft.menuTipoFuncionario"
                   label="Tipo de funcionário">
                <parameter
@@ -267,6 +272,7 @@
             </command>
             <command
                   commandId="org.eclipse.ui.views.showView"
+                  icon="assents/status/status16.png"
                   id="mecasoft.menuStatus"
                   label="Status">
                <parameter
