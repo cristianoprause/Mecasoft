@@ -16,6 +16,7 @@ public class MecasoftText extends Composite {
 	public static Integer LETRAS = 1;
 
 	private boolean passou;
+	private Integer tamanhoAnterior;
 	private Integer posicaoCursor;
 	private Integer max;
 	private Integer aceita;
@@ -69,8 +70,12 @@ public class MecasoftText extends Composite {
 
 	private void formatar() {
 		if(passou){
+
 			//pega posicao do cursor para ele nao sair do lugar
 			posicaoCursor = text.getCaretPosition();
+			
+			//pega o tamanho atual do texto para comparar com o novo tamanho e ver se o cursor ira mudar de posicao ou nao
+			tamanhoAnterior = text.getText().length();
 			
 			texto = text.getText();
 			for(int c = 0; c < caracteres.length(); c++)
@@ -102,6 +107,11 @@ public class MecasoftText extends Composite {
 			}
 			
 			text.setText(textoRetorno);
+			
+			//verifica se o texto aumento
+			tamanhoAnterior = textoRetorno.length() - tamanhoAnterior;
+			if(tamanhoAnterior > 0)
+				posicaoCursor += tamanhoAnterior;
 			
 			//seta a posiçao do cursor onde ela deveria ficar
 			text.setSelection(posicaoCursor, posicaoCursor);
