@@ -36,7 +36,13 @@ public class Configuracao implements Serializable{
 	
 	@OneToOne
 	private Pessoa representanteEmpresa;
-
+	
+	@OneToOne
+	private Status statusInicio;
+	
+	@OneToOne
+	private Status statusFinal;
+	
 	public Date getDtInicioManha() {
 		return dtInicioManha;
 	}
@@ -108,6 +114,22 @@ public class Configuracao implements Serializable{
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Status getStatusInicio() {
+		return statusInicio;
+	}
+
+	public void setStatusInicio(Status statusInicio) {
+		this.statusInicio = statusInicio;
+	}
+
+	public Status getStatusFinal() {
+		return statusFinal;
+	}
+
+	public void setStatusFinal(Status statusFinal) {
+		this.statusFinal = statusFinal;
 	}
 
 }

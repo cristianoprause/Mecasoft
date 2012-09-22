@@ -55,6 +55,7 @@ import tela.editor.editorInput.VeiculoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
+import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.CepService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
@@ -120,6 +121,13 @@ public class PessoaEditor extends MecasoftEditor {
 		
 		btnAtivo = new Button(compositeConteudo, SWT.CHECK);
 		btnAtivo.setText("Ativo");
+		
+		//verifica se a pessoa é definida como representante da empresa
+		//caso seja, o botao de ativo é desativado para que a pessoa não possa ser desativada
+		if(UsuarioHelper.getConfiguracaoPadrao() != null)
+			if(UsuarioHelper.getConfiguracaoPadrao().getRepresentanteEmpresa() != null)
+				if(UsuarioHelper.getConfiguracaoPadrao().getRepresentanteEmpresa().equals(service.getPessoa()))
+					btnAtivo.setEnabled(false);
 		
 		Label lblTipo = new Label(compositeConteudo, SWT.NONE);
 		lblTipo.setText("Tipo:");

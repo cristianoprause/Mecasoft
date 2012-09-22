@@ -39,9 +39,11 @@ public class StatusDAO extends HibernateConnection implements StatusUtils{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Status> findAllByStatus(boolean status) {
-		Query q = getSession().createQuery("select s from Status s where s.ativo is :status");
+	public List<Status> findAllByStatusAndFuncao(boolean status, Boolean pausar) {
+		Query q = getSession().createQuery("select s from Status s where s.ativo is :status and " +
+												"(s.pausar is :pausar or :pausar is null)");
 		q.setParameter("status", status);
+		q.setParameter("pausar", pausar);
 		return q.list();
 	}
 
