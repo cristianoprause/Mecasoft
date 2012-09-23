@@ -1,6 +1,7 @@
 package tela.dialog;
 
 import static aplicacao.helper.MessageHelper.openInformation;
+import static aplicacao.helper.ValidatorHelper.validar;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 
 import tela.componentes.MecasoftText;
+import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
@@ -66,6 +68,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 	private ComboViewer cvStatusFinal;
 	private Combo cbStatusInicio;
 	private Combo cbStatusFinal;
+	private ComboViewer cvFinalizarServico;
 
 	/**
 	 * Create the dialog.
@@ -99,7 +102,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		
 		Group grpEmpresa = new Group(area, SWT.NONE);
 		grpEmpresa.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		grpEmpresa.setLayout(new GridLayout(5, false));
+		grpEmpresa.setLayout(new GridLayout(6, false));
 		grpEmpresa.setText("Empresa");
 		
 		Label lblEmpresa = new Label(grpEmpresa, SWT.NONE);
@@ -107,7 +110,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		
 		txtEmpresa = new Text(grpEmpresa, SWT.BORDER);
 		txtEmpresa.setEnabled(false);
-		txtEmpresa.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		txtEmpresa.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Button btnSelecionar = new Button(grpEmpresa, SWT.NONE);
 		btnSelecionar.addSelectionListener(new SelectionAdapter() {
@@ -136,18 +139,31 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtInicioManha.setText(service.getConfiguracao().getDtInicioManha() == null ? "" :
 			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtInicioManha()));
 		
-		Label lblStatusInicio = new Label(grpEmpresa, SWT.NONE);
-		lblStatusInicio.setText("Status para iniciar:");
+		Group grpStatusParaPeriodos = new Group(grpEmpresa, SWT.NONE);
+		grpStatusParaPeriodos.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 2));
+		grpStatusParaPeriodos.setText("Status para per\u00EDodos");
+		grpStatusParaPeriodos.setLayout(new GridLayout(2, false));
 		
-		cvStatusInicio = new ComboViewer(grpEmpresa, SWT.READ_ONLY);
+		Label lblStatusInicio = new Label(grpStatusParaPeriodos, SWT.NONE);
+		lblStatusInicio.setText("Iniciar:");
+		
+		cvStatusInicio = new ComboViewer(grpStatusParaPeriodos, SWT.READ_ONLY);
 		cbStatusInicio = cvStatusInicio.getCombo();
-		cbStatusInicio.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		cbStatusInicio.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblStatusFinal = new Label(grpStatusParaPeriodos, SWT.NONE);
+		lblStatusFinal.setText("Finalizar:");
+		
+		cvStatusFinal = new ComboViewer(grpStatusParaPeriodos, SWT.READ_ONLY);
+		cbStatusFinal = cvStatusFinal.getCombo();
+		cbStatusFinal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblFinalManha = new Label(grpEmpresa, SWT.NONE);
 		lblFinalManha.setText("Final manh\u00E3:");
 		
 		txtFinalManha = new MecasoftText(grpEmpresa, SWT.NONE);
 		GridData gridData_1 = (GridData) txtFinalManha.text.getLayoutData();
+		gridData_1.verticalAlignment = SWT.TOP;
 		gridData_1.widthHint = 100;
 		gridData_1.grabExcessHorizontalSpace = false;
 		txtFinalManha.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -155,9 +171,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtFinalManha.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
 		txtFinalManha.setText(service.getConfiguracao().getDtFinalManha() == null ? "" :
 			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtFinalManha()));
-		new Label(grpEmpresa, SWT.NONE);
-		new Label(grpEmpresa, SWT.NONE);
-		new Label(grpEmpresa, SWT.NONE);
 		
 		Label lblInicioTarde = new Label(grpEmpresa, SWT.NONE);
 		lblInicioTarde.setText("In\u00EDcio tarde:");
@@ -169,12 +182,17 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtInicioTarde.setText(service.getConfiguracao().getDtInicioTarde() == null ? "" :
 			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtInicioTarde()));
 		
-		Label lblStatusFinal = new Label(grpEmpresa, SWT.NONE);
-		lblStatusFinal.setText("Status para finalizar:");
+		Group grpStatusParaServios = new Group(grpEmpresa, SWT.NONE);
+		grpStatusParaServios.setLayout(new GridLayout(2, false));
+		grpStatusParaServios.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 2));
+		grpStatusParaServios.setText("Status para servi\u00E7os");
 		
-		cvStatusFinal = new ComboViewer(grpEmpresa, SWT.READ_ONLY);
-		cbStatusFinal = cvStatusFinal.getCombo();
-		cbStatusFinal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		Label lblFinalizarServico = new Label(grpStatusParaServios, SWT.NONE);
+		lblFinalizarServico.setText("Finalizar:");
+		
+		cvFinalizarServico = new ComboViewer(grpStatusParaServios, SWT.READ_ONLY);
+		Combo cbFinalizarServico = cvFinalizarServico.getCombo();
+		cbFinalizarServico.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblFinalTarde = new Label(grpEmpresa, SWT.NONE);
 		lblFinalTarde.setText("Final tarde:");
@@ -187,9 +205,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtFinalTarde.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
 		txtFinalTarde.setText(service.getConfiguracao().getDtFinalTarde() == null ? "" :
 			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtFinalTarde()));
-		new Label(grpEmpresa, SWT.NONE);
-		new Label(grpEmpresa, SWT.NONE);
-		new Label(grpEmpresa, SWT.NONE);
 		
 		Group grpSenha = new Group(area, SWT.NONE);
 		grpSenha.setLayout(new GridLayout(2, false));
@@ -236,6 +251,8 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		
 		try{
+			validar(service.getConfiguracao());
+			
 			//verificar senha do usuario
 			if(!txtSenhaAtual.getText().isEmpty() || !txtNovaSenha.getText().isEmpty()){
 				if(!txtSenhaAtual.getText().equals(UsuarioHelper.getUsuarioLogado().getSenha())){
@@ -267,20 +284,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			if(!txtFinalTarde.getText().isEmpty())
 				service.getConfiguracao().setDtFinalTarde(FormatterHelper.DATEFOTMATHORA.parse(txtFinalTarde.getText()));
 			
-			//verifica se o usuário informou algum horario para iniciar os serviços, mas não colocou status para inicia-los
-			if((service.getConfiguracao().getDtInicioManha() != null || service.getConfiguracao().getDtInicioTarde() != null)
-				&& (service.getConfiguracao().getStatusInicio() == null)){
-				setErrorMessage("Selecione um status para iniciar os serviços no horário configurado.");
-				return;
-			}
-			
-			//verifica se o usuário informou algum horario para finalizar os serviços, mas não colocou status para finaliza-los
-			if((service.getConfiguracao().getDtFinalManha() != null || service.getConfiguracao().getDtFinalTarde() != null)
-					&& (service.getConfiguracao().getStatusFinal() == null)){
-				setErrorMessage("Selecione um status para finalizar os serviços no horário configurado.");
-				return;
-			}
-			
 			service.saveOrUpdate();
 			
 			UsuarioHelper.setConfiguracaoPadrao(service.getConfiguracao());
@@ -288,6 +291,8 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			HibernateConnection.commit();
 			super.okPressed();
 			
+		}catch (ValidationException e) {
+			setErrorMessage(e.getMessage());
 		}catch(Exception e){
 			setErrorMessage("Informe os horários corretamente");
 		}
@@ -312,7 +317,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(462, 386);
+		return new Point(462, 493);
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
@@ -344,6 +349,17 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		IObservableValue cvStatusFinalObserveSingleSelection = ViewersObservables.observeSingleSelection(cvStatusFinal);
 		IObservableValue servicegetConfiguracaoStatusFinalObserveValue = PojoObservables.observeValue(service.getConfiguracao(), "statusFinal");
 		bindingContext.bindValue(cvStatusFinalObserveSingleSelection, servicegetConfiguracaoStatusFinalObserveValue, null, null);
+		//
+		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
+		IObservableMap observeMap_3 = PojoObservables.observeMap(listContentProvider_3.getKnownElements(), Status.class, "descricao");
+		cvFinalizarServico.setLabelProvider(new ObservableMapLabelProvider(observeMap_3));
+		cvFinalizarServico.setContentProvider(listContentProvider_3);
+		//
+		cvFinalizarServico.setInput(writableList_1);
+		//
+		IObservableValue cvFinalizarServicoObserveSingleSelection = ViewersObservables.observeSingleSelection(cvFinalizarServico);
+		IObservableValue servicegetConfiguracaoStatusFinalizarServicoObserveValue = PojoObservables.observeValue(service.getConfiguracao(), "statusFinalizarServico");
+		bindingContext.bindValue(cvFinalizarServicoObserveSingleSelection, servicegetConfiguracaoStatusFinalizarServicoObserveValue, null, null);
 		//
 		return bindingContext;
 	}

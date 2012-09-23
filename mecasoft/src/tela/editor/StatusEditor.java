@@ -77,13 +77,14 @@ public class StatusEditor extends MecasoftEditor {
 		//verifica se o status esta registrado nas configurações
 		//caso esteja, nao permite que ele seja desativado
 		if(UsuarioHelper.getConfiguracaoPadrao() != null){
-			if(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio() != null)
-				if(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio().equals(service.getStatus()))
-					btnAtivo.setEnabled(false);
+			if(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio().equals(service.getStatus()))
+				btnAtivo.setEnabled(false);
 			
-			if(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal() != null)
-				if(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal().equals(service.getStatus()))
-					btnAtivo.setEnabled(false);
+			if(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal().equals(service.getStatus()))
+				btnAtivo.setEnabled(false);
+			
+			if(UsuarioHelper.getConfiguracaoPadrao().getStatusFinalizarServico().equals(service.getStatus()))
+				btnAtivo.setEnabled(false);
 		}
 		
 		new Label(compositeConteudo, SWT.NONE);

@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Configuracao implements Serializable{
@@ -38,10 +39,16 @@ public class Configuracao implements Serializable{
 	private Pessoa representanteEmpresa;
 	
 	@OneToOne
+	@NotNull(message="Selecione o status para iniciar os serviços no periodo.")
 	private Status statusInicio;
 	
 	@OneToOne
+	@NotNull(message="Selecione o status para finalizar os serviços no periodo.")
 	private Status statusFinal;
+	
+	@OneToOne
+	@NotNull(message="Selecione o status final padrão de cada serviço.")
+	private Status statusFinalizarServico;
 	
 	public Date getDtInicioManha() {
 		return dtInicioManha;
@@ -130,6 +137,14 @@ public class Configuracao implements Serializable{
 
 	public void setStatusFinal(Status statusFinal) {
 		this.statusFinal = statusFinal;
+	}
+
+	public Status getStatusFinalizarServico() {
+		return statusFinalizarServico;
+	}
+
+	public void setStatusFinalizarServico(Status statusFinalizarServico) {
+		this.statusFinalizarServico = statusFinalizarServico;
 	}
 
 }

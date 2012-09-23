@@ -44,10 +44,12 @@ import tela.editor.editorInput.FecharOrdemServicoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
+import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataService;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.Duplicata;
 import banco.modelo.FormaPagtoUtilizada;
+import banco.modelo.StatusServico;
 
 public class FecharOrdemServicoEditor extends MecasoftEditor {
 
@@ -98,6 +100,15 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			//serviço concluido
 			service.getServicoPrestado().setEmExecucao(false);
 			service.getServicoPrestado().setDataFechamento(new Date());
+			
+			//cria o status de concluido
+			StatusServico statusConcluido = new StatusServico();
+			statusConcluido.setFuncionario(service.getServicoPrestado().getUltimoStatus().getFuncionario());
+			statusConcluido.setServicoPrestado(service.getServicoPrestado());
+			statusConcluido.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinalizarServico());
+
+			//adiciona o status de concluido na lista de status do serviço
+			service.getServicoPrestado().getListaStatus().add(statusConcluido);
 			
 			service.saveOrUpdate();
 			openInformation("Ordem de serviço fechada com sucesso!");
