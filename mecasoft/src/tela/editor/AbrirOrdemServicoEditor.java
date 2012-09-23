@@ -1,13 +1,13 @@
 package tela.editor;
 
 import static aplicacao.helper.LayoutHelper.getActiveShell;
+import static aplicacao.helper.MessageHelper.openError;
 import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.MessageHelper.openWarning;
 import static aplicacao.helper.ValidatorHelper.validar;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -60,6 +60,7 @@ import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.ServicoPrestadoService;
 import aplicacao.service.StatusService;
+import aplicacao.service.StatusServicoService;
 import banco.modelo.ItemServico;
 import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
@@ -81,13 +82,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private TableViewer tvItens;
 	private ComboViewer cvNovoStatus;
 	private TableViewer tvStatus;
-	
-	private ServicoPrestadoService service = new ServicoPrestadoService();
-	private ProdutoServicoService prodServService = new ProdutoServicoService();
-	private StatusService statusService = new StatusService();
-	private PessoaService pessoaService = new PessoaService();
-	private List<Status> listaStatus;
-	private Pessoa funcionario;
 	private Button btnSelecionarCliente;
 	private Button btnSelecionarVeiculo;
 	private Button btnAdicionarServio;
@@ -98,6 +92,14 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private Combo cbNovoStatus;
 	private Button btnAlterarStatus;
 	private Button btnCancelarOrdem;
+	
+	private ServicoPrestadoService service = new ServicoPrestadoService();
+	private ProdutoServicoService prodServService = new ProdutoServicoService();
+	private StatusService statusService = new StatusService();
+	private PessoaService pessoaService = new PessoaService();
+	private StatusServicoService statusServicoService = new StatusServicoService();
+	private List<Status> listaStatus;
+	private Pessoa funcionario;
 
 	public AbrirOrdemServicoEditor() {
 		listaStatus = statusService.findAllAtivos();
@@ -460,14 +462,87 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					openWarning("Selecione primeiro o funcionário para alterar o status.");
 					return;
 				}
+
+				//pega o novo status
+				Status status = (Status)selecao.getFirstElement();
+				
+				//criado aqui para evitar o problema de o usuario aprovar que mude o serviço atual e nao o anterior
+				StatusServico statusParado = null;
+				
+				if(!service.getServicoPrestado().getListaStatus().isEmpty()){
+					StatusServico statusAtualServico = service.getServicoPrestado().getUltimoStatus();
+					
+					//não pode adicionar um status de parar 
+					if(!statusAtualServico.getFuncionario().equals(funcionario) && status.isPausar()){
+						openError("Não é permitido adicionar o status \"" + status.getDescricao() + "\" para um funcionário diferente do atual");
+						return;
+					
+					//se forem funcionarios diferentes adicionando status verde neste serviço, tem que ser adicionado
+					//um status vermelho com o funcionario que estava antes
+					}else if(!statusAtualServico.getStatus().isPausar() && !status.isPausar() &&
+							!statusAtualServico.getFuncionario().equals(funcionario)){
+						
+						//verifica se p usuário permite adicionar um status de parado para o funcionario anterior
+						if(openQuestion("O serviço esta em um status continuo para um funcionário diferente. Caso continue, " +
+								"será adicionado o status \"" + UsuarioHelper.getConfiguracaoPadrao().getStatusFinal().getDescricao() + "\" para o funcionário que estava anteriormente.\n" +
+								"Deseja continuar?")){
+							
+							//cria um status de parado para o funcionário anterior
+							statusParado = new StatusServico();
+							statusParado.setFuncionario(statusAtualServico.getFuncionario());
+							statusParado.setServicoPrestado(service.getServicoPrestado());
+							statusParado.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
+							
+						}else
+							return;
+						
+					}
+				}
+				
+				//verifica qual é o ultimo status do usuario
+				StatusServico statusFuncionario = statusServicoService.findStatusFuncionario(funcionario);
+				
+				if(statusFuncionario != null && !statusFuncionario.getServicoPrestado().equals(service.getServicoPrestado()) && status.isPausar()){
+					openError("Não é permitido adicionar o status \"" + status.getDescricao() + "\" com este funcionário, pois ele esta em um outro serviço");
+					return;
+					
+				//caso seja um status continuo em um outo serviço, ele mostra uma mensagem informando que tera que ser
+				//adicionado um status de parado ao serviço que ele esta para adicionar um status verde para este usuario neste serviço
+				}else if(statusFuncionario != null && !statusFuncionario.getStatus().isPausar() 
+						&& !statusFuncionario.getServicoPrestado().equals(service.getServicoPrestado())
+						&& !status.isPausar()){
+					
+					//verica se o usuário aprova
+					if(openQuestion("O mecânico selecionado ja esta ativo em outro serviço.\n" +
+							"Caso ele seja adicionado a este serviço, sera adicionado o status \"" + UsuarioHelper.getConfiguracaoPadrao().getStatusFinal().getDescricao() + "\" " +
+							"no serviço anterior.\n" +
+							"Deseja continuar?")){
+						
+						//cria um novo StatusServico para adicionar no serviço em que o funcionario estava
+						StatusServico statusServicoAnterior = new StatusServico();
+						statusServicoAnterior.setFuncionario(statusFuncionario.getFuncionario());
+						statusServicoAnterior.setServicoPrestado(statusFuncionario.getServicoPrestado());
+						statusServicoAnterior.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
+						
+						//salva este novo status
+						statusServicoService.setStatusServico(statusServicoAnterior);
+						statusServicoService.saveOrUpdate();
+						
+					}else
+						return;
+					
+				}
+				
+				//adiciona na lista de status do serviço atual o status caso
+				//o usuario aprovou o 1º if xD
+				if(statusParado != null)
+					service.getServicoPrestado().getListaStatus().add(statusParado);
 				
 				StatusServico ss = new StatusServico();
 				ss.setFuncionario(funcionario);
 				ss.setServicoPrestado(service.getServicoPrestado());
-				
-				Status status = (Status)selecao.getFirstElement();
 				ss.setStatus(status);
-				ss.setUsuarioRegistro(UsuarioHelper.getUsuarioLogado());
+				
 				
 				service.getServicoPrestado().getListaStatus().add(ss);
 				txtStatusAtual.setText(status.getDescricao());
@@ -490,9 +565,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		txtStatusAtual.setEnabled(false);
 		txtStatusAtual.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		
-		if(service.getServicoPrestado().getListaStatus().size() > 0)
-			txtStatusAtual.setText(service.getServicoPrestado().getListaStatus().get(service.getServicoPrestado().getListaStatus().size()-1)
-					.getStatus().getDescricao());
+		StatusServico ultimoStatus = service.getServicoPrestado().getUltimoStatus();
+		if(ultimoStatus != null)
+			txtStatusAtual.setText(ultimoStatus.getStatus().getDescricao());
 		
 		new Label(compositeConteudo, SWT.NONE);
 		
@@ -623,7 +698,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		setShowExcluir(false);
 		setShowSalvar(service.getServicoPrestado().isEmExecucao());
-		organizarListas();
+		service.organizarListas();
 		
 		setSite(site);
 		setInput(input);
@@ -698,20 +773,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	public BigDecimal calculaTotal(ItemServico is){
 		return is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
 			.subtract(is.getDesconto()).add(is.getAcrescimo());
-	}
-	
-	public void organizarListas(){
-		
-		//isso deve ser feito porque não é possivel editar a lista dentro do loop (java.util.ConcurrentModificationException)
-		List<ItemServico> lista = new ArrayList<ItemServico>();
-		lista.addAll(service.getServicoPrestado().getListaProdutos());
-		
-		for(ItemServico is : lista){
-			if(is.getItem().getTipo().equals(ProdutoServico.TIPOSERVICO))
-				service.getServicoPrestado().getListaProdutos().remove(is);
-			else if(is.getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO))
-				service.getServicoPrestado().getListaServicos().remove(is);
-		}
 	}
 	
 	public void adicionarItens(ProdutoServico ps){

@@ -8,6 +8,7 @@ import banco.DAO.PessoaDAO;
 import banco.DAO.ProdutoServicoDAO;
 import banco.DAO.ServicoPrestadoDAO;
 import banco.DAO.StatusDAO;
+import banco.DAO.StatusServicoDAO;
 import banco.DAO.TipoFuncionarioDAO;
 import banco.DAO.TipoVeiculoDAO;
 import banco.DAO.UsuarioDAO;
@@ -19,6 +20,7 @@ import banco.utils.PapelUtils;
 import banco.utils.PessoaUtils;
 import banco.utils.ProdutoServicoUtils;
 import banco.utils.ServicoPrestadoUtils;
+import banco.utils.StatusServicoUtils;
 import banco.utils.StatusUtils;
 import banco.utils.TipoFuncionarioUtils;
 import banco.utils.TipoVeiculoUtils;
@@ -43,6 +45,7 @@ public class MecasoftModule extends AbstractModule{
 		bind(FormaPagamentoUtils.class).to(FormaPagamentoDAO.class);
 		bind(DuplicataUtils.class).to(DuplicataDAO.class);
 		bind(ConfiguracaoUtils.class).to(ConfiguracaoDAO.class);
+		bind(StatusServicoUtils.class).to(StatusServicoDAO.class);
 	}
 
 }

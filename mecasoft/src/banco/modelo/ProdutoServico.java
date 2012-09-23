@@ -67,7 +67,7 @@ public class ProdutoServico implements Serializable{
 	
 	@ManyToMany
 	@Cascade(value={CascadeType.ALL})
-	@JoinTable(name="prosutoServicoParametrizado",
+	@JoinTable(name="produtoServicoParametrizado",
 		joinColumns={
 			@JoinColumn(name="servico_id", referencedColumnName = "id")
 		},

@@ -93,6 +93,17 @@ public class ServicoPrestado implements Serializable{
 	
 	@OneToMany(mappedBy="servicoPrestado")
 	private List<FormaPagtoUtilizada> listaFormaPagto;
+	
+	public StatusServico getUltimoStatus(){
+		StatusServico ultimoStatus = null;
+		
+		for(StatusServico status : listaStatus){
+			if(ultimoStatus == null || status.getData().compareTo(ultimoStatus.getData()) > 0)
+				ultimoStatus = status;
+		}
+		
+		return ultimoStatus;
+	}
 
 	public Long getId() {
 		return id;

@@ -37,6 +37,7 @@ import tela.filter.ServicoPrestadoFilter;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.ServicoPrestado;
+import banco.modelo.StatusServico;
 
 import com.ibm.icu.util.Calendar;
 
@@ -177,9 +178,11 @@ public class ServicoPrestadoView extends ViewPart {
 		tvcMecanico.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				ServicoPrestado sp = (ServicoPrestado)element;
-				if(!sp.getListaStatus().isEmpty())
-					return sp.getListaStatus().get(sp.getListaStatus().size()-1).getFuncionario().getNomeFantasia();
+				service.setServicoPrestado((ServicoPrestado)element);
+				StatusServico status = service.getServicoPrestado().getUltimoStatus();
+				
+				if(status != null)
+					return status.getFuncionario().getNomeFantasia();
 				
 				return "";
 			}
@@ -192,11 +195,11 @@ public class ServicoPrestadoView extends ViewPart {
 		tvcStatus.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				ServicoPrestado sp = (ServicoPrestado)element;
-				if(!sp.isEmExecucao())
-					return "Concluido";
-				else if(!sp.getListaStatus().isEmpty())
-					return sp.getListaStatus().get(sp.getListaStatus().size()-1).getStatus().getDescricao();
+				service.setServicoPrestado((ServicoPrestado)element);
+				StatusServico status = service.getServicoPrestado().getUltimoStatus();
+				
+				if(status != null)
+					return status.getStatus().getDescricao();
 				
 				return "";
 			}
