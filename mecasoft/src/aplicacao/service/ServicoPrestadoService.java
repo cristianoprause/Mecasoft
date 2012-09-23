@@ -42,6 +42,10 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 		return getDAO().findAllByPeriodoAndStatusAndConclusao(dataInicial, dataFinal, true, null);
 	}
 	
+	public List<ServicoPrestado> findAllNaoConcluidos(){
+		return getDAO().findAllByStatusAndConclusao(true, true);
+	}
+	
 	public void organizarListas() {
 
 		// isso deve ser feito porque não é possivel editar a lista dentro do

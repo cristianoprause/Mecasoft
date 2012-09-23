@@ -205,7 +205,7 @@ public class ServicoPrestadoView extends ViewPart {
 			}
 		});
 		TableColumn tblclmnStatusAtual = tvcStatus.getColumn();
-		tblclmnStatusAtual.setWidth(95);
+		tblclmnStatusAtual.setWidth(137);
 		tblclmnStatusAtual.setText("Status Atual");
 		frmServiosPrestados.getToolBarManager().add(actionAtualizar);
 		frmServiosPrestados.getToolBarManager().add(actionNovo);

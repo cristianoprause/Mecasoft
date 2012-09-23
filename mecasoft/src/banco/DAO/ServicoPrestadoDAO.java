@@ -71,4 +71,15 @@ public class ServicoPrestadoDAO extends HibernateConnection implements ServicoPr
 		return q.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ServicoPrestado> findAllByStatusAndConclusao(Boolean status,
+			Boolean emExecucao) {
+		Query q = getSession().createQuery("select s from ServicoPrestado s where (s.ativo is :status or :status is null) " +
+				                                "and (s.emExecucao is :emExecucao or :emExecucao is null)");
+		q.setParameter("status", status)
+		.setParameter("emExecucao", emExecucao);
+		return q.list();
+	}
+
 }

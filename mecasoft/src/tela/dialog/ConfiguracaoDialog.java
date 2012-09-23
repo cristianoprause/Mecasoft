@@ -271,6 +271,13 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 				usuarioService.saveOrUpdate();
 			}
 			
+			//verifica se foi informado ao menos um horario para inciar e outro para concluir
+			if((txtInicioManha.getText().isEmpty() && txtInicioTarde.getText().isEmpty())
+				|| (txtFinalManha.getText().isEmpty() && txtFinalTarde.getText().isEmpty())){
+				setErrorMessage("Informe ao menos um horário para inciar os serviços e outro para concluir.");
+				return;
+			}
+			
 			//verificar horario
 			if(!txtInicioManha.getText().isEmpty())
 				service.getConfiguracao().setDtInicioManha(FormatterHelper.DATEFOTMATHORA.parse(txtInicioManha.getText()));
