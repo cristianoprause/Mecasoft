@@ -47,6 +47,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.dialog.SelecionarItemDialog;
 import tela.editingSupport.AcrescimoItemServicoEditingSupport;
+import tela.editingSupport.DataStatusServicoEditinfSupport;
 import tela.editingSupport.DescontoItemServicoEditingSupport;
 import tela.editingSupport.QuantidadeItemServicoEditingSupport;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
@@ -100,6 +101,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private StatusServicoService statusServicoService = new StatusServicoService();
 	private List<Status> listaStatus;
 	private Pessoa funcionario;
+	private Button btnFecharOrdem;
 
 	public AbrirOrdemServicoEditor() {
 		listaStatus = statusService.findAllAtivos();
@@ -607,6 +609,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnStatus.setText("Status");
 		
 		TableViewerColumn tvcData = new TableViewerColumn(tvStatus, SWT.NONE);
+		tvcData.setEditingSupport(new DataStatusServicoEditinfSupport(tvStatus));
 		tvcData.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -667,7 +670,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		if(!getShowSalvar())
 			btnCancelarOrdem.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		
-		Button btnFecharOrdem = createNewButton();
+		btnFecharOrdem = createNewButton();
 		btnFecharOrdem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -811,6 +814,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	public void setFocus() {
 		listaStatus = statusService.findAllAtivos();
 		initDataBindings();
+		if(!service.getServicoPrestado().isEmExecucao())
+			disposeSalvar();
 	}
 	
 	public void setEnableButtonCancel(){
@@ -914,6 +919,10 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		//
 		IObservableValue tableStatusObserveEnabledObserveWidget = SWTObservables.observeEnabled(tableStatus);
 		bindingContext.bindValue(tableStatusObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
+		//
+		//
+		IObservableValue btnFecharOrdemObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnFecharOrdem);
+		bindingContext.bindValue(btnFecharOrdemObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
 		//
 		return bindingContext;
 	}

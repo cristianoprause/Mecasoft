@@ -370,8 +370,8 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		bindingContext.bindValue(txtValorEntradatextObserveTextObserveWidget, servicoValorEntradaObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), Duplicata.class, new String[]{"numero", "dataVencimento", "valor"});
-		tvDuplicatas.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), Duplicata.class, new String[]{"numero", "dataVencimento", "valor"});
+//		tvDuplicatas.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvDuplicatas.setContentProvider(listContentProvider_1);
 		//
 		WritableList writableList_1 = new WritableList(listaDuplicatas, Duplicata.class);

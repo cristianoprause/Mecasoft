@@ -25,6 +25,8 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	private Composite compositeBotoes;
 	private Boolean showExcluir = true;
 	private Boolean showSalvar = true;
+	private Button btnExcluir;
+	private Button btnSalvar;
 
 	public MecasoftEditor() {
 	}
@@ -56,7 +58,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		compositeBotoes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		compositeBotoes.setLayout(new GridLayout(3, false));
 		
-		Button btnSalvar = new Button(compositeBotoes, SWT.NONE);
+		btnSalvar = new Button(compositeBotoes, SWT.NONE);
 		btnSalvar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -67,7 +69,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		btnSalvar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnSalvar.setText("Salvar");
 		
-		Button btnExcluir = new Button(compositeBotoes, SWT.NONE);
+		btnExcluir = new Button(compositeBotoes, SWT.NONE);
 		btnExcluir.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -85,9 +87,9 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		scrolledComposite.getVerticalBar().setIncrement(15);
 		
 		if(!showExcluir)
-			btnExcluir.dispose();
+			disposeExcluir();
 		if(!showSalvar)
-			btnSalvar.dispose();
+			disposeSalvar();
 
 	}
 	
@@ -118,6 +120,14 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	
 	public Boolean getShowSalvar() {
 		return showSalvar;
+	}
+	
+	public void disposeSalvar(){
+		btnSalvar.dispose();
+	}
+	
+	public void disposeExcluir(){
+		btnExcluir.dispose();
 	}
 	
 	public void closeThisEditor(){
