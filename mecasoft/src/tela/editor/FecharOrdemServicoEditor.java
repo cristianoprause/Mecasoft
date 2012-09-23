@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.componentes.MecasoftText;
@@ -79,7 +80,8 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		try {
 			validar(service.getServicoPrestado());
 			
-			if(service.getServicoPrestado().getListaFormaPagto().isEmpty()){
+			if(service.getServicoPrestado().getListaFormaPagto() == null 
+					|| service.getServicoPrestado().getListaFormaPagto().isEmpty()){
 				setErroMessage("Adicione ao menos uma forma de pagamento");
 				return;
 			}
@@ -312,6 +314,8 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 				salvarRegistro();
 			}
 		});
+		btnFecharOrdem.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		btnFecharOrdem.setImage(ResourceManager.getPluginImage("mecasoft", "assents/servicoPrestado/closeService32.png"));
 		btnFecharOrdem.setText("Fechar Ordem");
 		
 		initDataBindings();

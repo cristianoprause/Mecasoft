@@ -54,7 +54,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		
 		compositeBotoes = new Composite(composite, SWT.BORDER);
 		compositeBotoes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		compositeBotoes.setLayout(new GridLayout(2, false));
+		compositeBotoes.setLayout(new GridLayout(3, false));
 		
 		Button btnSalvar = new Button(compositeBotoes, SWT.NONE);
 		btnSalvar.addSelectionListener(new SelectionAdapter() {
@@ -107,9 +107,17 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	public void setShowExcluir(Boolean showExcluir){
 		this.showExcluir = showExcluir;
 	}
+	
+	public Boolean getShowExcluir() {
+		return showExcluir;
+	}
 
 	public void setShowSalvar(Boolean showSalvar){
 		this.showSalvar = showSalvar;
+	}
+	
+	public Boolean getShowSalvar() {
+		return showSalvar;
 	}
 	
 	public void closeThisEditor(){

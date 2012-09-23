@@ -59,10 +59,10 @@ public class ServicoPrestado implements Serializable{
 	private BigDecimal troco = BigDecimal.ZERO;
 	
 	@Column
-	private BigDecimal valorEntrada;
+	private BigDecimal valorEntrada = BigDecimal.ZERO;
 	
 	@Column
-	private BigDecimal juros;
+	private BigDecimal juros = BigDecimal.ZERO;
 	
 	@Column
 	private Date dataAbertura = new Date();
@@ -92,7 +92,7 @@ public class ServicoPrestado implements Serializable{
 	private List<StatusServico> listaStatus = new ArrayList<StatusServico>();
 	
 	@OneToMany(mappedBy="servicoPrestado")
-	private List<FormaPagtoUtilizada> listaFormaPagto;
+	private List<FormaPagtoUtilizada> listaFormaPagto = new ArrayList<FormaPagtoUtilizada>();
 	
 	public StatusServico getUltimoStatus(){
 		StatusServico ultimoStatus = null;

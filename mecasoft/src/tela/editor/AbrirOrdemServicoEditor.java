@@ -664,6 +664,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		btnCancelarOrdem.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/cancel32.png"));
 		btnCancelarOrdem.setText("Cancelar ordem");
 		
+		if(!getShowSalvar())
+			btnCancelarOrdem.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		
 		Button btnFecharOrdem = createNewButton();
 		btnFecharOrdem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -677,6 +680,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				}
 			}
 		});
+		btnFecharOrdem.setImage(ResourceManager.getPluginImage("mecasoft", "assents/servicoPrestado/closeService32.png"));
 		btnFecharOrdem.setText("Fechar Ordem");
 		btnFecharOrdem.setEnabled(service.getServicoPrestado().isEmExecucao());
 		

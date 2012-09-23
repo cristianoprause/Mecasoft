@@ -216,7 +216,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		
 		//remove as formas de pagamento que geram duplicatas
 		//caso a ordem ja tenha uma forma a vista
-		if(!servico.getListaFormaPagto().isEmpty()){
+		if(servico.getListaFormaPagto() != null && !servico.getListaFormaPagto().isEmpty()){
 			if(servico.getListaFormaPagto().get(0).getFormaPagamento().isGeraPagVista()){
 				//clone da lista pq nao é possivel editala no loop
 				List<FormaPagamento> listaClone = new ArrayList<FormaPagamento>();
@@ -252,10 +252,12 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 			try {
 				validar(formaUtilizada);				
 				
-				atualizarValores();
+				if(formaUtilizada.getFormaPagamento().isGeraDuplicata())
+					atualizarValores();
 				
 				if(servico.getValorEntrada().compareTo(servico.getValorTotal()) > 0){
 					setErrorMessage("O valor de entrada não pode ser superior ao valor total");
+					return;
 				}
 				
 				servico.getListaFormaPagto().add(formaUtilizada);
@@ -368,8 +370,8 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		bindingContext.bindValue(txtValorEntradatextObserveTextObserveWidget, servicoValorEntradaObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), Duplicata.class, new String[]{"numero", "dataVencimento", "valor"});
-//		tvDuplicatas.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), Duplicata.class, new String[]{"numero", "dataVencimento", "valor"});
+		tvDuplicatas.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvDuplicatas.setContentProvider(listContentProvider_1);
 		//
 		WritableList writableList_1 = new WritableList(listaDuplicatas, Duplicata.class);
