@@ -3,7 +3,6 @@
 
 <product name="MECASOFT" id="mecasoft.mecasoft" application="mecasoft.application" version="1.0.0" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -13,14 +12,12 @@
 
    <windowImages i16="/mecasoft/assents/logo/mecanica16X16.png" i32="/mecasoft/assents/logo/mecanica32X32.png" i64="/mecasoft/assents/logo/mecanica64X64.png"/>
 
-
    <launcher>
       <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>

@@ -159,6 +159,11 @@
             id="tela.view.FormaPagamentoView"
             name="Lista de formas de pagamento">
       </view>
+      <view
+            class="tela.view.ReportView"
+            id="tela.view.ReportView"
+            name="New ViewPart">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -303,6 +308,14 @@
                </parameter>
             </command>
          </menu>
+         <menu
+               label="Relatório">
+            <command
+                  commandId="mecasoft.showServicoSinteticoCommand"
+                  label="Serviço sintético"
+                  style="push">
+            </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension
@@ -326,6 +339,11 @@
             defaultHandler="aplicacao.command.ConfiguracaoCommand"
             id="mecasoft.configuracaoCommand"
             name="Configuração">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.reports.ShowServicoSinteticoCommand"
+            id="mecasoft.showServicoSinteticoCommand"
+            name="Relatório de serviços sintético">
       </command>
    </extension>
    <extension
