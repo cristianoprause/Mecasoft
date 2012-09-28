@@ -32,20 +32,19 @@ public class ReportView extends ViewPart {
 
 	}
 	
-	public void setReport(JasperPrint jPrint){
+	public void setReport(JasperPrint jPrint, String title){
 		view.getReportViewer().setDocument(jPrint);
+		setPartName(title);
 	}
 
 	/**
 	 * Create the actions.
 	 */
 	private void createActions() {
-		// Create the actions
 	}
 
 	@Override
 	public void setFocus() {
-		// Set the focus
 	}
 
 }
