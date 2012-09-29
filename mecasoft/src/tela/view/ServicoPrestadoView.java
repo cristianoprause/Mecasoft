@@ -59,11 +59,7 @@ public class ServicoPrestadoView extends ViewPart {
 	public ServicoPrestadoView() {
 		createActions();
 	}
-
-	/**
-	 * Create contents of the view part.
-	 * @param parent
-	 */
+	
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
