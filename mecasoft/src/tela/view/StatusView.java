@@ -53,10 +53,6 @@ public class StatusView extends ViewPart {
 		createActions();
 	}
 
-	/**
-	 * Create contents of the view part.
-	 * @param parent
-	 */
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
@@ -118,17 +114,12 @@ public class StatusView extends ViewPart {
 			
 			@Override
 			public Color getForeground(Object element) {
-				return SWTResourceManager.getColor(SWT.COLOR_BLACK);
-			}
-			
-			@Override
-			public Color getBackground(Object element) {
-				Status s = (Status)element;
+				Status s = (Status) element;
 				
 				if(s.isPausar())
 					return SWTResourceManager.getColor(SWT.COLOR_RED);
 				else
-					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
+					return SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
 			}
 		});
 		TableColumn tblclmnDescricao = tvcDescricao.getColumn();
@@ -149,18 +140,14 @@ public class StatusView extends ViewPart {
 			
 			@Override
 			public Color getForeground(Object element) {
-				return SWTResourceManager.getColor(SWT.COLOR_BLACK);
-			}
-			
-			@Override
-			public Color getBackground(Object element) {
-				Status s = (Status)element;
+				Status s = (Status) element;
 				
 				if(s.isPausar())
 					return SWTResourceManager.getColor(SWT.COLOR_RED);
 				else
-					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
+					return SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
 			}
+			
 		});
 		TableColumn tblclmnAtuacao = tvcAtuacao.getColumn();
 		tblclmnAtuacao.setWidth(161);
@@ -175,17 +162,12 @@ public class StatusView extends ViewPart {
 			
 			@Override
 			public Color getForeground(Object element) {
-				return SWTResourceManager.getColor(SWT.COLOR_BLACK);
-			}
-			
-			@Override
-			public Color getBackground(Object element) {
-				Status s = (Status)element;
+				Status s = (Status) element;
 				
 				if(s.isPausar())
 					return SWTResourceManager.getColor(SWT.COLOR_RED);
 				else
-					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
+					return SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
 			}
 		});
 		TableColumn tblclmnStatus = tvcStatus.getColumn();
@@ -196,9 +178,6 @@ public class StatusView extends ViewPart {
 		frmListaDeStatus.updateToolBar();
 	}
 
-	/**
-	 * Create the actions.
-	 */
 	private void createActions() {
 		// Create the actions
 		{

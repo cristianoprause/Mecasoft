@@ -29,12 +29,6 @@ public class MecasoftText extends Composite {
 	
 	public Text text;
 
-	/**
-	 * Create the composite.
-	 * 
-	 * @param parent
-	 * @param style
-	 */
 	public MecasoftText(Composite parent, int style) {
 		super(parent, style);
 		
@@ -133,6 +127,8 @@ public class MecasoftText extends Composite {
 			return true;
 		}
 
+		System.err.println(keyCode);
+		
 		if ((text.getText().length() < max) || (max == -1)) {
 			if (aceita.equals(AMBOS))
 				return true;
@@ -141,9 +137,8 @@ public class MecasoftText extends Composite {
 				return true;
 
 			if (aceita.equals(NUMEROS)
-					&& ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 16777225 && keyCode <= 16777221)))
+					&& ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 16777264 && keyCode <= 16777273))) 
 				return true;
-
 		}
 
 		return false;

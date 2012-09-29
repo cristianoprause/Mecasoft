@@ -77,5 +77,10 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 	public void setServicoPrestado(ServicoPrestado servicoPrestado) {
 		this.servicoPrestado = servicoPrestado;
 	}
+	
+	@Override
+	public Boolean isDirty() {
+		return getDAO().isDirty();
+	}
 
 }

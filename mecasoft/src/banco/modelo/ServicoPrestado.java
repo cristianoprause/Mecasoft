@@ -22,9 +22,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 public class ServicoPrestado implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 9195363929741867859L;
 	
 	@Id
@@ -86,7 +83,7 @@ public class ServicoPrestado implements Serializable{
 	@Cascade(value={CascadeType.ALL})
 	private List<ItemServico> listaProdutos = new ArrayList<ItemServico>();
 	
-	@OneToMany(mappedBy="servicoPrestado")
+	@OneToMany(mappedBy="servicoPrestado", orphanRemoval=true)
 	@NotEmpty(message="Adicione ao menos um status.")
 	@Cascade(value={CascadeType.ALL})
 	private List<StatusServico> listaStatus = new ArrayList<StatusServico>();

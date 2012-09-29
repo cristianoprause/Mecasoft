@@ -18,10 +18,6 @@ public class ReportView extends ViewPart {
 		createActions();
 	}
 
-	/**
-	 * Create contents of the view part.
-	 * @param parent
-	 */
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
@@ -33,13 +29,10 @@ public class ReportView extends ViewPart {
 	}
 	
 	public void setReport(JasperPrint jPrint, String title){
-		view.getReportViewer().setDocument(jPrint);
 		setPartName(title);
+		view.getReportViewer().setDocument(jPrint);
 	}
 
-	/**
-	 * Create the actions.
-	 */
 	private void createActions() {
 	}
 
