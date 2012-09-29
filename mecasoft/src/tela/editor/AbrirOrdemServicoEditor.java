@@ -253,7 +253,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				if(ps != null){
 					
 					for(ItemServico is : service.getServicoPrestado().getListaServicos())
-						if(is.getItem().equals(ps))
+						if(is.getItem().equals(ps) || !is.getItem().getAtivo())
 							return;
 						
 					ItemServico is = new ItemServico();

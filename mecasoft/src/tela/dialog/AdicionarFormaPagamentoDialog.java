@@ -82,6 +82,10 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		formaUtilizada.setServicoPrestado(servico);
 		formaUtilizada.setValor(servico.getValorTotal());
 		
+		//desconta do valor total caso o serviço ja tenha alguma forma pagando uma parte dele
+		for(FormaPagtoUtilizada forma : servico.getListaFormaPagto())
+			formaUtilizada.setValor(formaUtilizada.getValor().subtract(forma.getValor()));
+		
 	}
 
 	@Override
@@ -314,23 +318,35 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 			
 			//gera as duplicatas
 			listaDuplicatas.clear();
-			for(int c = 0; c < numeroParcelas; c++){
+			
+			//caso o valor da parcela seja maior que 0, ele gera as duplicatas
+			if(valorParcela.compareTo(BigDecimal.ZERO) > 0){
+				for(int c = 0; c < numeroParcelas; c++){
+					Duplicata d = new Duplicata();
+					d.setDataVencimento(data.getTime());
+					d.setNumero(numeroDuplicata.toString());
+					d.setServicoPrestado(servico);
+					d.setValor(valorParcela);
+					listaDuplicatas.add(d);
+					
+					//seta a variavel data para a data da proxima duplicata e o numeroDuplicata para o numero da proxima duplicata
+					data.add(Calendar.DAY_OF_MONTH, diasParcelas);
+					numeroDuplicata++;
+					
+				}
+				//adiciona o que sobrou na ultima parcela
+				valorParcela = valorParcela.add(resto);
+				listaDuplicatas.get(listaDuplicatas.size()-1).setValor(valorParcela);
+				
+			//caso seja 0, ele gera apenas 1 duplicata com o valor total da forma	
+			}else{
 				Duplicata d = new Duplicata();
 				d.setDataVencimento(data.getTime());
 				d.setNumero(numeroDuplicata.toString());
 				d.setServicoPrestado(servico);
-				d.setValor(valorParcela);
+				d.setValor(valorTotal);
 				listaDuplicatas.add(d);
-				
-				//seta a variavel data para a data da proxima duplicata e o numeroDuplicata para o numero da proxima duplicata
-				data.add(Calendar.DAY_OF_MONTH, diasParcelas);
-				numeroDuplicata++;
-				
 			}
-			
-			//adiciona o que sobrou na ultima parcela
-			valorParcela = valorParcela.add(resto);
-			listaDuplicatas.get(listaDuplicatas.size()-1).setValor(valorParcela);
 			
 			tvDuplicatas.refresh();
 		}catch(Exception e){
