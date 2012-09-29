@@ -25,6 +25,10 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -43,6 +47,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
 
+import tela.componentes.MecasoftText;
 import tela.dialog.SelecionarItemDialog;
 import tela.editingSupport.ForneceProdutoEditingSupport;
 import tela.editor.editorInput.PessoaEditorInput;
@@ -50,9 +55,12 @@ import tela.editor.editorInput.VeiculoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
+import aplicacao.helper.UsuarioHelper;
+import aplicacao.service.CepService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.TipoFuncionarioService;
+import banco.modelo.Cep;
 import banco.modelo.ForneceProduto;
 import banco.modelo.ProdutoServico;
 import banco.modelo.TipoFuncionario;
@@ -64,19 +72,10 @@ public class PessoaEditor extends MecasoftEditor {
 	public static final String ID = "tela.editor.PessoaEditor"; //$NON-NLS-1$
 	private Text txtNomeFantasia;
 	private Text txtRazaoSocial;
-	private Text txtCpfCnpj;
-	private Text txtRgInscrEst;
-	private Text txtCartTrabNum;
-	private Text txtSerie;
-	private Text txtSalario;
-	private Text txtFoneFax;
-	private Text txtCelular;
 	private Text txtEmail;
-	private Text txtCep;
 	private Text txtCidade;
 	private Text txtBairro;
 	private Text txtRua;
-	private Text txtNumero;
 	private Text txtComplemento;
 	private Table tableVeiculos;
 	private Table tableProdutos;
@@ -89,15 +88,25 @@ public class PessoaEditor extends MecasoftEditor {
 	private Button btnAtivo;
 	private Button btnCliente;
 	private Button btnFornecedor;
-	
-	private PessoaService service = new PessoaService();
-	private List<TipoFuncionario> tiposFuncionarios;
 	private TableViewer tvVeiculo;
 	private TableViewer tvProduto;
 	private Combo cbCargo;
+	private MecasoftText txtCpfCnpj;
+	private MecasoftText txtRgInscrEst;
+	private MecasoftText txtCartNum;
+	private MecasoftText txtSerie;
+	private MecasoftText txtSalario;
+	private MecasoftText txtFoneFax;
+	private MecasoftText txtCelular;
+	private MecasoftText txtCep;
+	private MecasoftText txtNumero;
+	
+	private PessoaService service = new PessoaService();
+	private TipoFuncionarioService tipoFuncionarioService = new TipoFuncionarioService();
+	private List<TipoFuncionario> tiposFuncionarios;
 
 	public PessoaEditor() {
-		tiposFuncionarios = new TipoFuncionarioService().findAll();
+		tiposFuncionarios = tipoFuncionarioService.findAll();
 	}
 
 	@Override
@@ -112,6 +121,13 @@ public class PessoaEditor extends MecasoftEditor {
 		
 		btnAtivo = new Button(compositeConteudo, SWT.CHECK);
 		btnAtivo.setText("Ativo");
+		
+		//verifica se a pessoa é definida como representante da empresa
+		//caso seja, o botao de ativo é desativado para que a pessoa não possa ser desativada
+		if(UsuarioHelper.getConfiguracaoPadrao() != null)
+			if(UsuarioHelper.getConfiguracaoPadrao().getRepresentanteEmpresa() != null)
+				if(UsuarioHelper.getConfiguracaoPadrao().getRepresentanteEmpresa().equals(service.getPessoa()))
+					btnAtivo.setEnabled(false);
 		
 		Label lblTipo = new Label(compositeConteudo, SWT.NONE);
 		lblTipo.setText("Tipo:");
@@ -137,33 +153,60 @@ public class PessoaEditor extends MecasoftEditor {
 		Label lblCpfcnpj = new Label(compositeConteudo, SWT.NONE);
 		lblCpfcnpj.setText("CPF/CNPJ:");
 		
-		txtCpfCnpj = new Text(compositeConteudo, SWT.BORDER);
-		txtCpfCnpj.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1));
+		txtCpfCnpj = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtCpfCnpj.text.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(txtCpfCnpj.getText().length() > 14 && txtCpfCnpj.getCaracteres().equals(FormatterHelper.MECASOFTTXTCPF))
+					txtCpfCnpj.addChars(FormatterHelper.MECASOFTTXTCNPJ, new Integer[]{2, 5, 8, 12}, null, null);
+				else if(txtCpfCnpj.getText().length() <= 14 && txtCpfCnpj.getCaracteres().equals(FormatterHelper.MECASOFTTXTCNPJ))
+					txtCpfCnpj.addChars(FormatterHelper.MECASOFTTXTCPF, new Integer[]{3, 6, 9}, null, null);
+			}
+		});
+		txtCpfCnpj.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 6, 1));
+		txtCpfCnpj.setOptions(MecasoftText.NUMEROS, 18);
+		txtCpfCnpj.addChars(FormatterHelper.MECASOFTTXTCPF, new Integer[]{3, 6, 9}, null, null);
 		
 		Label lblRginscricaoEst = new Label(compositeConteudo, SWT.NONE);
 		lblRginscricaoEst.setText("RG/Inscri\u00E7\u00E3o Est:");
 		
-		txtRgInscrEst = new Text(compositeConteudo, SWT.BORDER);
-		txtRgInscrEst.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1));
+		txtRgInscrEst = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtRgInscrEst.text.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(txtRgInscrEst.getText().length() > 11 && txtRgInscrEst.getCaracteres().equals(FormatterHelper.MECASOFTTXTRG))
+					txtRgInscrEst.addChars(FormatterHelper.MECASOFTTXTINSCRICAOESTADUAL, new Integer[]{3, 6, 9}, null, null);
+				else if(txtRgInscrEst.getText().length() <= 11 && txtRgInscrEst.getCaracteres().equals(FormatterHelper.MECASOFTTXTINSCRICAOESTADUAL))
+					txtRgInscrEst.addChars(FormatterHelper.MECASOFTTXTRG, new Integer[]{1, 4, 7}, null, null);
+			}
+		});
+		txtRgInscrEst.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 6, 1));
+		txtRgInscrEst.setOptions(MecasoftText.NUMEROS, 15);
+		txtRgInscrEst.addChars(FormatterHelper.MECASOFTTXTRG, new Integer[]{1, 4, 7}, null, null);
 		
 		Label lblCartTrabalhoN = new Label(compositeConteudo, SWT.NONE);
 		lblCartTrabalhoN.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCartTrabalhoN.setText("Cart. trabalho N\u00BA:");
-		
-		txtCartTrabNum = new Text(compositeConteudo, SWT.BORDER);
-		txtCartTrabNum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		 
+		txtCartNum = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtCartNum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+		txtCartNum.setOptions(MecasoftText.NUMEROS, 7);
 		
 		Label lblSerie = new Label(compositeConteudo, SWT.NONE);
 		lblSerie.setText("S\u00E9rie:");
 		
-		txtSerie = new Text(compositeConteudo, SWT.BORDER);
-		txtSerie.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		txtSerie = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtSerie.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		txtSerie.setOptions(MecasoftText.NUMEROS, 5);
+		txtSerie.addChars(FormatterHelper.MECASOFTTXTSERIECARTEIRATRABALHO, new Integer[]{3}, null, null);
 		
 		Label lblSalario = new Label(compositeConteudo, SWT.NONE);
 		lblSalario.setText("Sal\u00E1rio:");
 		
-		txtSalario = new Text(compositeConteudo, SWT.BORDER);
-		txtSalario.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		txtSalario = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtSalario.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+		txtSalario.setOptions(MecasoftText.NUMEROS, -1);
+		txtSalario.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		
 		Label lblCargo = new Label(compositeConteudo, SWT.NONE);
 		lblCargo.setText("Cargo:");
@@ -175,14 +218,18 @@ public class PessoaEditor extends MecasoftEditor {
 		Label lblFoneFax = new Label(compositeConteudo, SWT.NONE);
 		lblFoneFax.setText("Fone/Fax:");
 		
-		txtFoneFax = new Text(compositeConteudo, SWT.BORDER);
-		txtFoneFax.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		txtFoneFax = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtFoneFax.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+		txtFoneFax.setOptions(MecasoftText.NUMEROS, 14);
+		txtFoneFax.addChars(FormatterHelper.MECASOFTTXTTELEFONE, new Integer[]{0, 2, 2, 6}, null, null);
 		
 		Label lblCelular = new Label(compositeConteudo, SWT.NONE);
 		lblCelular.setText("Celular:");
 		
-		txtCelular = new Text(compositeConteudo, SWT.BORDER);
-		txtCelular.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		txtCelular = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtCelular.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		txtCelular.setOptions(MecasoftText.NUMEROS, 14);
+		txtCelular.addChars(FormatterHelper.MECASOFTTXTTELEFONE, new Integer[]{0, 2, 2, 6}, null, null);
 		
 		Label lblEmail = new Label(compositeConteudo, SWT.NONE);
 		lblEmail.setText("E-mail:");
@@ -193,8 +240,16 @@ public class PessoaEditor extends MecasoftEditor {
 		Label lblCep = new Label(compositeConteudo, SWT.NONE);
 		lblCep.setText("CEP:");
 		
-		txtCep = new Text(compositeConteudo, SWT.BORDER);
-		txtCep.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		txtCep = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtCep.text.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				completarEndereco();
+			}
+		});
+		txtCep.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+		txtCep.setOptions(MecasoftText.NUMEROS, 9);
+		txtCep.addChars(FormatterHelper.MECASOFTTXTCEP, new Integer[]{5}, null, null);
 		
 		Label lblCidade = new Label(compositeConteudo, SWT.NONE);
 		lblCidade.setText("Cidade:");
@@ -217,8 +272,9 @@ public class PessoaEditor extends MecasoftEditor {
 		Label lblNumero = new Label(compositeConteudo, SWT.NONE);
 		lblNumero.setText("N\u00FAmero:");
 		
-		txtNumero = new Text(compositeConteudo, SWT.BORDER);
-		txtNumero.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		txtNumero = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtNumero.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		txtNumero.setOptions(MecasoftText.NUMEROS, -1);
 		
 		Label lblComplemento = new Label(compositeConteudo, SWT.NONE);
 		lblComplemento.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
@@ -422,11 +478,35 @@ public class PessoaEditor extends MecasoftEditor {
 		
 		initDataBindings();
 	}
+	
+	public void completarEndereco(){
+		Cep endereco = new CepService().getEndereco(txtCep.getTextoSemFormatacao());
+		
+		if(endereco != null){
+			txtCidade.setText(endereco.getCidade());
+			txtBairro.setText(endereco.getBairro());
+			String ruaNum[] = endereco.getLogradouro().split(", ");
+			txtRua.setText(ruaNum[0]);
+			
+			if(ruaNum.length > 1)
+				txtNumero.setText(ruaNum[1]);
+			
+		}else{
+			txtCidade.setText("");
+			txtBairro.setText("");
+			txtRua.setText("");
+		}
+	}
 
 	@Override
 	public void salvarRegistro() {
 		try {
 			validar(service.getPessoa());
+			
+			if(service.getPessoa().getFoneFax().isEmpty() && service.getPessoa().getCelular().isEmpty()){
+				setErroMessage("Informe ao menos um telefone.");
+				return;
+			}
 			
 			if(service.getPessoa().getTipoFuncionario()){
 				
@@ -450,10 +530,10 @@ public class PessoaEditor extends MecasoftEditor {
 					return;
 				}
 				
-				service.saveOrUpdate();
 				
-			}else
-				service.saveOrUpdate();
+			}
+			
+			service.saveOrUpdate();
 			
 			openInformation("Pessoa cadastrada com sucesso!");
 			closeThisEditor();
@@ -473,13 +553,24 @@ public class PessoaEditor extends MecasoftEditor {
 		
 		PessoaEditorInput pei = (PessoaEditorInput)input;
 		
-		if(pei.getPessoa().getId() != null)
+		if(pei.getPessoa().getId() != null){
 			service.setPessoa(service.find(pei.getPessoa().getId()));
-		else
+			setPartName("Pessoa: " + service.getPessoa().getNomeFantasia());
+		}else
 			service.setPessoa(pei.getPessoa());
 		
 		setSite(site);
 		setInput(input);
+	}
+	
+	@Override
+	public void setFocus() {
+		tvProduto.refresh();
+		tvVeiculo.refresh();
+		
+		tiposFuncionarios = tipoFuncionarioService.findAll();
+		initDataBindings();
+		
 	}
 	
 	private ProdutoServico selecionarProduto(){
@@ -494,12 +585,6 @@ public class PessoaEditor extends MecasoftEditor {
 		return (ProdutoServico) sid.getElementoSelecionado();
 	}
 
-	@Override
-	public void setFocus() {
-		tvProduto.refresh();
-		tvVeiculo.refresh();
-	}
-	
 	@Override
 	public boolean isDirty() {
 		return service.isDirty();
@@ -531,41 +616,9 @@ public class PessoaEditor extends MecasoftEditor {
 		IObservableValue funcionarioServicegetFuncionarioRazaoSocialObserveValue = PojoObservables.observeValue(service.getPessoa(), "razaoSocial");
 		bindingContext.bindValue(txtRazaoSocialObserveTextObserveWidget, funcionarioServicegetFuncionarioRazaoSocialObserveValue, null, null);
 		//
-		IObservableValue txtCpfCnpjObserveTextObserveWidget = SWTObservables.observeText(txtCpfCnpj, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioCpfCnpjObserveValue = PojoObservables.observeValue(service.getPessoa(), "cpfCnpj");
-		bindingContext.bindValue(txtCpfCnpjObserveTextObserveWidget, funcionarioServicegetFuncionarioCpfCnpjObserveValue, null, null);
-		//
-		IObservableValue txtRgInscrEstObserveTextObserveWidget = SWTObservables.observeText(txtRgInscrEst, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioRgInscricaoEstObserveValue = PojoObservables.observeValue(service.getPessoa(), "rgInscricaoEst");
-		bindingContext.bindValue(txtRgInscrEstObserveTextObserveWidget, funcionarioServicegetFuncionarioRgInscricaoEstObserveValue, null, null);
-		//
-		IObservableValue txtCartTrabNumObserveTextObserveWidget = SWTObservables.observeText(txtCartTrabNum, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioCarteiraNumObserveValue = PojoObservables.observeValue(service.getPessoa(), "carteiraNum");
-		bindingContext.bindValue(txtCartTrabNumObserveTextObserveWidget, funcionarioServicegetFuncionarioCarteiraNumObserveValue, null, null);
-		//
-		IObservableValue txtSerieObserveTextObserveWidget = SWTObservables.observeText(txtSerie, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioSerieObserveValue = PojoObservables.observeValue(service.getPessoa(), "serie");
-		bindingContext.bindValue(txtSerieObserveTextObserveWidget, funcionarioServicegetFuncionarioSerieObserveValue, null, null);
-		//
-		IObservableValue txtSalarioObserveTextObserveWidget = SWTObservables.observeText(txtSalario, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioSalarioObserveValue = PojoObservables.observeValue(service.getPessoa(), "salario");
-		bindingContext.bindValue(txtSalarioObserveTextObserveWidget, funcionarioServicegetFuncionarioSalarioObserveValue, null, null);
-		//
-		IObservableValue txtFoneFaxObserveTextObserveWidget = SWTObservables.observeText(txtFoneFax, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioFoneFaxObserveValue = PojoObservables.observeValue(service.getPessoa(), "foneFax");
-		bindingContext.bindValue(txtFoneFaxObserveTextObserveWidget, funcionarioServicegetFuncionarioFoneFaxObserveValue, null, null);
-		//
-		IObservableValue txtCelularObserveTextObserveWidget = SWTObservables.observeText(txtCelular, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioCelularObserveValue = PojoObservables.observeValue(service.getPessoa(), "celular");
-		bindingContext.bindValue(txtCelularObserveTextObserveWidget, funcionarioServicegetFuncionarioCelularObserveValue, null, null);
-		//
 		IObservableValue txtEmailObserveTextObserveWidget = SWTObservables.observeText(txtEmail, SWT.Modify);
 		IObservableValue funcionarioServicegetFuncionarioEmailObserveValue = PojoObservables.observeValue(service.getPessoa(), "email");
 		bindingContext.bindValue(txtEmailObserveTextObserveWidget, funcionarioServicegetFuncionarioEmailObserveValue, null, null);
-		//
-		IObservableValue txtCepObserveTextObserveWidget = SWTObservables.observeText(txtCep, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioCepObserveValue = PojoObservables.observeValue(service.getPessoa(), "cep");
-		bindingContext.bindValue(txtCepObserveTextObserveWidget, funcionarioServicegetFuncionarioCepObserveValue, null, null);
 		//
 		IObservableValue txtCidadeObserveTextObserveWidget = SWTObservables.observeText(txtCidade, SWT.Modify);
 		IObservableValue funcionarioServicegetFuncionarioCidadeObserveValue = PojoObservables.observeValue(service.getPessoa(), "cidade");
@@ -578,10 +631,6 @@ public class PessoaEditor extends MecasoftEditor {
 		IObservableValue txtRuaObserveTextObserveWidget = SWTObservables.observeText(txtRua, SWT.Modify);
 		IObservableValue funcionarioServicegetFuncionarioRuaObserveValue = PojoObservables.observeValue(service.getPessoa(), "rua");
 		bindingContext.bindValue(txtRuaObserveTextObserveWidget, funcionarioServicegetFuncionarioRuaObserveValue, null, null);
-		//
-		IObservableValue txtNumeroObserveTextObserveWidget = SWTObservables.observeText(txtNumero, SWT.Modify);
-		IObservableValue funcionarioServicegetFuncionarioNumeroObserveValue = PojoObservables.observeValue(service.getPessoa(), "numero");
-		bindingContext.bindValue(txtNumeroObserveTextObserveWidget, funcionarioServicegetFuncionarioNumeroObserveValue, null, null);
 		//
 		IObservableValue txtComplementoObserveTextObserveWidget = SWTObservables.observeText(txtComplemento, SWT.Modify);
 		IObservableValue funcionarioServicegetFuncionarioComplementoObserveValue = PojoObservables.observeValue(service.getPessoa(), "complemento");
@@ -599,17 +648,8 @@ public class PessoaEditor extends MecasoftEditor {
 		IObservableValue btnRemoverVeiculoObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnDesativarVeiculo);
 		bindingContext.bindValue(btnRemoverVeiculoObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoClienteObserveValue, null, null);
 		//
-		IObservableValue txtSerieObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtSerie);
-		bindingContext.bindValue(txtSerieObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
-		//
 		IObservableValue cbCargoObserveEnabledObserveWidget = SWTObservables.observeEnabled(cbCargo);
 		bindingContext.bindValue(cbCargoObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
-		//
-		IObservableValue txtCartTrabNumObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtCartTrabNum);
-		bindingContext.bindValue(txtCartTrabNumObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
-		//
-		IObservableValue txtSalarioObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtSalario);
-		bindingContext.bindValue(txtSalarioObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
 //		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ForneceProduto.class, new String[]{"id.produto.descricao", "valorUnitario"});
@@ -644,6 +684,51 @@ public class PessoaEditor extends MecasoftEditor {
 		IObservableValue cvCargoObserveSingleSelection = ViewersObservables.observeSingleSelection(cvCargo);
 		IObservableValue funcionarioServicegetFuncionarioTipoObserveValue = PojoObservables.observeValue(service.getPessoa(), "tipo");
 		bindingContext.bindValue(cvCargoObserveSingleSelection, funcionarioServicegetFuncionarioTipoObserveValue, null, null);
+		//
+		IObservableValue txtCpfCnpjtextObserveTextObserveWidget = SWTObservables.observeText(txtCpfCnpj.text, SWT.Modify);
+		IObservableValue servicegetPessoaCpfCnpjObserveValue = PojoObservables.observeValue(service.getPessoa(), "cpfCnpj");
+		bindingContext.bindValue(txtCpfCnpjtextObserveTextObserveWidget, servicegetPessoaCpfCnpjObserveValue, null, null);
+		//
+		IObservableValue txtRgInscrEsttextObserveTextObserveWidget = SWTObservables.observeText(txtRgInscrEst.text, SWT.Modify);
+		IObservableValue servicegetPessoaRgInscricaoEstObserveValue = PojoObservables.observeValue(service.getPessoa(), "rgInscricaoEst");
+		bindingContext.bindValue(txtRgInscrEsttextObserveTextObserveWidget, servicegetPessoaRgInscricaoEstObserveValue, null, null);
+		//
+		IObservableValue txtCartNumtextObserveTextObserveWidget = SWTObservables.observeText(txtCartNum.text, SWT.Modify);
+		IObservableValue servicegetPessoaCarteiraNumObserveValue = PojoObservables.observeValue(service.getPessoa(), "carteiraNum");
+		bindingContext.bindValue(txtCartNumtextObserveTextObserveWidget, servicegetPessoaCarteiraNumObserveValue, null, null);
+		//
+		IObservableValue txtCartNumtextObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtCartNum.text);
+		bindingContext.bindValue(txtCartNumtextObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
+		//
+		IObservableValue txtSerietextObserveTextObserveWidget = SWTObservables.observeText(txtSerie.text, SWT.Modify);
+		IObservableValue servicegetPessoaSerieObserveValue = PojoObservables.observeValue(service.getPessoa(), "serie");
+		bindingContext.bindValue(txtSerietextObserveTextObserveWidget, servicegetPessoaSerieObserveValue, null, null);
+		//
+		IObservableValue txtSerietextObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtSerie.text);
+		bindingContext.bindValue(txtSerietextObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
+		//
+		IObservableValue txtSalariotextObserveTextObserveWidget = SWTObservables.observeText(txtSalario.text, SWT.Modify);
+		IObservableValue servicegetPessoaSalarioObserveValue = PojoObservables.observeValue(service.getPessoa(), "salario");
+		bindingContext.bindValue(txtSalariotextObserveTextObserveWidget, servicegetPessoaSalarioObserveValue, null, null);
+		//
+		IObservableValue txtSalariotextObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtSalario.text);
+		bindingContext.bindValue(txtSalariotextObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
+		//
+		IObservableValue txtFoneFaxtextObserveTextObserveWidget = SWTObservables.observeText(txtFoneFax.text, SWT.Modify);
+		IObservableValue servicegetPessoaFoneFaxObserveValue = PojoObservables.observeValue(service.getPessoa(), "foneFax");
+		bindingContext.bindValue(txtFoneFaxtextObserveTextObserveWidget, servicegetPessoaFoneFaxObserveValue, null, null);
+		//
+		IObservableValue txtCelulartextObserveTextObserveWidget = SWTObservables.observeText(txtCelular.text, SWT.Modify);
+		IObservableValue servicegetPessoaCelularObserveValue = PojoObservables.observeValue(service.getPessoa(), "celular");
+		bindingContext.bindValue(txtCelulartextObserveTextObserveWidget, servicegetPessoaCelularObserveValue, null, null);
+		//
+		IObservableValue txtCeptextObserveTextObserveWidget = SWTObservables.observeText(txtCep.text, SWT.Modify);
+		IObservableValue servicegetPessoaCepObserveValue = PojoObservables.observeValue(service.getPessoa(), "cep");
+		bindingContext.bindValue(txtCeptextObserveTextObserveWidget, servicegetPessoaCepObserveValue, null, null);
+		//
+		IObservableValue txtNumerotextObserveTextObserveWidget = SWTObservables.observeText(txtNumero.text, SWT.Modify);
+		IObservableValue servicegetPessoaNumeroObserveValue = PojoObservables.observeValue(service.getPessoa(), "numero");
+		bindingContext.bindValue(txtNumerotextObserveTextObserveWidget, servicegetPessoaNumeroObserveValue, null, null);
 		//
 		return bindingContext;
 	}

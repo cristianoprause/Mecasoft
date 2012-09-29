@@ -86,7 +86,7 @@ public class ServicoEditor extends MecasoftEditor {
 		
 		txtValorBase = new MecasoftText(compositeConteudo, SWT.NONE);
 		txtValorBase.setOptions(MecasoftText.NUMEROS, -1);
-		txtValorBase.addChars(",", new Integer[]{-2});
+		txtValorBase.addChars(",", new Integer[]{-2}, null, null);
 		((GridData) txtValorBase.text.getLayoutData()).widthHint = 203;
 		txtValorBase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		

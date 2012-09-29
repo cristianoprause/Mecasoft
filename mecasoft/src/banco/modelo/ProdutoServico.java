@@ -40,6 +40,9 @@ public class ProdutoServico implements Serializable{
 	private boolean ativo = true;
 	
 	@Column
+	private boolean estocavel;
+	
+	@Column
 	@NotEmpty(message="Informe a descrição.")
 	private String descricao;
 	
@@ -64,7 +67,7 @@ public class ProdutoServico implements Serializable{
 	
 	@ManyToMany
 	@Cascade(value={CascadeType.ALL})
-	@JoinTable(name="prosutoServicoParametrizado",
+	@JoinTable(name="produtoServicoParametrizado",
 		joinColumns={
 			@JoinColumn(name="servico_id", referencedColumnName = "id")
 		},
@@ -184,6 +187,14 @@ public class ProdutoServico implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public boolean isEstocavel() {
+		return estocavel;
+	}
+
+	public void setEstocavel(boolean estocavel) {
+		this.estocavel = estocavel;
 	}
 	
 }

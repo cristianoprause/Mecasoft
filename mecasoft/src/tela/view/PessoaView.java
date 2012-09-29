@@ -43,7 +43,7 @@ public class PessoaView extends ViewPart {
 	private Action actionNovo;
 
 	private PessoaFilter filter = new PessoaFilter();
-	private PessoaService service = new PessoaService();
+	private PessoaService service = new PessoaService();;
 	
 	public PessoaView() {
 		createActions();

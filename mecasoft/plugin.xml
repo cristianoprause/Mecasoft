@@ -53,6 +53,7 @@
       </editor>
       <editor
             class="tela.editor.TipoFuncionarioEditor"
+            icon="assents/tipoFuncionario/tipoFuncionario16.png"
             id="tela.editor.TipoFuncionarioEditor"
             name="Tipo de funcionário">
       </editor>
@@ -70,8 +71,25 @@
       </editor>
       <editor
             class="tela.editor.StatusEditor"
+            icon="assents/status/status16.png"
             id="tela.editor.StatusEditor"
             name="Status">
+      </editor>
+      <editor
+            class="tela.editor.AbrirOrdemServicoEditor"
+            id="tela.editor.AbrirOrdemServicoEditor"
+            name="Abrir ordem de serviço">
+      </editor>
+      <editor
+            class="tela.editor.FecharOrdemServicoEditor"
+            id="tela.editor.FecharOrdemServicoEditor"
+            name="Fechar ordem de serviço">
+      </editor>
+      <editor
+            class="tela.editor.FormaPagamentoEditor"
+            icon="assents/formaPagamento/formaPagamento16.png"
+            id="tela.editor.FormaPagamentoEditor"
+            name="Forma de pagamento">
       </editor>
    </extension>
    <extension
@@ -108,6 +126,7 @@
       </view>
       <view
             class="tela.view.TipoFuncionarioView"
+            icon="assents/tipoFuncionario/tipoFuncionario16.png"
             id="tela.view.TipoFuncionarioView"
             name="Lista de tipos de funcionário">
       </view>
@@ -125,8 +144,25 @@
       </view>
       <view
             class="tela.view.StatusView"
+            icon="assents/status/status16.png"
             id="tela.view.StatusView"
             name="Lista de status">
+      </view>
+      <view
+            class="tela.view.ServicoPrestadoView"
+            id="tela.view.ServicoPrestadoView"
+            name="Serviços Prestados">
+      </view>
+      <view
+            class="tela.view.FormaPagamentoView"
+            icon="assents/formaPagamento/formaPagamento16.png"
+            id="tela.view.FormaPagamentoView"
+            name="Lista de formas de pagamento">
+      </view>
+      <view
+            class="tela.view.ReportView"
+            id="tela.view.ReportView"
+            name="New ViewPart">
       </view>
    </extension>
    <extension
@@ -135,6 +171,16 @@
             locationURI="menu:org.eclipse.ui.main.menu">
          <menu
                label="Arquivo">
+            <command
+                  commandId="mecasoft.configuracaoCommand"
+                  icon="assents/funcoes/config16.png"
+                  label="Configurações"
+                  style="push">
+            </command>
+            <separator
+                  name="mecasoft.separator1"
+                  visible="true">
+            </separator>
             <command
                   commandId="mecasoft.reiniciarCommand"
                   icon="assents/funcoes/reset16.png"
@@ -181,6 +227,7 @@
             </command>
             <command
                   commandId="org.eclipse.ui.views.showView"
+                  icon="assents/tipoFuncionario/tipoFuncionario16.png"
                   id="mecasoft.menuTipoFuncionario"
                   label="Tipo de funcionário">
                <parameter
@@ -230,12 +277,43 @@
             </command>
             <command
                   commandId="org.eclipse.ui.views.showView"
+                  icon="assents/status/status16.png"
                   id="mecasoft.menuStatus"
                   label="Status">
                <parameter
                      name="org.eclipse.ui.views.showView.viewId"
                      value="tela.view.StatusView">
                </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  icon="assents/formaPagamento/formaPagamento16.png"
+                  id="mecasoft.menuFormaPagamento"
+                  label="Forma de pagamento">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.FormaPagamentoView">
+               </parameter>
+            </command>
+         </menu>
+         <menu
+               label="Financeiro">
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  id="mecasoft.menuServicoPrestado"
+                  label="Serviço">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.ServicoPrestadoView">
+               </parameter>
+            </command>
+         </menu>
+         <menu
+               label="Relatório">
+            <command
+                  commandId="mecasoft.showServicoSinteticoCommand"
+                  label="Serviço sintético"
+                  style="push">
             </command>
          </menu>
       </menuContribution>
@@ -257,6 +335,16 @@
             id="mecasoft.sairCommand"
             name="Sair">
       </command>
+      <command
+            defaultHandler="aplicacao.command.ConfiguracaoCommand"
+            id="mecasoft.configuracaoCommand"
+            name="Configuração">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.reports.ShowServicoSinteticoCommand"
+            id="mecasoft.showServicoSinteticoCommand"
+            name="Relatório de serviços sintético">
+      </command>
    </extension>
    <extension
          id="mecasoft"
@@ -267,6 +355,10 @@
          <property
                name="appName"
                value="MECASOFT">
+         </property>
+         <property
+               name="windowImages"
+               value="assents/logo/mecanica16X16.png,assents/logo/mecanica32X32.png,assents/logo/mecanica64X64.png">
          </property>
       </product>
    </extension>
@@ -344,6 +436,15 @@
             id="tela.view.activityServico"
             name="activity serviço">
       </activity>
+      <activity
+            id="tela.view.activityStatus"
+            name="activity status">
+      </activity>
+      <activityPatternBinding
+            activityId="tela.view.activityStatus"
+            isEqualityPattern="false"
+            pattern="mecasoft/mecasoft.menuStatus">
+      </activityPatternBinding>
    </extension>
 
 </plugin>

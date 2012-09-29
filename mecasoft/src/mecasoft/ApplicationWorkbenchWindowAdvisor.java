@@ -1,11 +1,19 @@
 package mecasoft;
 
+import static aplicacao.helper.MessageHelper.openQuestion;
+
+import java.util.List;
+
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.handlers.IHandlerService;
+
+import aplicacao.helper.UsuarioHelper;
+import aplicacao.service.ConfiguracaoService;
+import banco.modelo.Configuracao;
 
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
@@ -38,7 +46,20 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	}
 	
 	@Override
+	public boolean preWindowShellClose() {
+		return openQuestion("Tem certeza que deseja finalizar o sistema?");
+	}
+	
+	@Override
 	public void postWindowOpen() {
 		verificacaoMenus();
+		verificarConfiguracoes();
+	}
+	
+	public void verificarConfiguracoes(){
+		List<Configuracao> configuracoes = new ConfiguracaoService().findAll();
+		
+		if(!configuracoes.isEmpty())
+			UsuarioHelper.setConfiguracaoPadrao(configuracoes.get(0));
 	}
 }

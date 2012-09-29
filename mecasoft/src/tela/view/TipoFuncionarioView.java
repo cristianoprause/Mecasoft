@@ -59,6 +59,7 @@ public class TipoFuncionarioView extends ViewPart {
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Form frmListaDeTipos = formToolkit.createForm(container);
+		frmListaDeTipos.setImage(ResourceManager.getPluginImage("mecasoft", "assents/tipoFuncionario/tipoFuncionario32.png"));
 		formToolkit.paintBordersFor(frmListaDeTipos);
 		frmListaDeTipos.setText("Lista de tipos de funcion\u00E1rio");
 		frmListaDeTipos.getBody().setLayout(new GridLayout(2, false));

@@ -30,6 +30,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import tela.dialog.SelecionarItemDialog;
 import tela.editor.editorInput.UsuarioEditorInput;
+import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.MessageHelper;
 import aplicacao.helper.ValidatorHelper;
@@ -49,12 +50,13 @@ public class UsuarioEditor extends MecasoftEditor{
 	private Button btnAtivo;
 	
 	private UsuarioService service = new UsuarioService();
+	private PapelService papelService = new PapelService();
 	private List<Papel> papeis;
 	
 	private ComboViewer comboViewer;
 	
 	public UsuarioEditor() {
-		papeis = new PapelService().findAll();
+		papeis = papelService.findAll();
 	}
 	
 	@Override
@@ -137,8 +139,12 @@ public class UsuarioEditor extends MecasoftEditor{
 			service.saveOrUpdate();
 			MessageHelper.openInformation("Usuário salvo com sucesso!");
 			closeThisEditor();
-		} catch (aplicacao.exception.ValidationException e) {
+		} catch (ValidationException e) {
 			setErroMessage(e.getMessage());
+		}catch(Exception ex){
+			if(ex.getMessage().contains("(login)=(admin) já existe"))
+				setErroMessage("Já existe um usuário com o login informado.");
+			return;
 		}
 	}
 
@@ -177,6 +183,14 @@ public class UsuarioEditor extends MecasoftEditor{
 		dialog.setElements(new PessoaService().findAllAtivosSemUsuario().toArray());
 		
 		return (Pessoa) dialog.getElementoSelecionado();
+	}
+	
+	@Override
+	public void setFocus() {
+		
+		papeis = papelService.findAll();
+		initDataBindings();
+		
 	}
 
 	protected DataBindingContext initDataBindings() {

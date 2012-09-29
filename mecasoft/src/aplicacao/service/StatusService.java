@@ -33,6 +33,14 @@ public class StatusService extends MecasoftService<Status>{
 	public List<Status> findAll() {
 		return getDAO().findAll();
 	}
+	
+	public List<Status> findAllAtivos(){
+		return getDAO().findAllByStatusAndFuncao(true, null);
+	}
+	
+	public List<Status> findAllAtivosByFuncao(boolean pausar){
+		return getDAO().findAllByStatusAndFuncao(true, pausar);
+	}
 
 	public Status getStatus() {
 		return status;

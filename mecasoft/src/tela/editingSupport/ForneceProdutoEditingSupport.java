@@ -37,8 +37,8 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 
 		if(fp.getValorUnitario() != null)
 			return FormatterHelper.getDecimalFormat().format(fp.getValorUnitario());
-		else
-			return "";
+
+		return "";
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 		
 		if(!valor.isEmpty()){
 			try{
-				((ForneceProduto)element).setValorUnitario(new BigDecimal(valor.replaceAll(",", ".")));
+				((ForneceProduto)element).setValorUnitario(new BigDecimal(valor.replace(".", "").replace(",", ".")));
 				viewer.refresh();
 			}catch(Exception e){}
 		}

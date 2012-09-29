@@ -10,7 +10,7 @@
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages/>
+   <windowImages i16="/mecasoft/assents/logo/mecanica16X16.png" i32="/mecasoft/assents/logo/mecanica32X32.png" i64="/mecasoft/assents/logo/mecanica64X64.png"/>
 
    <launcher>
       <solaris/>

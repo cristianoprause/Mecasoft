@@ -63,6 +63,7 @@ public class StatusView extends ViewPart {
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Form frmListaDeStatus = formToolkit.createForm(container);
+		frmListaDeStatus.setImage(ResourceManager.getPluginImage("mecasoft", "assents/status/status32.png"));
 		formToolkit.paintBordersFor(frmListaDeStatus);
 		frmListaDeStatus.setText("Lista de status");
 		frmListaDeStatus.getBody().setLayout(new GridLayout(2, false));

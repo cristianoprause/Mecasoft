@@ -5,9 +5,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridLayout;
 
 public class MecasoftText extends Composite {
 
@@ -16,13 +16,17 @@ public class MecasoftText extends Composite {
 	public static Integer LETRAS = 1;
 
 	private boolean passou;
+	private Integer tamanhoAnterior;
+	private Integer posicaoCursor;
 	private Integer max;
 	private Integer aceita;
 	private String caracteres;
 	private Integer[] posicoes;
 	private String texto;
 	private String textoRetorno;
-
+	private Character charContinuo;
+	private Integer mediaCharContinuo;
+	
 	public Text text;
 
 	/**
@@ -38,6 +42,7 @@ public class MecasoftText extends Composite {
 		caracteres = "";
 		aceita = AMBOS;
 		max = -1;
+		charContinuo = null;
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
@@ -58,15 +63,28 @@ public class MecasoftText extends Composite {
 			public void keyReleased(KeyEvent e) {
 				formatar();
 			}
+			
 		});
 
 	}
 
-	public void formatar() {
+	private void formatar() {
 		if(passou){
+
+			//pega posicao do cursor para ele nao sair do lugar
+			posicaoCursor = text.getCaretPosition();
+			
+			//pega o tamanho atual do texto para comparar com o novo tamanho e ver se o cursor ira mudar de posicao ou nao
+			tamanhoAnterior = text.getText().length();
+			
 			texto = text.getText();
 			for(int c = 0; c < caracteres.length(); c++)
 				texto = StringUtils.remove(texto, caracteres.charAt(c));
+			
+			texto = StringUtils.deleteWhitespace(texto);
+			
+			if(charContinuo != null)
+				texto = StringUtils.remove(texto, charContinuo);
 			
 			textoRetorno = "";
 			for(int c1 = 0; c1 < texto.length(); c1++){
@@ -74,15 +92,29 @@ public class MecasoftText extends Composite {
 					if(posicoes[c2].compareTo(c1) == 0)
 						textoRetorno += caracteres.charAt(c2);
 					
-					else if(c1 == (texto.length() + posicoes[c2]))
+					else if(c1 == (texto.length() + posicoes[c2]) && c1 != 0){
 						textoRetorno += caracteres.charAt(c2);
+					}
+				}
+				
+				if(charContinuo != null){
+					if((texto.length() - c1 + posicoes[0]) % mediaCharContinuo == 0 && c1 > (posicoes[0] * -1 + 2))
+						textoRetorno += charContinuo;
+
 				}
 				
 				textoRetorno += texto.charAt(c1);
 			}
 			
 			text.setText(textoRetorno);
-			text.setSelection(textoRetorno.length());
+			
+			//verifica se o texto aumento
+			tamanhoAnterior = textoRetorno.length() - tamanhoAnterior;
+			if(tamanhoAnterior > 0)
+				posicaoCursor += tamanhoAnterior;
+			
+			//seta a posiçao do cursor onde ela deveria ficar
+			text.setSelection(posicaoCursor, posicaoCursor);
 			
 		}
 		
@@ -122,9 +154,11 @@ public class MecasoftText extends Composite {
 		this.max = max;
 	}
 
-	public void addChars(String caracteres, Integer posicoes[]) {
+	public void addChars(String caracteres, Integer posicoes[], Character charContinuo, Integer mediaCharContinuo) {
 		this.caracteres = caracteres;
 		this.posicoes = posicoes;
+		this.charContinuo = charContinuo;
+		this.mediaCharContinuo = mediaCharContinuo;
 	}
 	
 	@Override
@@ -143,6 +177,25 @@ public class MecasoftText extends Composite {
 	
 	public boolean getEditable(boolean editable){
 		return text.getEditable();
+	}
+	
+	public String getText(){
+		if(text.getText() == null)
+			return "";
+					
+		return text.getText();
+	}
+	
+	public void setText(String text){
+		this.text.setText(text);
+	}
+
+	public String getCaracteres() {
+		return caracteres;
+	}
+	
+	public String getTextoSemFormatacao(){
+		return texto;
 	}
 
 }

@@ -53,7 +53,7 @@ public class TelaTeste {
 		text = new MecasoftText(shell, SWT.BORDER);
 		text.setLayout(new GridLayout(1, false));
 		text.setOptions(MecasoftText.NUMEROS, 14);
-//		text.addChars("..-", new Integer[]{3, 6, 9});2
+		text.addChars(",", new Integer[]{-2}, null, null);
 
 	}
 

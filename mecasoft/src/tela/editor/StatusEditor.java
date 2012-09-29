@@ -20,6 +20,7 @@ import org.eclipse.ui.PartInitException;
 
 import tela.editor.editorInput.StatusEditorInput;
 import aplicacao.exception.ValidationException;
+import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.StatusService;
 
 public class StatusEditor extends MecasoftEditor {
@@ -72,6 +73,20 @@ public class StatusEditor extends MecasoftEditor {
 		
 		btnAtivo = new Button(compositeConteudo, SWT.CHECK);
 		btnAtivo.setText("Ativo");
+		
+		//verifica se o status esta registrado nas configurações
+		//caso esteja, nao permite que ele seja desativado
+		if(UsuarioHelper.getConfiguracaoPadrao() != null){
+			if(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio().equals(service.getStatus()))
+				btnAtivo.setEnabled(false);
+			
+			if(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal().equals(service.getStatus()))
+				btnAtivo.setEnabled(false);
+			
+			if(UsuarioHelper.getConfiguracaoPadrao().getStatusFinalizarServico().equals(service.getStatus()))
+				btnAtivo.setEnabled(false);
+		}
+		
 		new Label(compositeConteudo, SWT.NONE);
 		new Label(compositeConteudo, SWT.NONE);
 		initDataBindings();

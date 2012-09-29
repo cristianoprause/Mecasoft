@@ -33,7 +33,7 @@ public class TipoFuncionarioService extends MecasoftService<TipoFuncionario>{
 	public List<TipoFuncionario> findAll() {
 		return getDAO().findAll();
 	}
-
+	
 	public TipoFuncionario getTipo() {
 		return tipo;
 	}

@@ -5,6 +5,7 @@ import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.ValidatorHelper.validar;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -59,11 +60,13 @@ public class ProdutoEditor extends MecasoftEditor {
 	private Text txtCusto;
 	private Text txtValorUnitario;
 	private Table tableFornecedores;
-	
-	private ProdutoServicoService service = new ProdutoServicoService();
 	private MecasoftText txtLucro;
 	private TableViewer tvFornecedores;
 	private Button btnAtivo;
+	private Button btnEstocavel;
+	
+	private ProdutoServicoService service = new ProdutoServicoService();
+	private PessoaService pessoaService = new PessoaService();
 
 	public ProdutoEditor() {
 	}
@@ -141,7 +144,7 @@ public class ProdutoEditor extends MecasoftEditor {
 			}
 		});
 		txtLucro.setOptions(MecasoftText.NUMEROS, -1);
-		txtLucro.addChars(",", new Integer[]{-2});
+		txtLucro.addChars(",", new Integer[]{-2}, null, null);
 		txtLucro.setEditable(true);
 		txtLucro.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
@@ -153,6 +156,11 @@ public class ProdutoEditor extends MecasoftEditor {
 		txtValorUnitario.setEnabled(false);
 		txtValorUnitario.setEditable(false);
 		txtValorUnitario.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeConteudo, SWT.NONE);
+		
+		btnEstocavel = new Button(compositeConteudo, SWT.CHECK);
+		btnEstocavel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		btnEstocavel.setText("Necess\u00E1rio ter em estoque");
 		new Label(compositeConteudo, SWT.NONE);
 		
 		Label lblFornecedores = new Label(compositeConteudo, SWT.NONE);
@@ -188,13 +196,17 @@ public class ProdutoEditor extends MecasoftEditor {
 		tblclmnNome.setText("Nome");
 		
 		TableViewerColumn tvcValorUnitario = new TableViewerColumn(tvFornecedores, SWT.NONE);
+		tvcValorUnitario.setEditingSupport(new ForneceProdutoEditingSupport(tvFornecedores));
 		tvcValorUnitario.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.getDecimalFormat().format(((ForneceProduto)element).getValorUnitario());
+				try{
+					return FormatterHelper.getDecimalFormat().format(((ForneceProduto)element).getValorUnitario());
+				}catch(Exception e){
+					return "";
+				}
 			}
 		});
-		tvcValorUnitario.setEditingSupport(new ForneceProdutoEditingSupport(tvFornecedores));
 		TableColumn tblclmnValorUnitario = tvcValorUnitario.getColumn();
 		tblclmnValorUnitario.setWidth(100);
 		tblclmnValorUnitario.setText("Valor Unitário");
@@ -268,7 +280,16 @@ public class ProdutoEditor extends MecasoftEditor {
 				return ((Pessoa)element).getNomeFantasia();
 			}
 		});
-		sid.setElements(new PessoaService().findAllFornecedoresAtivos().toArray());
+		
+		//remover fornecedores ja adicionados
+		List<Pessoa> fornecedores = pessoaService.findAllFornecedoresAtivos();
+		
+		for(ForneceProduto fp : service.getProdutoServico().getListaFornecedores()){
+			if(fornecedores.contains(fp.getId().getPessoa()))
+				fornecedores.remove(fp.getId().getPessoa());
+		}
+		
+		sid.setElements(fornecedores.toArray());
 		
 		return (Pessoa) sid.getElementoSelecionado();
 	}
@@ -331,6 +352,10 @@ public class ProdutoEditor extends MecasoftEditor {
 		IObservableValue btnAtivoObserveSelectionObserveWidget = SWTObservables.observeSelection(btnAtivo);
 		IObservableValue servicegetProdutoServicoAtivoObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "ativo");
 		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, servicegetProdutoServicoAtivoObserveValue, null, null);
+		//
+		IObservableValue btnEstocavelObserveSelectionObserveWidget = SWTObservables.observeSelection(btnEstocavel);
+		IObservableValue servicegetProdutoServicoEstocavelObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "estocavel");
+		bindingContext.bindValue(btnEstocavelObserveSelectionObserveWidget, servicegetProdutoServicoEstocavelObserveValue, null, null);
 		//
 		return bindingContext;
 	}
