@@ -5,6 +5,7 @@ import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.ValidatorHelper.validar;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -59,12 +60,13 @@ public class ProdutoEditor extends MecasoftEditor {
 	private Text txtCusto;
 	private Text txtValorUnitario;
 	private Table tableFornecedores;
-	
-	private ProdutoServicoService service = new ProdutoServicoService();
 	private MecasoftText txtLucro;
 	private TableViewer tvFornecedores;
 	private Button btnAtivo;
 	private Button btnEstocavel;
+	
+	private ProdutoServicoService service = new ProdutoServicoService();
+	private PessoaService pessoaService = new PessoaService();
 
 	public ProdutoEditor() {
 	}
@@ -278,7 +280,16 @@ public class ProdutoEditor extends MecasoftEditor {
 				return ((Pessoa)element).getNomeFantasia();
 			}
 		});
-		sid.setElements(new PessoaService().findAllFornecedoresAtivos().toArray());
+		
+		//remover fornecedores ja adicionados
+		List<Pessoa> fornecedores = pessoaService.findAllFornecedoresAtivos();
+		
+		for(ForneceProduto fp : service.getProdutoServico().getListaFornecedores()){
+			if(fornecedores.contains(fp.getId().getPessoa()))
+				fornecedores.remove(fp.getId().getPessoa());
+		}
+		
+		sid.setElements(fornecedores.toArray());
 		
 		return (Pessoa) sid.getElementoSelecionado();
 	}

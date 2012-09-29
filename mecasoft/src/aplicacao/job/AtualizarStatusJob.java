@@ -26,18 +26,21 @@ public class AtualizarStatusJob extends Job{
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
- 		List<ServicoPrestado> servicos = servicoService.findAllNaoConcluidos();
+ 		List<ServicoPrestado> servicos = servicoService.findAllNaoConcluidosAutomatic();
 		monitor.beginTask("Adicionando os status...", servicos.size());
 		
 		for(ServicoPrestado sp : servicos){
 			atualizar(sp);
 			monitor.worked(1);
+			servicoService.setServicoPrestado(sp);
+			servicoService.saveOrUpdateAutomatic();
 		}
 		
 		//após concluir as atualizações, ele commita
-		HibernateConnection.commit();
+		HibernateConnection.autoCommit();
 		
-		schedule(3600000);
+//		schedule(3600000);
+		schedule(60000);
 		return Status.OK_STATUS;
 	}
 	

@@ -22,6 +22,10 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 	public void saveOrUpdate() {
 		getDAO().saveOrUpdate(servicoPrestado);
 	}
+	
+	public void saveOrUpdateAutomatic(){
+		getDAO().saveOrUpdateAutomatic(servicoPrestado);
+	}
 
 	@Override
 	public void delete() {
@@ -45,6 +49,10 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 	public List<ServicoPrestado> findAllNaoConcluidos(){
 		return getDAO().findAllByStatusAndConclusao(true, true);
 	}
+
+	public List<ServicoPrestado> findAllNaoConcluidosAutomatic(){
+		return getDAO().findAllByStatusAndConclusaoAutomatic(true, true);
+	}
 	
 	public void organizarListas() {
 
@@ -60,6 +68,7 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 				servicoPrestado.getListaServicos().remove(is);
 		}
 	}
+	
 	
 	public ServicoPrestado getServicoPrestado() {
 		return servicoPrestado;

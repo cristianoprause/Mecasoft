@@ -125,7 +125,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
 	@Override
 	public void addComponentes(Composite compositeConteudo) {
-		compositeConteudo.setLayout(new GridLayout(4, false));
+		compositeConteudo.setLayout(new GridLayout(5, false));
 		
 		Label lblCliente = new Label(compositeConteudo, SWT.NONE);
 		lblCliente.setText("Cliente:");
@@ -133,7 +133,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		txtCliente = new Text(compositeConteudo, SWT.BORDER);
 		txtCliente.setEnabled(false);
 		txtCliente.setEditable(false);
-		txtCliente.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		txtCliente.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		
 		btnSelecionarCliente = new Button(compositeConteudo, SWT.NONE);
 		btnSelecionarCliente.addSelectionListener(new SelectionAdapter() {
@@ -157,7 +157,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		txtVeiculo = new Text(compositeConteudo, SWT.BORDER);
 		txtVeiculo.setEnabled(false);
 		txtVeiculo.setEditable(false);
-		txtVeiculo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		txtVeiculo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		
 		btnSelecionarVeiculo = new Button(compositeConteudo, SWT.NONE);
 		btnSelecionarVeiculo.addSelectionListener(new SelectionAdapter() {
@@ -183,7 +183,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tableServicos = tvServico.getTable();
 		tableServicos.setLinesVisible(true);
 		tableServicos.setHeaderVisible(true);
-		GridData gd_tableServicos = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 2);
+		GridData gd_tableServicos = new GridData(SWT.FILL, SWT.FILL, false, false, 3, 2);
 		gd_tableServicos.widthHint = 658;
 		gd_tableServicos.heightHint = 95;
 		tableServicos.setLayoutData(gd_tableServicos);
@@ -309,7 +309,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tableItens = tvItens.getTable();
 		tableItens.setLinesVisible(true);
 		tableItens.setHeaderVisible(true);
-		GridData gd_tableItens = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 2);
+		GridData gd_tableItens = new GridData(SWT.FILL, SWT.FILL, false, false, 3, 2);
 		gd_tableItens.widthHint = 628;
 		gd_tableItens.heightHint = 95;
 		tableItens.setLayoutData(gd_tableItens);
@@ -428,7 +428,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		txtFuncionario = new Text(compositeConteudo, SWT.BORDER);
 		txtFuncionario.setEnabled(false);
 		txtFuncionario.setEditable(false);
-		txtFuncionario.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		txtFuncionario.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		
 		btnSelecionar = new Button(compositeConteudo, SWT.NONE);
 		btnSelecionar.addSelectionListener(new SelectionAdapter() {
@@ -557,6 +557,26 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		});
 		btnAlterarStatus.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnAlterarStatus.setText("Alterar Status");
+		
+		Button btnRemoverStatus = new Button(compositeConteudo, SWT.NONE);
+		btnRemoverStatus.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				IStructuredSelection selecao = (IStructuredSelection)tvStatus.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				if(openQuestion("Deseja realmente remover este status do serviço?")){
+					StatusServico ss = (StatusServico)selecao.getFirstElement();
+					service.getServicoPrestado().getListaStatus().remove(ss);
+					tvStatus.refresh();
+				}
+				
+			}
+		});
+		btnRemoverStatus.setText("Remover Status");
 		new Label(compositeConteudo, SWT.NONE);
 		
 		Label lblStatusAtual = new Label(compositeConteudo, SWT.NONE);
@@ -565,7 +585,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		txtStatusAtual = new Text(compositeConteudo, SWT.BORDER);
 		txtStatusAtual.setEditable(false);
 		txtStatusAtual.setEnabled(false);
-		txtStatusAtual.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		txtStatusAtual.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		
 		StatusServico ultimoStatus = service.getServicoPrestado().getUltimoStatus();
 		if(ultimoStatus != null)
@@ -581,7 +601,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tableStatus = tvStatus.getTable();
 		tableStatus.setLinesVisible(true);
 		tableStatus.setHeaderVisible(true);
-		GridData gd_tableStatus = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1);
+		GridData gd_tableStatus = new GridData(SWT.FILL, SWT.FILL, false, false, 3, 1);
 		gd_tableStatus.widthHint = 593;
 		gd_tableStatus.heightHint = 95;
 		tableStatus.setLayoutData(gd_tableStatus);
