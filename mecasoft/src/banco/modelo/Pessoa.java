@@ -59,10 +59,10 @@ public class Pessoa implements Serializable{
 	private String rgInscricaoEst;
 	
 	@Column
-	private String foneFax;
+	private String foneFax = "";
 	
 	@Column
-	private String celular;
+	private String celular = "";
 	
 	@Column
 	private String email;
@@ -102,9 +102,9 @@ public class Pessoa implements Serializable{
 	@Cascade(value={CascadeType.ALL})
 	private List<Veiculo> listaVeiculo = new ArrayList<Veiculo>();
 	
-	@OneToMany(mappedBy="id.pessoa")
-	@Cascade(value= {CascadeType.ALL})
-	private List<ForneceProduto> listaProduto = new ArrayList<ForneceProduto>();
+	@OneToMany(mappedBy="id.pessoa",orphanRemoval=true)
+    @Cascade(value= {CascadeType.ALL})
+    private List<ForneceProduto> listaProduto = new ArrayList<ForneceProduto>();
 	
 	@Column
 	private String serie = "";
