@@ -161,8 +161,9 @@
       </view>
       <view
             class="tela.view.ReportView"
+            icon="assents/funcoes/report16.png"
             id="tela.view.ReportView"
-            name="New ViewPart">
+            name="Relatório">
       </view>
    </extension>
    <extension
