@@ -91,6 +91,13 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 				return;
 			}
 			
+			//para fechar uma ordem de serviço, o usuário deve ter adicionado nas configurações qual status corresponde ao de serviço concluido
+			if(UsuarioHelper.getConfiguracaoPadrao() == null){
+				setErroMessage("Não é posível fechar a ordem de serviço.\n" +
+						"Va em Arquivo/Configurações e selecione o status para fechar as ordens de serviço.");
+				return;
+			}
+			
 			//salva as duplicatas, caso geradas
 			if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraDuplicata()){
 				for(Duplicata duplicata : listaDuplicatas){

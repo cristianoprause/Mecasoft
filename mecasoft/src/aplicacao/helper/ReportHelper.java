@@ -7,5 +7,6 @@ public class ReportHelper {
 	}
 	
 	public static String SERVICO_SINTETICO = getReport("servicoSintetico");
+	public static String SERVICO_ANALITICO = getReport("servicoAnalitico");
 	
 }

@@ -102,6 +102,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private List<Status> listaStatus;
 	private Pessoa funcionario;
 	private Button btnFecharOrdem;
+	private Button btnRemoverStatus;
 
 	public AbrirOrdemServicoEditor() {
 		listaStatus = statusService.findAllAtivos();
@@ -111,6 +112,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	public void salvarRegistro() {
 		try {
 			validar(service.getServicoPrestado());
+			
+			calcularTotais();
 			
 			service.saveOrUpdate();
 			openInformation("Ordem de serviço registrada com sucesso!");
@@ -558,7 +561,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		btnAlterarStatus.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnAlterarStatus.setText("Alterar Status");
 		
-		Button btnRemoverStatus = new Button(compositeConteudo, SWT.NONE);
+		btnRemoverStatus = new Button(compositeConteudo, SWT.NONE);
 		btnRemoverStatus.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -621,7 +624,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				if(ss.getStatus().isPausar())
 					return SWTResourceManager.getColor(SWT.COLOR_RED);
 				else
-					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
+					return SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
 			}
 		});
 		TableColumn tblclmnStatus = tvcStatus.getColumn();
@@ -643,7 +646,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				if(ss.getStatus().isPausar())
 					return SWTResourceManager.getColor(SWT.COLOR_RED);
 				else
-					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
+					return SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
 			}
 		});
 		TableColumn tblclmnData = tvcData.getColumn();
@@ -664,7 +667,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				if(ss.getStatus().isPausar())
 					return SWTResourceManager.getColor(SWT.COLOR_RED);
 				else
-					return SWTResourceManager.getColor(SWT.COLOR_GREEN);
+					return SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
 			}
 		});
 		TableColumn tblclmnFuncionario = tvcFuncionario.getColumn();
@@ -678,6 +681,10 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			public void widgetSelected(SelectionEvent e) {
 				if(openQuestion("Deseja realmente cancelar esta ordem de serviço?")){
 					service.getServicoPrestado().setAtivo(false);
+					service.getServicoPrestado().setEmExecucao(false);
+					
+					calcularTotais();
+					
 					service.saveOrUpdate();
 					openInformation("Ordem de serviço cancelada com sucesso!");
 					closeThisEditor();
@@ -865,7 +872,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		service.getServicoPrestado().setValorTotal(total);
 		
 	}
-	
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
@@ -940,9 +946,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		IObservableValue tableStatusObserveEnabledObserveWidget = SWTObservables.observeEnabled(tableStatus);
 		bindingContext.bindValue(tableStatusObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
 		//
-		//
-		IObservableValue btnFecharOrdemObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnFecharOrdem);
-		bindingContext.bindValue(btnFecharOrdemObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
+		IObservableValue btnRemoverStatusObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnRemoverStatus);
+		bindingContext.bindValue(btnRemoverStatusObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
 		//
 		return bindingContext;
 	}

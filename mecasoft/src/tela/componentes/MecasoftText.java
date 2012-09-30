@@ -127,8 +127,6 @@ public class MecasoftText extends Composite {
 			return true;
 		}
 
-		System.err.println(keyCode);
-		
 		if ((text.getText().length() < max) || (max == -1)) {
 			if (aceita.equals(AMBOS))
 				return true;

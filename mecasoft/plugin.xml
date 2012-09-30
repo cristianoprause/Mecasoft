@@ -315,6 +315,11 @@
                   label="Serviço sintético"
                   style="push">
             </command>
+            <command
+                  commandId="mecasoft.showServicoAnaliticoCommand"
+                  label="Serviço analítico"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -344,6 +349,11 @@
             defaultHandler="aplicacao.command.reports.ShowServicoSinteticoCommand"
             id="mecasoft.showServicoSinteticoCommand"
             name="Relatório de serviços sintético">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.reports.ShowServicoAnaliticoCommand"
+            id="mecasoft.showServicoAnaliticoCommand"
+            name="Relatório de serviços analítico">
       </command>
    </extension>
    <extension

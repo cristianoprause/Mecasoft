@@ -12,22 +12,22 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 
-import tela.dialog.ParametroRelatorioServicoSintetico;
+import tela.dialog.ParametroRelatorioServicoSinteticoDialog;
 
 import aplicacao.command.ReportCommand;
 import aplicacao.helper.ReportHelper;
 
 public class ShowServicoSinteticoCommand extends ReportCommand{
 
-	private ParametroRelatorioServicoSintetico prss;
+	private ParametroRelatorioServicoSinteticoDialog prssd;
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		prss = new ParametroRelatorioServicoSintetico(getActiveShell());
+		prssd = new ParametroRelatorioServicoSinteticoDialog(getActiveShell());
 		
-		if(prss.open() == IDialogConstants.OK_ID){
+		if(prssd.open() == IDialogConstants.OK_ID){
 		
-			JasperPrint print = getReport(ReportHelper.SERVICO_SINTETICO, getParametros());
+			JasperPrint print = getReport(ReportHelper.SERVICO_SINTETICO);
 			
 			if(!print.getPages().isEmpty())
 				getView().setReport(print, "Relatório de serviços (sintético)");
@@ -42,10 +42,10 @@ public class ShowServicoSinteticoCommand extends ReportCommand{
 	public Map<String, Object> getParametros() {
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("NUMERO", prss.getNumeroServico());
-		param.put("CLIENTE_ID", prss.getCliente() == null ? null : prss.getCliente().getId());
-		param.put("VALOR_INICIAL", prss.getValorInicial());
-		param.put("VALOR_FINAL", prss.getValorFinal());
+		param.put("NUMERO", prssd.getNumeroServico());
+		param.put("CLIENTE_ID", prssd.getCliente() == null ? null : prssd.getCliente().getId());
+		param.put("VALOR_INICIAL", prssd.getValorInicial());
+		param.put("VALOR_FINAL", prssd.getValorFinal());
 		
 		return param;
 	}

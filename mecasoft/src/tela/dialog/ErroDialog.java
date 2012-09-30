@@ -39,7 +39,7 @@ public class ErroDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(1, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		txtErroMessage = new Text(container, SWT.BORDER | SWT.MULTI);
+		txtErroMessage = new Text(container, SWT.BORDER | SWT.WRAP | SWT.MULTI);
 		txtErroMessage.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 		txtErroMessage.setForeground(SWTResourceManager.getColor(255, 0, 0));
 		txtErroMessage.setEditable(false);

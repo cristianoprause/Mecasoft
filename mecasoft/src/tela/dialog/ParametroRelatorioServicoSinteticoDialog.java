@@ -28,7 +28,7 @@ import aplicacao.service.PessoaService;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class ParametroRelatorioServicoSintetico extends TitleAreaDialog {
+public class ParametroRelatorioServicoSinteticoDialog extends TitleAreaDialog {
 
 	private MecasoftText txtServicoNumero;
 	private Text txtCliente;
@@ -39,8 +39,9 @@ public class ParametroRelatorioServicoSintetico extends TitleAreaDialog {
 	private Long numeroServico;
 	private BigDecimal valorInicial;
 	private BigDecimal valorFinal;
+	private PessoaService pessoaService = new PessoaService();
 
-	public ParametroRelatorioServicoSintetico(Shell parentShell) {
+	public ParametroRelatorioServicoSinteticoDialog(Shell parentShell) {
 		super(parentShell);
 		cliente = null;
 		numeroServico = null;
@@ -97,7 +98,9 @@ public class ParametroRelatorioServicoSintetico extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent e) {
 				cliente = selecionarPessoa();
 				if(cliente != null)
-					txtCliente.setText(cliente.getNomeFantasia());
+					txtCliente.setText(cliente.getNome());
+				else
+					txtCliente.setText("");
 			}
 		});
 		btnSelecionar.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
@@ -110,11 +113,11 @@ public class ParametroRelatorioServicoSintetico extends TitleAreaDialog {
 		SelecionarItemDialog sid = new SelecionarItemDialog(getActiveShell(), new LabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return ((Pessoa)element).getNomeFantasia();
+				return ((Pessoa)element).getNome();
 			}
 		});
 		
-		sid.setElements(new PessoaService().findAllAtivos().toArray());
+		sid.setElements(pessoaService.findAll().toArray());
 		
 		return (Pessoa)sid.getElementoSelecionado();
 	}

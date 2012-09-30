@@ -128,6 +128,10 @@ public class Pessoa implements Serializable{
 		else
 			return PadraoHelper.DESATIVADO;
 	}
+	
+	public String getNome(){
+		return razaoSocial == null ? nomeFantasia : razaoSocial;
+	}
 
 	public Long getId() {
 		return id;

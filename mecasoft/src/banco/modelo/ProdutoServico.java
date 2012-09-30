@@ -30,7 +30,7 @@ public class ProdutoServico implements Serializable{
 	private static final long serialVersionUID = 4257821782999163779L;
 	
 	public static String TIPOPRODUTO = "produto";
-	public static String TIPOSERVICO = "servico";
+	public static String TIPOSERVICO = "serviço";
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

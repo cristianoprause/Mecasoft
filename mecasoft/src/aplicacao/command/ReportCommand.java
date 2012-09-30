@@ -25,7 +25,7 @@ public abstract class ReportCommand extends AbstractHandler{
 	public ReportCommand() {
 	}
 	
-	public JasperPrint getReport(String caminhoRelatorio, Map<String, Object> parametros){
+	public JasperPrint getReport(String caminhoRelatorio){
 
 		try {
 			String urlBanco = "jdbc:postgresql://localhost:5432/mecasoft";
@@ -34,7 +34,7 @@ public abstract class ReportCommand extends AbstractHandler{
 			
 			Connection con = DriverManager.getConnection(urlBanco, "postgres", "admin");
 			
-			return JasperFillManager.fillReport(reportsPath().concat(caminhoRelatorio), parametros, con);
+			return JasperFillManager.fillReport(reportsPath().concat(caminhoRelatorio), getParametros(), con);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
