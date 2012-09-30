@@ -146,6 +146,10 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				if(p != null){
 					service.getServicoPrestado().setCliente(p);
 					txtCliente.setText(p.getNomeFantasia());
+					
+					//remove o veículo para evitar que o veículo nao pertença ao dono
+					service.getServicoPrestado().setVeiculo(null);
+					txtVeiculo.setText("");
 				}
 			}
 		});
@@ -268,7 +272,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					is.setValorUnitario(ps.getValorUnitario());
 					service.getServicoPrestado().getListaServicos().add(is);
 					
-					setEnableButtonCancel();
+					setEnableButtonCancelFechar();
 					
 					for(ProdutoServico item : ps.getListaProduto())
 						adicionarItens(item);
@@ -295,7 +299,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					ItemServico is = (ItemServico)selecao.getFirstElement();
 					service.getServicoPrestado().getListaServicos().remove(is);
 					
-					setEnableButtonCancel();
+					setEnableButtonCancelFechar();
 					
 					tvServico.refresh();
 				}
@@ -415,7 +419,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					ItemServico is = (ItemServico)selecao.getFirstElement();
 					service.getServicoPrestado().getListaProdutos().remove(is);
 					
-					setEnableButtonCancel();
+					setEnableButtonCancelFechar();
 					
 					tvItens.refresh();
 				}
@@ -712,9 +716,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		});
 		btnFecharOrdem.setImage(ResourceManager.getPluginImage("mecasoft", "assents/servicoPrestado/closeService32.png"));
 		btnFecharOrdem.setText("Fechar Ordem");
-		btnFecharOrdem.setEnabled(service.getServicoPrestado().isEmExecucao());
 		
-		setEnableButtonCancel();
+		setEnableButtonCancelFechar();
 		
 		initDataBindings();
 		
@@ -828,7 +831,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		is.setServicoPrestado(service.getServicoPrestado());
 		service.getServicoPrestado().getListaProdutos().add(is);
 		
-		setEnableButtonCancel();
+		setEnableButtonCancelFechar();
 		tvItens.refresh();
 	}
 	
@@ -843,13 +846,17 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		initDataBindings();
 		if(!service.getServicoPrestado().isEmExecucao())
 			disposeSalvar();
+		
+		setEnableButtonCancelFechar();
 	}
 	
-	public void setEnableButtonCancel(){
+	public void setEnableButtonCancelFechar(){
 		btnCancelarOrdem.setEnabled(service.getServicoPrestado().isAtivo()
 				&& service.getServicoPrestado().getId() != null
 				&& service.getServicoPrestado().getListaProdutos().size() == 0
 				&& service.getServicoPrestado().getListaServicos().size() == 0);
+		
+		btnFecharOrdem.setEnabled(service.getServicoPrestado().isEmExecucao());
 	}
 	
 	private void calcularTotais(){

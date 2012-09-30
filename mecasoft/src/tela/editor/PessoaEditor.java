@@ -1,5 +1,6 @@
 package tela.editor;
 
+import static aplicacao.helper.MessageHelper.openError;
 import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.ValidatorHelper.validar;
@@ -466,9 +467,18 @@ public class PessoaEditor extends MecasoftEditor {
 					return;
 				
 				if(openQuestion("Deseja realmente remover este produto da lista?")){
+					
 					ForneceProduto fp = (ForneceProduto)selecao.getFirstElement();
+					
+					if(fp.getId().getProduto().getListaFornecedores().size() == 1 && fp.getId().getProduto().getAtivo()){
+						openError("Não é possível remover este produto.\nDirija-se ao cadastro de produtos e desative-o, " +
+								"para que o fornecedor possa ser removido.");
+						return;
+					}
+					
 					service.getPessoa().getListaProduto().remove(fp);
 					tvProduto.refresh();
+					
 				}
 			}
 		});
@@ -584,7 +594,7 @@ public class PessoaEditor extends MecasoftEditor {
 		
 		return (ProdutoServico) sid.getElementoSelecionado();
 	}
-
+	
 	@Override
 	public boolean isDirty() {
 		return service.isDirty();

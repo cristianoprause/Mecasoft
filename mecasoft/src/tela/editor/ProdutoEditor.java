@@ -76,8 +76,8 @@ public class ProdutoEditor extends MecasoftEditor {
 		try {
 			validar(service.getProdutoServico());
 			
-			if(service.getProdutoServico().getListaFornecedores().size() == 0){
-				setErroMessage("Selecione ao menos um fornecedor.");
+			if(service.getProdutoServico().getListaFornecedores().size() == 0 && service.getProdutoServico().getAtivo()){
+				setErroMessage("Para o cadastro do Produto selecione um fornecedor, caso não possua fornecedor, o Produto devera se inativado.");
 				return;
 			}
 			

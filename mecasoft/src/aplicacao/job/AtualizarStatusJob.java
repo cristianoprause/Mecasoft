@@ -39,8 +39,8 @@ public class AtualizarStatusJob extends Job{
 		//após concluir as atualizações, ele commita
 		HibernateConnection.autoCommit();
 		
-//		schedule(3600000);
-		schedule(60000);
+		schedule(3600000);
+//		schedule(60000);
 		return Status.OK_STATUS;
 	}
 	
