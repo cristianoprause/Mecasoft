@@ -61,7 +61,7 @@ public class ProdutoServico implements Serializable{
 	@Column(precision=14,scale=2)
 	private BigDecimal custo = BigDecimal.ZERO;
 	
-	@OneToMany(mappedBy="id.produto")
+	@OneToMany(mappedBy="id.produto", orphanRemoval=true)
 	@Cascade(value= {CascadeType.ALL})
 	private List<ForneceProduto> listaFornecedores = new ArrayList<ForneceProduto>();
 	
