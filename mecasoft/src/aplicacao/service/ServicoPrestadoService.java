@@ -1,11 +1,8 @@
 package aplicacao.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import banco.modelo.ItemServico;
-import banco.modelo.ProdutoServico;
 import banco.modelo.ServicoPrestado;
 import banco.utils.ServicoPrestadoUtils;
 
@@ -53,22 +50,6 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 	public List<ServicoPrestado> findAllNaoConcluidosAutomatic(){
 		return getDAO().findAllByStatusAndConclusaoAutomatic(true, true);
 	}
-	
-	public void organizarListas() {
-
-		// isso deve ser feito porque não é possivel editar a lista dentro do
-		// loop (java.util.ConcurrentModificationException)
-		List<ItemServico> lista = new ArrayList<ItemServico>();
-		lista.addAll(servicoPrestado.getListaProdutos());
-
-		for (ItemServico is : lista) {
-			if (is.getItem().getTipo().equals(ProdutoServico.TIPOSERVICO))
-				servicoPrestado.getListaProdutos().remove(is);
-			else if (is.getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO))
-				servicoPrestado.getListaServicos().remove(is);
-		}
-	}
-	
 	
 	public ServicoPrestado getServicoPrestado() {
 		return servicoPrestado;

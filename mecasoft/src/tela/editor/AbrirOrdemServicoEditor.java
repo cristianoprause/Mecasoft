@@ -52,6 +52,8 @@ import tela.editingSupport.DescontoItemServicoEditingSupport;
 import tela.editingSupport.QuantidadeItemServicoEditingSupport;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import tela.editor.editorInput.FecharOrdemServicoEditorInput;
+import tela.filter.ServicoPrestadoProdutoFilter;
+import tela.filter.ServicoPrestadoServicoFilter;
 import tela.viewerSorter.TableStatusServicoViewerSorter;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
@@ -93,6 +95,10 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private Combo cbNovoStatus;
 	private Button btnAlterarStatus;
 	private Button btnCancelarOrdem;
+	private Button btnFecharOrdem;
+	private Button btnRemoverStatus;
+	private ServicoPrestadoProdutoFilter produtoFilter = new ServicoPrestadoProdutoFilter();
+	private ServicoPrestadoServicoFilter servicoFilter = new ServicoPrestadoServicoFilter();
 	
 	private ServicoPrestadoService service = new ServicoPrestadoService();
 	private ProdutoServicoService prodServService = new ProdutoServicoService();
@@ -101,8 +107,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private StatusServicoService statusServicoService = new StatusServicoService();
 	private List<Status> listaStatus;
 	private Pessoa funcionario;
-	private Button btnFecharOrdem;
-	private Button btnRemoverStatus;
 
 	public AbrirOrdemServicoEditor() {
 		listaStatus = statusService.findAllAtivos();
@@ -193,6 +197,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		GridData gd_tableServicos = new GridData(SWT.FILL, SWT.FILL, false, false, 3, 2);
 		gd_tableServicos.widthHint = 658;
 		gd_tableServicos.heightHint = 95;
+		tvServico.addFilter(servicoFilter);
 		tableServicos.setLayoutData(gd_tableServicos);
 		
 		TableViewerColumn tvcServico = new TableViewerColumn(tvServico, SWT.NONE);
@@ -320,6 +325,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		GridData gd_tableItens = new GridData(SWT.FILL, SWT.FILL, false, false, 3, 2);
 		gd_tableItens.widthHint = 628;
 		gd_tableItens.heightHint = 95;
+		tvItens.addFilter(produtoFilter);
 		tableItens.setLayoutData(gd_tableItens);
 		
 		TableViewerColumn tvcDescricao = new TableViewerColumn(tvItens, SWT.NONE);
@@ -418,6 +424,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				
 				if(openQuestion("Deseja realmente remover este item da lista?")){
 					ItemServico is = (ItemServico)selecao.getFirstElement();
+					
+					//remove da lista de serviços apenas para evitar o erro do orphanremove
+					service.getServicoPrestado().getListaServicos().remove(is);
 					service.getServicoPrestado().getListaProdutos().remove(is);
 					
 					setEnableButtonCancelFechar();
@@ -736,7 +745,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		setShowExcluir(false);
 		setShowSalvar(service.getServicoPrestado().isEmExecucao());
-		service.organizarListas();
+//		service.organizarListas();
 		
 		setSite(site);
 		setInput(input);
