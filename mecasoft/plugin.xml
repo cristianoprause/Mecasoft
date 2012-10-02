@@ -165,6 +165,11 @@
             id="tela.view.ReportView"
             name="Relatório">
       </view>
+      <view
+            class="tela.view.BaixaDuplicataView"
+            id="tela.view.BaixaDuplicataView"
+            name="Baixa de duplicatas">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -308,6 +313,18 @@
                      value="tela.view.ServicoPrestadoView">
                </parameter>
             </command>
+            <menu
+                  label="Duplicatas">
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     label="Baixa de duplicatas"
+                     style="push">
+                  <parameter
+                        name="org.eclipse.ui.views.showView.viewId"
+                        value="tela.view.BaixaDuplicataView">
+                  </parameter>
+               </command>
+            </menu>
          </menu>
          <menu
                label="Relatório">

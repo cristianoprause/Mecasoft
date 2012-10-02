@@ -16,11 +16,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
-import tela.componentes.MecasoftText;
 import tela.editor.editorInput.TipoFuncionarioEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.service.PessoaService;
@@ -31,7 +31,7 @@ public class TipoFuncionarioEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.TipoFuncionarioEditor"; //$NON-NLS-1$
 	private TipoFuncionarioService service = new TipoFuncionarioService();
-	private MecasoftText txtNome;
+	private Text txtNome;
 
 	public TipoFuncionarioEditor() {
 	}
@@ -45,7 +45,7 @@ public class TipoFuncionarioEditor extends MecasoftEditor {
 			openInformation("Tipo de funcionário cadastrado com sucesso!");
 			closeThisEditor();
 		} catch (ValidationException e) {
-			e.printStackTrace();
+			setErroMessage(e.getMessage());
 		}
 	}
 
@@ -72,8 +72,7 @@ public class TipoFuncionarioEditor extends MecasoftEditor {
 		lblNome.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNome.setText("Nome:");
 		
-		txtNome = new MecasoftText(compositeConteudo, SWT.NONE);
-		txtNome.setOptions(MecasoftText.LETRAS, -1);
+		txtNome = new Text(compositeConteudo, SWT.BORDER);
 		txtNome.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		initDataBindings();
 		
@@ -104,9 +103,9 @@ public class TipoFuncionarioEditor extends MecasoftEditor {
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue mecasoftTexttextObserveTextObserveWidget = SWTObservables.observeText(txtNome.text, SWT.Modify);
+		IObservableValue txtNomeObserveTextObserveWidget = SWTObservables.observeText(txtNome, SWT.Modify);
 		IObservableValue servicegetTipoNomeObserveValue = PojoObservables.observeValue(service.getTipo(), "nome");
-		bindingContext.bindValue(mecasoftTexttextObserveTextObserveWidget, servicegetTipoNomeObserveValue, null, null);
+		bindingContext.bindValue(txtNomeObserveTextObserveWidget, servicegetTipoNomeObserveValue, null, null);
 		//
 		return bindingContext;
 	}

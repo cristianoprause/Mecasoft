@@ -21,10 +21,10 @@ public class DuplicataPaga implements Serializable{
 	private Long id;
 	
 	@Column
-	private Date dataPagamento;
+	private Date dataPagamento = new Date();
 	
 	@Column
-	private BigDecimal valorTotal;
+	private BigDecimal valorTotal = BigDecimal.ZERO;
 	
 	@Column
 	private BigDecimal valorJuros;

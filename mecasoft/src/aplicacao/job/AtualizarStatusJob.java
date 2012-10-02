@@ -36,11 +36,13 @@ public class AtualizarStatusJob extends Job{
 			servicoService.saveOrUpdateAutomatic();
 		}
 		
-		//após concluir as atualizações, ele commita
+		//após concluir as atualizações, ele aguarda o usuario commitar algo que deva ser commitado
+		//após o usuario commitar, ele commita
+//		while(HibernateConnection.getSession().isDirty()){}
 		HibernateConnection.autoCommit();
 		
 		schedule(3600000);
-//		schedule(60000);
+//		schedule();
 		return Status.OK_STATUS;
 	}
 	

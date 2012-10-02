@@ -275,7 +275,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					setEnableButtonCancelFechar();
 					
 					for(ProdutoServico item : ps.getListaProduto())
-						adicionarItens(item);
+						if(item.getAtivo())
+							adicionarItens(item);
 					
 					tvServico.refresh();
 				}

@@ -27,7 +27,7 @@ public class Duplicata implements Serializable{
 	private String numero;
 	
 	@Column
-	private BigDecimal valor;
+	private BigDecimal valor = BigDecimal.ZERO;
 	
 	@Column
 	private Date dataVencimento;

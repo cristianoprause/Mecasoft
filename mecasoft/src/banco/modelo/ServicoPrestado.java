@@ -75,7 +75,7 @@ public class ServicoPrestado implements Serializable{
 	@NotNull(message="Selecione o veículo")
 	private Veiculo veiculo;
 	
-	@OneToMany(mappedBy="servicoPrestado")
+	@OneToMany(mappedBy="servicoPrestado", orphanRemoval=true)
 	@Cascade(value={CascadeType.ALL})
 	private List<ItemServico> listaServicos = new ArrayList<ItemServico>();
 	

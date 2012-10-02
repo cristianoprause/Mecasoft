@@ -1,5 +1,6 @@
 package banco.DAO;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -30,6 +31,13 @@ public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 		return (Duplicata)q.uniqueResult();
 	}
 
+	@Override
+	public Duplicata findUltimaDuplicata() {
+		Query q = getSession().createQuery("select d from Duplicata d where d.id = (" +
+				"select max(dup.id) from Duplicata dup)");
+		return (Duplicata) q.uniqueResult();
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Duplicata> findAll() {
@@ -37,11 +45,23 @@ public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 		return q.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Duplicata findUltimaDuplicata() {
-		Query q = getSession().createQuery("select d from Duplicata d where d.id = (" +
-				"select max(dup.id) from Duplicata dup)");
-		return (Duplicata) q.uniqueResult();
+	public List<Duplicata> findAllByPagamento(boolean pago) {
+		Query q = getSession().createQuery("select d from Duplicata d where d.pago is :pago");
+		q.setParameter("pago", pago);
+		return q.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Duplicata> findAllByPeriodoAndPagamento(Date dtInicial, Date dtFinal, Boolean pago) {
+		Query q = getSession().createQuery("select d from Duplicata d where (d.dataVencimento between :dtInicial and :dtFinal) " +
+											"and (d.pago is :pago or :pago is null)");
+		q.setParameter("dtInicial", dtInicial)
+		.setParameter("dtFinal", dtFinal)
+		.setParameter("pago", pago);
+		return q.list();
 	}
 
 }
