@@ -27,6 +27,7 @@ public class AtualizarStatusJob extends Job{
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
  		List<ServicoPrestado> servicos = servicoService.findAllNaoConcluidosAutomatic();
+ 		System.out.println("Vish");
 		monitor.beginTask("Adicionando os status...", servicos.size());
 		
 		for(ServicoPrestado sp : servicos){
@@ -41,8 +42,8 @@ public class AtualizarStatusJob extends Job{
 //		while(HibernateConnection.getSession().isDirty()){}
 		HibernateConnection.autoCommit();
 		
-		schedule(3600000);
-//		schedule();
+//		schedule(3600000);
+		schedule(60000);
 		return Status.OK_STATUS;
 	}
 	
@@ -57,8 +58,14 @@ public class AtualizarStatusJob extends Job{
 				dataUltimoStatus.setTime(statusAtual.getData());
 				
 				//calendar para rodar o loop e adicionando os status necessarios ate o dia atual
+				//hora é zerada para nao gerar problemas
 				Calendar data = Calendar.getInstance();
 				data.setTime(dataUltimoStatus.getTime());
+				data.set(Calendar.AM_PM, Calendar.AM);
+				data.set(Calendar.HOUR, 0);
+				data.set(Calendar.MINUTE, 0);
+				data.set(Calendar.SECOND, 0);
+				
 				
 				do{
 					Calendar dt = Calendar.getInstance();
@@ -69,7 +76,7 @@ public class AtualizarStatusJob extends Job{
 						dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtInicioManha());
 						dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
 						
-						if(dt.compareTo(dataUltimoStatus) > 0){
+						if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
 							StatusServico ss = new StatusServico();
 							ss.setData(dt.getTime());
 							ss.setFuncionario(statusAtual.getFuncionario());
@@ -86,7 +93,7 @@ public class AtualizarStatusJob extends Job{
 						dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtFinalManha());
 						dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
 						
-						if(dt.compareTo(dataUltimoStatus) > 0){
+						if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
 							StatusServico ss = new StatusServico();
 							ss.setData(dt.getTime());
 							ss.setFuncionario(statusAtual.getFuncionario());
@@ -102,7 +109,7 @@ public class AtualizarStatusJob extends Job{
 						dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtInicioTarde());
 						dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
 						
-						if(dt.compareTo(dataUltimoStatus) > 0){
+						if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
 							StatusServico ss = new StatusServico();
 							ss.setData(dt.getTime());
 							ss.setFuncionario(statusAtual.getFuncionario());
@@ -119,7 +126,7 @@ public class AtualizarStatusJob extends Job{
 						dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtFinalTarde());
 						dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
 						
-						if(dt.compareTo(dataUltimoStatus) > 0){
+						if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
 							StatusServico ss = new StatusServico();
 							ss.setData(dt.getTime());
 							ss.setFuncionario(statusAtual.getFuncionario());
@@ -133,7 +140,7 @@ public class AtualizarStatusJob extends Job{
 					//adiciona 1 dia
 					data.add(Calendar.DAY_OF_MONTH, 1);
 					
-				}while(data.getTime().compareTo(new Date()) < 0);
+				}while(data.getTime().compareTo(new Date()) <= 0);
 			}
 		}
 	}

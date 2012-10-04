@@ -71,9 +71,9 @@ public class ServicoPrestadoDAO extends HibernateConnection implements
 			dataFinal = c.getTime();
 		}
 
-		Query q = getSession()
-				.createQuery(
-						"select s from ServicoPrestado s where (s.dataAbertura between :dataInicial and :dataFinal) "
+//		Query q = getSession()
+//				.createQuery(
+		Query q = createQuery("select s from ServicoPrestado s where (s.dataAbertura between :dataInicial and :dataFinal) "
 								+ "and (s.ativo is :status or :status is null) "
 								+ "and (s.emExecucao is :emExecucao or :emExecucao is null)");
 		q.setParameter("dataInicial", dataInicial);

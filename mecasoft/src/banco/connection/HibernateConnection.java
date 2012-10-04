@@ -1,5 +1,6 @@
 package banco.connection;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -80,6 +81,12 @@ public class HibernateConnection {
 	
 	public static void revertChanges(Object entidade){
 		session.evict(entidade);
+	}
+	
+	//para as consultas que sao influenciadas pela 2º session
+	public Query createQuery(String query){
+		getSession().clear();
+		return getSession().createQuery(query);
 	}
 	
 	public boolean isDirty(){
