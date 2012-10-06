@@ -171,6 +171,11 @@
             id="tela.view.BaixaDuplicataView"
             name="Baixa de duplicatas">
       </view>
+      <view
+            class="tela.view.DuplicataPagaView"
+            id="tela.view.DuplicataPagaView"
+            name="Lista de duplicatas pagas">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -324,6 +329,15 @@
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"
                         value="tela.view.BaixaDuplicataView">
+                  </parameter>
+               </command>
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     label="Baixa de duplicatas"
+                     style="push">
+                  <parameter
+                        name="org.eclipse.ui.views.showView.viewId"
+                        value="tela.view.DuplicataPagaView">
                   </parameter>
                </command>
             </menu>

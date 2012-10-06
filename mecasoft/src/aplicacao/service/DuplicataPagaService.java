@@ -1,5 +1,6 @@
 package aplicacao.service;
 
+import java.util.Date;
 import java.util.List;
 
 import banco.modelo.DuplicataPaga;
@@ -32,6 +33,10 @@ public class DuplicataPagaService extends MecasoftService<DuplicataPaga>{
 	@Override
 	public List<DuplicataPaga> findAll() {
 		return getDAO().findAll();
+	}
+	
+	public List<DuplicataPaga> findAllByPeriodo(Date dtInicial, Date dtFinal){
+		return getDAO().findAllByPeriodo(dtInicial, dtFinal);
 	}
 
 	public DuplicataPaga getDuplicataPaga() {
