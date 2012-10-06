@@ -167,6 +167,7 @@
       </view>
       <view
             class="tela.view.BaixaDuplicataView"
+            icon="assents/duplicata/duplicata16.png"
             id="tela.view.BaixaDuplicataView"
             name="Baixa de duplicatas">
       </view>
@@ -317,6 +318,7 @@
                   label="Duplicatas">
                <command
                      commandId="org.eclipse.ui.views.showView"
+                     icon="assents/duplicata/duplicata16.png"
                      label="Baixa de duplicatas"
                      style="push">
                   <parameter

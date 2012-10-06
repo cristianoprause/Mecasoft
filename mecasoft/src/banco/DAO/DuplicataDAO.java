@@ -38,6 +38,13 @@ public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 		return (Duplicata) q.uniqueResult();
 	}
 	
+	@Override
+	public Duplicata findByNumero(String numero) {
+		Query q = getSession().createQuery("Select d from Duplicata d where d.numero like :numero");
+		q.setParameter("numero", numero);
+		return (Duplicata) q.uniqueResult();
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Duplicata> findAll() {

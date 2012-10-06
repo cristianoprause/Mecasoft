@@ -1,5 +1,6 @@
 package tela.view;
 
+import static aplicacao.helper.LayoutHelper.getActiveShell;
 import static aplicacao.helper.MessageHelper.openError;
 
 import java.util.Calendar;
@@ -8,11 +9,14 @@ import java.util.Date;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,6 +34,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
 
 import tela.componentes.MecasoftText;
+import tela.dialog.BaixarDuplicataDialog;
 import tela.filter.BaixaDuplicataFilter;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.service.DuplicataService;
@@ -61,6 +66,7 @@ public class BaixaDuplicataView extends ViewPart {
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Form frmBaixaDeDuplicatas = formToolkit.createForm(container);
+		frmBaixaDeDuplicatas.setImage(ResourceManager.getPluginImage("mecasoft", "assents/duplicata/duplicata32.png"));
 		formToolkit.paintBordersFor(frmBaixaDeDuplicatas);
 		frmBaixaDeDuplicatas.setText("Baixa de duplicatas");
 		frmBaixaDeDuplicatas.getBody().setLayout(new GridLayout(4, false));
@@ -173,6 +179,21 @@ public class BaixaDuplicataView extends ViewPart {
 		table.setMenu(menu);
 		
 		MenuItem mntmBaixar = new MenuItem(menu, SWT.NONE);
+		mntmBaixar.setImage(ResourceManager.getPluginImage("mecasoft", "assents/duplicata/baixar20.png"));
+		mntmBaixar.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				IStructuredSelection selecao = (IStructuredSelection)tvDuplicata.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				Duplicata duplicata = (Duplicata)selecao.getFirstElement();
+				new BaixarDuplicataDialog(getActiveShell(), duplicata).open();
+				
+			}
+		});
 		mntmBaixar.setText("Baixar");
 		frmBaixaDeDuplicatas.getToolBarManager().add(actionBuscarTodas);
 		frmBaixaDeDuplicatas.getToolBarManager().add(actionBuscarPeriodo);
@@ -182,7 +203,6 @@ public class BaixaDuplicataView extends ViewPart {
 	}
 
 	private void createActions() {
-		// Create the actions
 		{
 			actionBuscarTodas = new Action("Buscar todas as duplicatas") {				@Override
 				public void run() {
@@ -195,9 +215,10 @@ public class BaixaDuplicataView extends ViewPart {
 		{
 			actionBaixar = new Action("Baixar duplicata") {				@Override
 				public void run() {
-					
+					new BaixarDuplicataDialog(getActiveShell(), new Duplicata()).open();
 				}
 			};
+			actionBaixar.setImageDescriptor(ResourceManager.getPluginImageDescriptor("mecasoft", "assents/duplicata/baixar20.png"));
 		}
 		{
 			actionBuscarPeriodo = new Action("Buscar duplicatas no período") {				@Override

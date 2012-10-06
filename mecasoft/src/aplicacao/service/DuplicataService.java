@@ -33,6 +33,10 @@ public class DuplicataService extends MecasoftService<Duplicata>{
 	public Duplicata findUltimaDuplicata(){
 		return getDAO().findUltimaDuplicata();
 	}
+	
+	public Duplicata findByNumero(String numero){
+		return getDAO().findByNumero(numero);
+	}
 
 	@Override
 	public List<Duplicata> findAll() {

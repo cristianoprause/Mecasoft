@@ -1,5 +1,9 @@
 package tela.dialog;
 
+import static aplicacao.helper.MessageHelper.openInformation;
+
+import java.math.BigDecimal;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -7,6 +11,8 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,6 +26,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import tela.componentes.MecasoftText;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.service.DuplicataPagaService;
+import aplicacao.service.DuplicataService;
+import banco.connection.HibernateConnection;
 import banco.modelo.Duplicata;
 import banco.modelo.DuplicataPaga;
 
@@ -34,6 +42,7 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 	
 	private Duplicata duplicata;
 	private DuplicataPagaService service = new DuplicataPagaService();
+	private DuplicataService duplicataService = new DuplicataService();
 
 	public BaixarDuplicataDialog(Shell parentShell, Duplicata duplicata) {
 		super(parentShell);
@@ -55,9 +64,21 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 		lblDuplicataN.setText("Duplicata N\u00BA:");
 		
 		txtNumeroDuplicata = new MecasoftText(container, SWT.NONE);
+		txtNumeroDuplicata.text.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				duplicata = duplicataService.findByNumero(txtNumeroDuplicata.getText());
+				
+				if(duplicata == null)
+					duplicata = new Duplicata();
+				
+				txtValor.setText(FormatterHelper.getDecimalFormat().format(duplicata.getValor()));
+				calcularValores();
+			}
+		});
 		txtNumeroDuplicata.setOptions(MecasoftText.NUMEROS, -1);
 		txtNumeroDuplicata.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtNumeroDuplicata.setText(duplicata.getNumero());
+		txtNumeroDuplicata.setText(duplicata.getNumero() == null ? "" : duplicata.getNumero());
 		
 		Label lblValor = new Label(container, SWT.NONE);
 		lblValor.setText("Valor:");
@@ -65,11 +86,18 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 		txtValor = new Text(container, SWT.BORDER);
 		txtValor.setEnabled(false);
 		txtValor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtValor.setText(FormatterHelper.getDecimalFormat().format(duplicata.getValor()));
 		
 		Label lblJuros = new Label(container, SWT.NONE);
-		lblJuros.setText("Juros(%):");
+		lblJuros.setText("Juros:");
 		
 		txtJuros = new MecasoftText(container, SWT.NONE);
+		txtJuros.text.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				calcularValores();
+			}
+		});
 		txtJuros.setOptions(MecasoftText.NUMEROS, -1);
 		txtJuros.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtJuros.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -78,6 +106,12 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 		lblDesconto.setText("Desconto:");
 		
 		txtDesconto = new MecasoftText(container, SWT.NONE);
+		txtDesconto.text.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				calcularValores();
+			}
+		});
 		txtDesconto.setOptions(MecasoftText.NUMEROS, -1);
 		txtDesconto.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtDesconto.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -86,6 +120,12 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 		lblValorRecebido.setText("Valor recebido:");
 		
 		txtValorRecebido = new MecasoftText(container, SWT.NONE);
+		txtValorRecebido.text.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				calcularValores();
+			}
+		});
 		txtValorRecebido.setOptions(MecasoftText.NUMEROS, -1);
 		txtValorRecebido.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtValorRecebido.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -102,8 +142,9 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 		lblValorTotal.setText("Valor total:");
 		
 		lblTotal = new Label(container, SWT.NONE);
+		lblTotal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblTotal.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
-		lblTotal.setText("R$:");
+		lblTotal.setText("R$ ".concat(FormatterHelper.getDecimalFormat().format(duplicata.getValor())));
 
 		initDataBindings();
 		
@@ -120,11 +161,64 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 	
 	public void calcularValores(){
 		
-//		BigDecimal valor = duplicata.getValor();
-//		BigDecimal porcentagemJuro = service.getDuplicataPaga().getValorJuros();
-//		BigDecimal desconto = service.getDuplicataPaga().getValorDesconto();
-//		BigDecimal valorRecebido = service.getDuplicataPaga().getValorRecebido();
+		if(duplicata != null && duplicata.getId() != null){
+			BigDecimal valor = duplicata.getValor() == null ? BigDecimal.ZERO : duplicata.getValor();
+			BigDecimal juro = service.getDuplicataPaga().getValorJuros() == null ? BigDecimal.ZERO : service.getDuplicataPaga().getValorJuros();
+			BigDecimal desconto = service.getDuplicataPaga().getValorDesconto() == null ? BigDecimal.ZERO : service.getDuplicataPaga().getValorDesconto();
+			BigDecimal valorRecebido = service.getDuplicataPaga().getValorRecebido() == null ? BigDecimal.ZERO : service.getDuplicataPaga().getValorRecebido();
+			BigDecimal troco;
+			BigDecimal valorTotal;
+			
+			valorTotal = valor.add(juro).subtract(desconto);
+			troco = valorRecebido.subtract(valorTotal);
+			
+			service.getDuplicataPaga().setValorTotal(valorTotal);
+			lblTotal.setText("R$ ".concat(FormatterHelper.getDecimalFormat().format(valorTotal)));
+			
+			if(troco.compareTo(BigDecimal.ZERO) > 0)
+				service.getDuplicataPaga().setTroco(troco);
+			else
+				service.getDuplicataPaga().setTroco(BigDecimal.ZERO);
+			
+			initDataBindings();
+			
+		}else
+			lblTotal.setText("R$ ".concat(FormatterHelper.getDecimalFormat().format(BigDecimal.ZERO)));
 		
+	}
+	
+	@Override
+	protected void okPressed() {
+		
+		if(duplicata.getId() == null){
+			setErrorMessage("Duplicata não encontrada.");
+			return;
+		}
+		
+		if(service.getDuplicataPaga().getValorTotal().compareTo(
+				service.getDuplicataPaga().getValorRecebido() == null ? BigDecimal.ZERO : service.getDuplicataPaga().getValorRecebido()) > 0){
+			setErrorMessage("O valor recebido não pode ser inferior ao valor total da duplicata.");
+			return;
+		}
+		
+		if((service.getDuplicataPaga().getValorDesconto() == null ? BigDecimal.ZERO : service.getDuplicataPaga().getValorDesconto())
+				.compareTo(service.getDuplicataPaga().getValorTotal()) > 0){
+			setErrorMessage("O valor do desconto não pode ser superior ao valor total da duplciata.");
+			return;
+		}
+		
+		duplicata.setPago(true);
+		duplicataService.setDuplicata(duplicata);
+		duplicataService.saveOrUpdate();
+		
+		service.getDuplicataPaga().setDuplicata(duplicata);
+		service.saveOrUpdate();
+		
+		HibernateConnection.commit();
+		
+		openInformation("Duplicata baixa com sucesso!");
+		
+		super.okPressed();
 	}
 
 	@Override
@@ -133,10 +227,6 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
-		//
-		IObservableValue txtValorObserveTextObserveWidget = SWTObservables.observeText(txtValor, SWT.Modify);
-		IObservableValue duplicataValorObserveValue = PojoObservables.observeValue(duplicata, "valor");
-		bindingContext.bindValue(txtValorObserveTextObserveWidget, duplicataValorObserveValue, null, null);
 		//
 		IObservableValue txtJurostextObserveTextObserveWidget = SWTObservables.observeText(txtJuros.text, SWT.Modify);
 		IObservableValue servicegetDuplicataPagaValorJurosObserveValue = PojoObservables.observeValue(service.getDuplicataPaga(), "valorJuros");
