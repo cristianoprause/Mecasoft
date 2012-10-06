@@ -1,6 +1,5 @@
 package tela.editor;
 
-import static aplicacao.helper.MessageHelper.openError;
 import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.ValidatorHelper.validar;
@@ -471,7 +470,7 @@ public class PessoaEditor extends MecasoftEditor {
 					ForneceProduto fp = (ForneceProduto)selecao.getFirstElement();
 					
 					if(fp.getId().getProduto().getListaFornecedores().size() == 1 && fp.getId().getProduto().getAtivo()){
-						openError("Não é possível remover este produto.\nDirija-se ao cadastro de produtos e desative-o, " +
+						setErroMessage("Não é possível remover este produto.\nDirija-se ao cadastro de produtos e desative-o, " +
 								"para que o fornecedor possa ser removido.");
 						return;
 					}

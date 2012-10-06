@@ -134,6 +134,11 @@ public class ServicoEditor extends MecasoftEditor {
 			public void widgetSelected(SelectionEvent e) {
 				ProdutoServico ps = selecionarProduto();
 				if(ps != null){
+					if(service.getProdutoServico().getListaProduto().contains(ps)){
+						setErroMessage("O produto selecionado já esta parametrizado neste serviço.");
+						return;
+					}
+					
 					service.getProdutoServico().getListaProduto().add(ps);
 					tvProdutos.refresh();
 				}

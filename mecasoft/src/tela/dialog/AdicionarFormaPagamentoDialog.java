@@ -284,7 +284,9 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 			Calendar c = Calendar.getInstance();
 			c.add(Calendar.DAY_OF_MONTH, diasParcelas);
 			dtPrimeiraParcela = c.getTime();
-			txtDataParcela.setText(FormatterHelper.DATEFORMATDATA.format(dtPrimeiraParcela));
+			
+			if(txtDataParcela.getText().isEmpty())
+				txtDataParcela.setText(FormatterHelper.DATEFORMATDATA.format(dtPrimeiraParcela));
 			
 			//gera as duplicatas
 			gerarDuplicata();

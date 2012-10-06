@@ -27,7 +27,6 @@ public class AtualizarStatusJob extends Job{
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
  		List<ServicoPrestado> servicos = servicoService.findAllNaoConcluidosAutomatic();
- 		System.out.println("Vish");
 		monitor.beginTask("Adicionando os status...", servicos.size());
 		
 		for(ServicoPrestado sp : servicos){
@@ -48,7 +47,8 @@ public class AtualizarStatusJob extends Job{
 	}
 	
 	public static void atualizar(ServicoPrestado servico){
-		if(UsuarioHelper.getConfiguracaoPadrao() != null){
+		if(UsuarioHelper.getConfiguracaoPadrao() != null 
+				&& Calendar.getInstance().get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY){
 			StatusServico statusAtual = servico.getUltimoStatus();
 			
 			if(statusAtual != null && (!statusAtual.getStatus().isPausar() 

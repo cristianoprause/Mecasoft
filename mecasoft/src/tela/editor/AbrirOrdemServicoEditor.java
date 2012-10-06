@@ -485,11 +485,12 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				//pega o novo status
 				Status status = (Status)selecao.getFirstElement();
 				
-				//criado aqui para evitar o problema de o usuario aprovar que mude o serviço atual e nao o anterior
+				//criado aqui para evitar problemas e conseguir verificar em linhas abaixo
 				StatusServico statusParado = null;
+				StatusServico statusAtualServico = null;
 				
 				if(!service.getServicoPrestado().getListaStatus().isEmpty()){
-					StatusServico statusAtualServico = service.getServicoPrestado().getUltimoStatus();
+					statusAtualServico = service.getServicoPrestado().getUltimoStatus();
 					
 					//não pode adicionar um status de parar 
 					if(!statusAtualServico.getFuncionario().equals(funcionario) && status.isPausar()){
@@ -518,8 +519,16 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					}
 				}
 				
-				//verifica qual é o ultimo status do usuario
+				//pega o ultimo status do usuario
 				StatusServico statusFuncionario = statusServicoService.findStatusFuncionario(funcionario);
+				
+				//verifica se nao foi adicionado algum status neste serviço para este funcionario e ainda nao foi salvo
+				//caso tenha sido, esse status é o status atual do funcionario
+				if(statusAtualServico != null && statusFuncionario != null){
+					if(statusAtualServico.getFuncionario().equals(funcionario) 
+						&& statusAtualServico.getData().compareTo(statusFuncionario.getData()) > 0)
+							statusFuncionario = statusAtualServico;
+				}
 				
 				if(statusFuncionario != null && !statusFuncionario.getServicoPrestado().equals(service.getServicoPrestado()) && status.isPausar()){
 					openError("Não é permitido adicionar o status \"" + status.getDescricao() + "\" com este funcionário, pois ele esta em um outro serviço");
@@ -840,6 +849,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		is.setItem(ps);
 		is.setServicoPrestado(service.getServicoPrestado());
 		service.getServicoPrestado().getListaProdutos().add(is);
+		service.getServicoPrestado().getListaServicos().add(is);
 		
 		setEnableButtonCancelFechar();
 		tvItens.refresh();
@@ -874,13 +884,13 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		BigDecimal totalItens = BigDecimal.ZERO;
 		BigDecimal total;
 		
-		for(ItemServico servico : service.getServicoPrestado().getListaServicos()){
-			totalServicos = totalServicos.add(servico.getTotal());
+		for(ItemServico item : service.getServicoPrestado().getListaServicos()){
+			if(item.getItem().getTipo().equals(ProdutoServico.TIPOSERVICO))
+				totalServicos = totalServicos.add(item.getTotal());
+			else if(item.getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO))
+				totalItens = totalItens.add(item.getTotal());
 		}
 		
-		for(ItemServico item : service.getServicoPrestado().getListaProdutos()){
-			totalItens = totalItens.add(item.getTotal());
-		}
 		
 		total = totalServicos.add(totalItens);
 		
