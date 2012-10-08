@@ -113,18 +113,14 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getServicoPrestado());
+	public void salvarRegistro() throws ValidationException {
+		validar(service.getServicoPrestado());
 			
-			calcularTotais();
+		calcularTotais();
 			
-			service.saveOrUpdate();
-			openInformation("Ordem de serviço registrada com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
-		}
+		service.saveOrUpdate();
+		openInformation("Ordem de serviço registrada com sucesso!");
+		closeThisEditor();
 	}
 
 	@Override

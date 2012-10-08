@@ -162,41 +162,31 @@ public class VeiculoEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getVeiculo());
+	public void salvarRegistro() throws ValidationException{
+		validar(service.getVeiculo());
 			
-			if(service.getVeiculo().getTipo() != null){
+		if(service.getVeiculo().getTipo() != null){
 				
-				if(service.getVeiculo().getTipo().getHodometro()){
-					if(service.getVeiculo().getPlaca() == null){
-						setErroMessage("Informe a placa.");
-						return;
-					}
+			if(service.getVeiculo().getTipo().getHodometro()){
+				if(service.getVeiculo().getPlaca() == null)
+					throw new ValidationException("Informe a placa.");
 					
-					if(service.getVeiculo().getHodometro() == null){
-						setErroMessage("Informe o hodômetro.");
-						return;
-					}
-				}else if(service.getVeiculo().getTipo().getHorimetro()){
-					if(service.getVeiculo().getHorimetro() == null){
-						setErroMessage("Informe o horímetro.");
-						return;
-					}
-				}
+				if(service.getVeiculo().getHodometro() == null)
+					throw new ValidationException("Informe o hodômetro.");
 				
+			}else if(service.getVeiculo().getTipo().getHorimetro()){
+				if(service.getVeiculo().getHorimetro() == null)
+					throw new ValidationException("Informe o horímetro.");
 			}
-			
-			if(pessoaService != null)
-				pessoaService.getPessoa().getListaVeiculo().add(service.getVeiculo());
-			else
-				service.saveOrUpdate();
-			
-			openInformation("Veículo cadastrado com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
+				
 		}
+			
+		if(pessoaService != null)
+			pessoaService.getPessoa().getListaVeiculo().add(service.getVeiculo());
+		else
+			service.saveOrUpdate();
+			
+		openInformation("Veículo cadastrado com sucesso!");
 	}
 
 	@Override

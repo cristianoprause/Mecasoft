@@ -64,16 +64,10 @@ public class TipoVeiculoEditor extends MecasoftEditor {
 	}
 	
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getTipoVeiculo());
-			service.saveOrUpdate();
-			openInformation("Tipo de veículo cadastrado com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
-			e.printStackTrace();
-		}
+	public void salvarRegistro() throws ValidationException{
+		validar(service.getTipoVeiculo());
+		service.saveOrUpdate();
+		openInformation("Tipo de veículo cadastrado com sucesso!");
 	}
 
 	@Override

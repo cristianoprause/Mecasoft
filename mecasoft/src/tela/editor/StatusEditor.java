@@ -37,16 +37,11 @@ public class StatusEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getStatus());
+	public void salvarRegistro() throws ValidationException{
+		validar(service.getStatus());
 			
-			service.saveOrUpdate();
-			openInformation("Status cadastrado com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
-		}
+		service.saveOrUpdate();
+		openInformation("Status cadastrado com sucesso!");
 	}
 
 	@Override

@@ -36,16 +36,11 @@ public class FormaPagamentoEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getForma());
+	public void salvarRegistro() throws ValidationException {
+		validar(service.getForma());
 			
-			service.saveOrUpdate();
-			openInformation("Forma de pagamento cadastrada com sucesso");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
-		}
+		service.saveOrUpdate();
+		openInformation("Forma de pagamento cadastrada com sucesso");
 	}
 
 	@Override

@@ -1,6 +1,9 @@
 package tela.editor;
 
+import static aplicacao.helper.LayoutHelper.getActiveShell;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -15,8 +18,9 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wb.swt.ResourceManager;
 
 import tela.dialog.ErroDialog;
+import tela.dialog.SimNaoCancelarDialog;
+import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
-import aplicacao.helper.MessageHelper;
 import banco.connection.HibernateConnection;
 
 public abstract class MecasoftEditor extends EditorPart implements ISaveablePart2{
@@ -31,7 +35,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	public MecasoftEditor() {
 	}
 	
-	public abstract void salvarRegistro();
+	public abstract void salvarRegistro() throws ValidationException;
 	public abstract void excluirRegistro();
 	public abstract void addComponentes(Composite compositeConteudo);
 	
@@ -62,7 +66,18 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		btnSalvar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				salvarRegistro();
+				try {
+					salvarRegistro();
+					closeThisEditor();
+				} catch (ValidationException e4) {
+					setErroMessage(e4.getMessage());
+					return;
+				}catch(Exception ex){
+					if(ex.getMessage().contains("(login)=(admin) já existe")){
+						setErroMessage("Já existe um usuário com o login informado.");
+						return;
+					}
+				}
 			}
 		});
 		btnSalvar.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/save32.png"));
@@ -141,18 +156,30 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	
 	@Override
 	public int promptToSaveOnClose() {
-		
-		if(MessageHelper.openQuestion("Os dados foram alterados, deseja salvar antes de sair?")){
-			salvarRegistro();
-			return YES;
+		SimNaoCancelarDialog sncd = new SimNaoCancelarDialog(getActiveShell(), "Os dados foram alterados, deseja salvar antes de sair?");
+		try {
+			sncd.open();
 			
-		}
-		else{
-			HibernateConnection.rollBack();
-			getSite().getWorkbenchWindow().getActivePage().closeAllEditors(false);
-			return NO;
+			if(sncd.getId() == IDialogConstants.OK_ID){
+				salvarRegistro();
+				closeThisEditor();
+				return YES;
+			}
+			
+			if(sncd.getId() == IDialogConstants.CANCEL_ID){
+				HibernateConnection.rollBack();
+				getSite().getWorkbenchWindow().getActivePage().closeAllEditors(false);
+				return NO;
+			}
+		
+		} catch (ValidationException e) {
+			e.printStackTrace();
+		}catch(Exception ex){
+			if(ex.getMessage().contains("(login)=(admin) já existe"))
+				setErroMessage("Já existe um usuário com o login informado.");
 		}
 		
+		return CANCEL;
 	}
 	
 	public Button createNewButton(){

@@ -56,16 +56,11 @@ public class ServicoEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getProdutoServico());
+	public void salvarRegistro() throws ValidationException{
+		validar(service.getProdutoServico());
 			
-			service.saveOrUpdate();
-			openInformation("Serviço cadastrado com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
-		}
+		service.saveOrUpdate();
+		openInformation("Serviço cadastrado com sucesso!");
 	}
 
 	@Override

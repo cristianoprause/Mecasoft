@@ -202,16 +202,11 @@ public class PapelEditor extends MecasoftEditor {
 	}
 	
 	@Override
-	public void salvarRegistro() {
-		try {
-			ValidatorHelper.validar(service.getPapel());
+	public void salvarRegistro() throws ValidationException{
+		ValidatorHelper.validar(service.getPapel());
 			
-			service.saveOrUpdate();
-			MessageHelper.openInformation("Papel cadastrado com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
-		}		
+		service.saveOrUpdate();
+		MessageHelper.openInformation("Papel cadastrado com sucesso!");
 	}
 
 	@Override

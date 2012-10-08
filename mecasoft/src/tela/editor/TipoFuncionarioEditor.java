@@ -37,16 +37,11 @@ public class TipoFuncionarioEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getTipo());
+	public void salvarRegistro() throws ValidationException{
+		validar(service.getTipo());
 			
-			service.saveOrUpdate();
-			openInformation("Tipo de funcionário cadastrado com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
-		}
+		service.saveOrUpdate();
+		openInformation("Tipo de funcionário cadastrado com sucesso!");
 	}
 
 	@Override

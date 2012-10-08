@@ -127,25 +127,15 @@ public class UsuarioEditor extends MecasoftEditor{
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			ValidatorHelper.validar(service.getUsuario());
+	public void salvarRegistro() throws ValidationException{
+		ValidatorHelper.validar(service.getUsuario());
 			
-			if(!txtSenha.getText().equals(txtConfirmarSenha.getText())){
-				setErroMessage("Senha e confirmar senha não estão batendo.");
-				return;
-			}
+		if(!txtSenha.getText().equals(txtConfirmarSenha.getText()))
+			throw new ValidationException("Senha e confirmar senha não estão batendo.");
 			
-			service.saveOrUpdate();
-			MessageHelper.openInformation("Usuário salvo com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
-		}catch(Exception ex){
-			if(ex.getMessage().contains("(login)=(admin) já existe"))
-				setErroMessage("Já existe um usuário com o login informado.");
-			return;
-		}
+		service.saveOrUpdate();
+		MessageHelper.openInformation("Usuário salvo com sucesso!");
+		
 	}
 
 	@Override

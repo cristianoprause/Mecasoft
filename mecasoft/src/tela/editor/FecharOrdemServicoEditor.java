@@ -76,56 +76,44 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getServicoPrestado());
+	public void salvarRegistro() throws ValidationException {
+		validar(service.getServicoPrestado());
 			
-			if(service.getServicoPrestado().getListaFormaPagto() == null 
-					|| service.getServicoPrestado().getListaFormaPagto().isEmpty()){
-				setErroMessage("Adicione ao menos uma forma de pagamento");
-				return;
+		if(service.getServicoPrestado().getListaFormaPagto() == null 
+				|| service.getServicoPrestado().getListaFormaPagto().isEmpty())
+			throw new ValidationException("Adicione ao menos uma forma de pagamento");
+		
+		if(totalPago.compareTo(service.getServicoPrestado().getValorTotal()) < 0)
+			throw new ValidationException("A soma do valor das formas de pagamento não pode ser inferior ao total da nota.");
+			
+		//para fechar uma ordem de serviço, o usuário deve ter adicionado nas configurações qual status corresponde ao de serviço concluido
+		if(UsuarioHelper.getConfiguracaoPadrao() == null)
+			throw new ValidationException("Não é posível fechar a ordem de serviço.\n" +
+					"Va em Arquivo/Configurações e selecione o status para fechar as ordens de serviço.");
+			
+		//salva as duplicatas, caso geradas
+		if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraDuplicata()){
+			for(Duplicata duplicata : listaDuplicatas){
+				duplicataService.setDuplicata(duplicata);
+				duplicataService.saveOrUpdate();
 			}
-			
-			if(totalPago.compareTo(service.getServicoPrestado().getValorTotal()) < 0){
-				setErroMessage("A soma do valor das formas de pagamento não pode ser inferior ao total da nota.");
-				return;
-			}
-			
-			//para fechar uma ordem de serviço, o usuário deve ter adicionado nas configurações qual status corresponde ao de serviço concluido
-			if(UsuarioHelper.getConfiguracaoPadrao() == null){
-				setErroMessage("Não é posível fechar a ordem de serviço.\n" +
-						"Va em Arquivo/Configurações e selecione o status para fechar as ordens de serviço.");
-				return;
-			}
-			
-			//salva as duplicatas, caso geradas
-			if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraDuplicata()){
-				for(Duplicata duplicata : listaDuplicatas){
-					duplicataService.setDuplicata(duplicata);
-					duplicataService.saveOrUpdate();
-				}
-			}
-			
-			//serviço concluido
-			service.getServicoPrestado().setEmExecucao(false);
-			service.getServicoPrestado().setDataFechamento(new Date());
-			
-			//cria o status de concluido
-			StatusServico statusConcluido = new StatusServico();
-			statusConcluido.setFuncionario(service.getServicoPrestado().getUltimoStatus().getFuncionario());
-			statusConcluido.setServicoPrestado(service.getServicoPrestado());
-			statusConcluido.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinalizarServico());
-
-			//adiciona o status de concluido na lista de status do serviço
-			service.getServicoPrestado().getListaStatus().add(statusConcluido);
-			
-			service.saveOrUpdate();
-			openInformation("Ordem de serviço fechada com sucesso!");
-			closeThisEditor();
-			
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
 		}
+			
+		//serviço concluido
+		service.getServicoPrestado().setEmExecucao(false);
+		service.getServicoPrestado().setDataFechamento(new Date());
+		
+		//cria o status de concluido
+		StatusServico statusConcluido = new StatusServico();
+		statusConcluido.setFuncionario(service.getServicoPrestado().getUltimoStatus().getFuncionario());
+		statusConcluido.setServicoPrestado(service.getServicoPrestado());
+		statusConcluido.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinalizarServico());
+
+		//adiciona o status de concluido na lista de status do serviço
+		service.getServicoPrestado().getListaStatus().add(statusConcluido);
+			
+		service.saveOrUpdate();
+		openInformation("Ordem de serviço fechada com sucesso!");
 	}
 
 	@Override
@@ -318,7 +306,11 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		btnFecharOrdem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				salvarRegistro();
+				try {
+					salvarRegistro();
+				} catch (ValidationException e1) {
+					setErroMessage(e1.getMessage());
+				}
 			}
 		});
 		btnFecharOrdem.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));

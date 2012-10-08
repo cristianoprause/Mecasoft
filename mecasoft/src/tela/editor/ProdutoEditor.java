@@ -72,25 +72,18 @@ public class ProdutoEditor extends MecasoftEditor {
 	}
 
 	@Override
-	public void salvarRegistro() {
-		try {
-			validar(service.getProdutoServico());
+	public void salvarRegistro() throws ValidationException{
+		validar(service.getProdutoServico());
 			
-			if(service.getProdutoServico().getListaFornecedores().size() == 0 && service.getProdutoServico().getAtivo()){
-				setErroMessage("Para o cadastro do Produto selecione um fornecedor, caso não possua fornecedor, o Produto devera se inativado.");
-				return;
-			}
+		if(service.getProdutoServico().getListaFornecedores().size() == 0 && service.getProdutoServico().getAtivo())
+			throw new ValidationException("Para o cadastro do Produto selecione um fornecedor, caso não possua fornecedor, o Produto devera se inativado.");
 			
-			for(ForneceProduto fp : service.getProdutoServico().getListaFornecedores()){
-				validar(fp);
-			}
-			
-			service.saveOrUpdate();
-			openInformation("Produto cadastrado com sucesso!");
-			closeThisEditor();
-		} catch (ValidationException e) {
-			setErroMessage(e.getMessage());
+		for(ForneceProduto fp : service.getProdutoServico().getListaFornecedores()){
+			validar(fp);
 		}
+			
+		service.saveOrUpdate();
+		openInformation("Produto cadastrado com sucesso!");
 	}
 
 	@Override
