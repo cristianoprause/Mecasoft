@@ -308,6 +308,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					salvarRegistro();
+					closeThisEditor();
 				} catch (ValidationException e1) {
 					setErroMessage(e1.getMessage());
 				}
@@ -346,7 +347,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		
 		service.getServicoPrestado().setValorTotal(totalServico.add(totalItens).add(maoObra).add(locomocao).add(juros));
 		
-		BigDecimal desconto = service.getServicoPrestado().getDesconto();
+		BigDecimal desconto = service.getServicoPrestado().getDesconto() == null ? BigDecimal.ZERO : service.getServicoPrestado().getDesconto();
 		
 		service.getServicoPrestado().setValorTotal(service.getServicoPrestado().getValorTotal().subtract(desconto));
 		

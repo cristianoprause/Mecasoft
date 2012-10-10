@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import tela.componentes.MecasoftText;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
+import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataService;
 import aplicacao.service.FormaPagamentoService;
 import banco.modelo.Duplicata;
@@ -329,6 +330,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 					d.setNumero(numeroDuplicata.toString());
 					d.setServicoPrestado(servico);
 					d.setValor(valorParcela);
+					d.setUsuario(UsuarioHelper.getUsuarioLogado());
 					listaDuplicatas.add(d);
 					
 					//seta a variavel data para a data da proxima duplicata e o numeroDuplicata para o numero da proxima duplicata
@@ -347,6 +349,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 				d.setNumero(numeroDuplicata.toString());
 				d.setServicoPrestado(servico);
 				d.setValor(valorTotal);
+				d.setUsuario(UsuarioHelper.getUsuarioLogado());
 				listaDuplicatas.add(d);
 			}
 			

@@ -37,6 +37,9 @@ public class Duplicata implements Serializable{
 	
 	@ManyToOne
 	private ServicoPrestado servicoPrestado;
+	
+	@ManyToOne
+	private Usuario usuario;
 
 	public Long getId() {
 		return id;
@@ -86,6 +89,14 @@ public class Duplicata implements Serializable{
 		this.servicoPrestado = servicoPrestado;
 	}
 
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -110,5 +121,6 @@ public class Duplicata implements Serializable{
 			return false;
 		return true;
 	}
+
 
 }

@@ -489,7 +489,11 @@ public class PessoaEditor extends MecasoftEditor {
 	}
 	
 	public void completarEndereco(){
-		Cep endereco = new CepService().getEndereco(txtCep.getTextoSemFormatacao());
+		Cep endereco = null;
+		String cep = txtCep.getTextoSemFormatacao();
+		
+		if(cep != null && !cep.isEmpty())
+			endereco = new CepService().getEndereco(cep);
 		
 		if(endereco != null){
 			txtCidade.setText(endereco.getCidade());

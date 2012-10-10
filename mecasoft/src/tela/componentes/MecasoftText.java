@@ -71,14 +71,7 @@ public class MecasoftText extends Composite {
 			//pega o tamanho atual do texto para comparar com o novo tamanho e ver se o cursor ira mudar de posicao ou nao
 			tamanhoAnterior = text.getText().length();
 			
-			texto = text.getText();
-			for(int c = 0; c < caracteres.length(); c++)
-				texto = StringUtils.remove(texto, caracteres.charAt(c));
-			
-			texto = StringUtils.deleteWhitespace(texto);
-			
-			if(charContinuo != null)
-				texto = StringUtils.remove(texto, charContinuo);
+			limparTexto();
 			
 			textoRetorno = "";
 			for(int c1 = 0; c1 < texto.length(); c1++){
@@ -141,6 +134,17 @@ public class MecasoftText extends Composite {
 
 		return false;
 	}
+	
+	private void limparTexto(){
+		texto = text.getText();
+		for(int c = 0; c < caracteres.length(); c++)
+			texto = StringUtils.remove(texto, caracteres.charAt(c));
+		
+		texto = StringUtils.deleteWhitespace(texto);
+		
+		if(charContinuo != null)
+			texto = StringUtils.remove(texto, charContinuo);
+	}
 
 	public void setOptions(Integer aceita, Integer max) {
 		this.aceita = aceita;
@@ -188,6 +192,9 @@ public class MecasoftText extends Composite {
 	}
 	
 	public String getTextoSemFormatacao(){
+		if(texto == null)
+			limparTexto();
+		
 		return texto;
 	}
 
