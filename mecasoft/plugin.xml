@@ -354,6 +354,11 @@
                   label="Serviço analítico"
                   style="push">
             </command>
+            <command
+                  commandId="mecasoft.showDuplicataCommand"
+                  label="Duplicatas"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -388,6 +393,11 @@
             defaultHandler="aplicacao.command.reports.ShowServicoAnaliticoCommand"
             id="mecasoft.showServicoAnaliticoCommand"
             name="Relatório de serviços analítico">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.reports.ShowDuplicataCommand"
+            id="mecasoft.showDuplicataCommand"
+            name="Relatório de duplicatas">
       </command>
    </extension>
    <extension
