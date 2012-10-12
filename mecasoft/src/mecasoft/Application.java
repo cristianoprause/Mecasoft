@@ -9,7 +9,7 @@ import org.eclipse.ui.PlatformUI;
 
 import tela.dialog.LoginDialog;
 import aplicacao.job.AtualizarStatusJob;
-import banco.connection.HibernateConnection;
+import banco.connection.HibernateConnection2;
 
 /**
  * This class controls all aspects of the application's execution
@@ -22,8 +22,8 @@ public class Application implements IApplication {
 	public Object start(IApplicationContext context) {
 		Display display = PlatformUI.createDisplay();
 		try {
-			new HibernateConnection().initSystem();
-			HibernateConnection.openConnection();
+			new HibernateConnection2().initSystem();
+			HibernateConnection2.openConnection();
 			LoginDialog ld = new LoginDialog(display.getActiveShell());
 			if(ld.open() == IDialogConstants.OK_ID){
 				new AtualizarStatusJob("Atualizando status dos serviços...").schedule();

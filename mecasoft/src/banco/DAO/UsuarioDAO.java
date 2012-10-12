@@ -6,11 +6,11 @@ import javax.persistence.NoResultException;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.HibernateConnection2;
 import banco.modelo.Usuario;
 import banco.utils.UsuarioUtils;
 
-public class UsuarioDAO extends HibernateConnection implements UsuarioUtils{
+public class UsuarioDAO extends HibernateConnection2 implements UsuarioUtils{
 
 	@Override
 	public void saveOrUpdate(Usuario modelo) {

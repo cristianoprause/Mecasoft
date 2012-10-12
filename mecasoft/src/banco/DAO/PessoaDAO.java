@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.HibernateConnection2;
 import banco.modelo.Pessoa;
 import banco.modelo.TipoFuncionario;
 import banco.utils.PessoaUtils;
 
-public class PessoaDAO extends HibernateConnection implements PessoaUtils{
+public class PessoaDAO extends HibernateConnection2 implements PessoaUtils{
 
 	@Override
 	public void saveOrUpdate(Pessoa modelo) {

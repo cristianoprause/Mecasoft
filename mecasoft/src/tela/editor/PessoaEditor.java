@@ -560,6 +560,7 @@ public class PessoaEditor extends MecasoftEditor {
 	
 	@Override
 	public void setFocus() {
+
 		tvProduto.refresh();
 		tvVeiculo.refresh();
 		

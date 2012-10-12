@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.HibernateConnection2;
 import banco.modelo.Pessoa;
 import banco.modelo.StatusServico;
 import banco.utils.StatusServicoUtils;
 
-public class StatusServicoDAO extends HibernateConnection implements StatusServicoUtils{
+public class StatusServicoDAO extends HibernateConnection2 implements StatusServicoUtils{
 
 	@Override
 	public void saveOrUpdate(StatusServico modelo) {

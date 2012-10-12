@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import com.ibm.icu.util.Calendar;
-
-import banco.connection.HibernateConnection;
+import banco.connection.HibernateConnection2;
 import banco.modelo.ServicoPrestado;
 import banco.utils.ServicoPrestadoUtils;
 
-public class ServicoPrestadoDAO extends HibernateConnection implements
+import com.ibm.icu.util.Calendar;
+
+public class ServicoPrestadoDAO extends HibernateConnection2 implements
 		ServicoPrestadoUtils {
 
 	@Override

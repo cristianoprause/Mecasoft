@@ -27,7 +27,7 @@ import tela.componentes.MecasoftText;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.service.DuplicataPagaService;
 import aplicacao.service.DuplicataService;
-import banco.connection.HibernateConnection;
+import banco.connection.HibernateConnection2;
 import banco.modelo.Duplicata;
 import banco.modelo.DuplicataPaga;
 
@@ -214,7 +214,7 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 		service.getDuplicataPaga().setDuplicata(duplicata);
 		service.saveOrUpdate();
 		
-		HibernateConnection.commit();
+		HibernateConnection2.commit();
 		
 		openInformation("Duplicata baixa com sucesso!");
 		
