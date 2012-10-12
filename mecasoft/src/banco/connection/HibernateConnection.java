@@ -9,7 +9,7 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
-public class HibernateConnection2 {
+public class HibernateConnection {
 
 	private static SessionFactory sf;
 	private static Session session;

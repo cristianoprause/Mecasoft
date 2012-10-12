@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 import banco.modelo.DuplicataPaga;
 import banco.utils.DuplicataPagaUtils;
 
-public class DuplicataPagaDAO extends HibernateConnection2 implements DuplicataPagaUtils{
+public class DuplicataPagaDAO extends HibernateConnection implements DuplicataPagaUtils{
 
 	@Override
 	public void saveOrUpdate(DuplicataPaga modelo) {

@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 import banco.modelo.Duplicata;
 import banco.utils.DuplicataUtils;
 
-public class DuplicataDAO extends HibernateConnection2 implements DuplicataUtils{
+public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 
 	@Override
 	public void saveOrUpdate(Duplicata modelo) {

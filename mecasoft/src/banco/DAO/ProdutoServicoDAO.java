@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 import banco.modelo.ProdutoServico;
 import banco.utils.ProdutoServicoUtils;
 
-public class ProdutoServicoDAO extends HibernateConnection2 implements ProdutoServicoUtils{
+public class ProdutoServicoDAO extends HibernateConnection implements ProdutoServicoUtils{
 
 	@Override
 	public void saveOrUpdate(ProdutoServico modelo) {

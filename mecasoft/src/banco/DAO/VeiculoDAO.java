@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 import banco.modelo.TipoVeiculo;
 import banco.modelo.Veiculo;
 import banco.utils.VeiculoUtils;
 
-public class VeiculoDAO extends HibernateConnection2 implements VeiculoUtils{
+public class VeiculoDAO extends HibernateConnection implements VeiculoUtils{
 
 	@Override
 	public void saveOrUpdate(Veiculo modelo) {

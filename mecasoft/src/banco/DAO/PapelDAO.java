@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 import banco.modelo.Papel;
 import banco.utils.PapelUtils;
 
-public class PapelDAO extends HibernateConnection2 implements PapelUtils{
+public class PapelDAO extends HibernateConnection implements PapelUtils{
 
 	@Override
 	public void saveOrUpdate(Papel modelo) {

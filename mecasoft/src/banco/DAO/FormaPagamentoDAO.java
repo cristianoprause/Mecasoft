@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 import banco.modelo.FormaPagamento;
 import banco.utils.FormaPagamentoUtils;
 
-public class FormaPagamentoDAO extends HibernateConnection2 implements FormaPagamentoUtils{
+public class FormaPagamentoDAO extends HibernateConnection implements FormaPagamentoUtils{
 
 	@Override
 	public void saveOrUpdate(FormaPagamento modelo) {

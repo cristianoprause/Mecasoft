@@ -21,7 +21,7 @@ import tela.dialog.ErroDialog;
 import tela.dialog.SimNaoCancelarDialog;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 
 public abstract class MecasoftEditor extends EditorPart implements ISaveablePart2{
 	
@@ -146,7 +146,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	}
 	
 	public void closeThisEditor(){
-		HibernateConnection2.commit();
+		HibernateConnection.commit();
 		getEditorSite().getPart().getSite().getWorkbenchWindow().getActivePage().closeEditor(this, false);
 	}
 	
@@ -167,7 +167,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 			}
 			
 			if(sncd.getId() == IDialogConstants.CANCEL_ID){
-				HibernateConnection2.rollBack();
+				HibernateConnection.rollBack();
 				getSite().getWorkbenchWindow().getActivePage().closeAllEditors(false);
 				return NO;
 			}

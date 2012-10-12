@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.jobs.Job;
 
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ServicoPrestadoService;
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 import banco.modelo.ServicoPrestado;
 import banco.modelo.StatusServico;
 
@@ -39,7 +39,7 @@ public class AtualizarStatusJob extends Job{
 		//após concluir as atualizações, ele aguarda o usuario commitar algo que deva ser commitado
 		//após o usuario commitar, ele commita
 //		while(HibernateConnection.getSession().isDirty()){}
-		HibernateConnection2.autoCommit();
+		HibernateConnection.autoCommit();
 		
 //		schedule(3600000);
 		schedule(60000);

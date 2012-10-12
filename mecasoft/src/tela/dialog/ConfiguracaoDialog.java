@@ -43,7 +43,7 @@ import aplicacao.service.ConfiguracaoService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.StatusService;
 import aplicacao.service.UsuarioService;
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 import banco.modelo.Configuracao;
 import banco.modelo.Pessoa;
 import banco.modelo.Status;
@@ -295,7 +295,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			
 			UsuarioHelper.setConfiguracaoPadrao(service.getConfiguracao());
 			openInformation("Configuraçõe salvas com sucesso!");
-			HibernateConnection2.commit();
+			HibernateConnection.commit();
 			super.okPressed();
 			
 		}catch (ValidationException e) {

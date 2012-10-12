@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import banco.connection.HibernateConnection2;
+import banco.connection.HibernateConnection;
 import banco.modelo.TipoFuncionario;
 import banco.utils.TipoFuncionarioUtils;
 
-public class TipoFuncionarioDAO extends HibernateConnection2 implements TipoFuncionarioUtils{
+public class TipoFuncionarioDAO extends HibernateConnection implements TipoFuncionarioUtils{
 
 	@Override
 	public void saveOrUpdate(TipoFuncionario modelo) {
