@@ -91,6 +91,11 @@
             id="tela.editor.FormaPagamentoEditor"
             name="Forma de pagamento">
       </editor>
+      <editor
+            class="tela.editor.StatusFuncionarioEditor"
+            id="tela.editor.StatusFuncionarioEditor"
+            name="Status geral do funcionário">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -175,6 +180,11 @@
             class="tela.view.DuplicataPagaView"
             id="tela.view.DuplicataPagaView"
             name="Lista de duplicatas pagas">
+      </view>
+      <view
+            class="tela.view.StatusFuncionarioView"
+            id="tela.view.StatusFuncionarioView"
+            name="Status atual dos funcionários">
       </view>
    </extension>
    <extension
@@ -310,15 +320,27 @@
          </menu>
          <menu
                label="Financeiro">
-            <command
-                  commandId="org.eclipse.ui.views.showView"
-                  id="mecasoft.menuServicoPrestado"
+            <menu
                   label="Serviço">
-               <parameter
-                     name="org.eclipse.ui.views.showView.viewId"
-                     value="tela.view.ServicoPrestadoView">
-               </parameter>
-            </command>
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     id="mecasoft.menuServicoPrestado"
+                     label="Serviços">
+                  <parameter
+                        name="org.eclipse.ui.views.showView.viewId"
+                        value="tela.view.ServicoPrestadoView">
+                  </parameter>
+               </command>
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     id="mecasoft.menuStatusFuncionario"
+                     label="Status dos funcionários">
+                  <parameter
+                        name="org.eclipse.ui.views.showView.viewId"
+                        value="tela.view.StatusFuncionarioView">
+                  </parameter>
+               </command>
+            </menu>
             <menu
                   label="Duplicatas">
                <command

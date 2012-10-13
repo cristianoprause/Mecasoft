@@ -1,5 +1,6 @@
 package aplicacao.service;
 
+import java.util.Date;
 import java.util.List;
 
 import banco.modelo.Pessoa;
@@ -37,6 +38,10 @@ public class StatusServicoService extends MecasoftService<StatusServico>{
 	@Override
 	public List<StatusServico> findAll() {
 		return getDAO().findAll();
+	}
+	
+	public List<StatusServico> findAllByFuncionarioAndPeriodo(Pessoa funcionario, Date dtInicial, Date dtFinal){
+		return getDAO().findAllByFuncionarioAndPeriodo(funcionario, dtInicial, dtFinal);
 	}
 
 	public StatusServico getStatusServico() {

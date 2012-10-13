@@ -130,7 +130,7 @@ public class Pessoa implements Serializable{
 	}
 	
 	public String getNome(){
-		return razaoSocial == null ? nomeFantasia : razaoSocial;
+		return (razaoSocial == null || razaoSocial.isEmpty()) ? nomeFantasia : razaoSocial;
 	}
 
 	public Long getId() {
