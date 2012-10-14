@@ -50,6 +50,8 @@ import aplicacao.service.DuplicataService;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.Duplicata;
 import banco.modelo.FormaPagtoUtilizada;
+import banco.modelo.ItemServico;
+import banco.modelo.ProdutoServico;
 import banco.modelo.StatusServico;
 
 public class FecharOrdemServicoEditor extends MecasoftEditor {
@@ -111,6 +113,17 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 
 		//adiciona o status de concluido na lista de status do serviço
 		service.getServicoPrestado().getListaStatus().add(statusConcluido);
+		
+		//remove todos os produtos com quantidade 0 da ordem de serviço antes de fecha-la
+		List<ItemServico> listaItens = new ArrayList<ItemServico>();
+		listaItens.addAll(service.getServicoPrestado().getListaServicos());
+		
+		for(ItemServico item : listaItens){
+			if(item.getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO) && item.getQuantidade().compareTo(0) == 0){
+				service.getServicoPrestado().getListaProdutos().remove(item);
+				service.getServicoPrestado().getListaServicos().remove(item);
+			}
+		}
 			
 		service.saveOrUpdate();
 		openInformation("Ordem de serviço fechada com sucesso!");
