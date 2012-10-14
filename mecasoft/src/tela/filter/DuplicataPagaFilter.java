@@ -1,5 +1,7 @@
 package tela.filter;
 
+import java.math.BigDecimal;
+
 import org.eclipse.jface.viewers.Viewer;
 
 import aplicacao.helper.FormatterHelper;
@@ -27,7 +29,8 @@ public class DuplicataPagaFilter extends MecasoftFilter{
 		if(FormatterHelper.getDecimalFormat().format(d.getDuplicata().getValor()).matches(search.toLowerCase()))
 			return true;
 		
-		if(FormatterHelper.getDecimalFormat().format(d.getValorDesconto()).matches(search.toLowerCase()))
+		if(FormatterHelper.getDecimalFormat().format(d.getValorDesconto() == null ? BigDecimal.ZERO : d.getValorDesconto())
+				.matches(search.toLowerCase()))
 			return true;
 		
 		if(FormatterHelper.getDecimalFormat().format(d.getValorTotal()).matches(search.toLowerCase()))
