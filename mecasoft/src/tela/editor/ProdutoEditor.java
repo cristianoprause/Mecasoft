@@ -205,6 +205,14 @@ public class ProdutoEditor extends MecasoftEditor {
 		tblclmnValorUnitario.setText("Valor Unitário");
 		
 		Button btnAdicionar = new Button(compositeConteudo, SWT.NONE);
+		btnAdicionar.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				//foram adicionados aqui porque não era possivel pegar o tab na lista de fornecedores xD
+				calcularValores();
+				initDataBindings();
+			}
+		});
 		btnAdicionar.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/fornecedor/removeFornecedor16.png"));
 		btnAdicionar.addSelectionListener(new SelectionAdapter() {
 			@Override
