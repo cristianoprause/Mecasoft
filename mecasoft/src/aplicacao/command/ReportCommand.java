@@ -1,15 +1,19 @@
 package aplicacao.command;
 
+
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import mecasoft.Activator;
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.runtime.FileLocator;
@@ -38,6 +42,19 @@ public abstract class ReportCommand extends AbstractHandler{
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
+	public JasperPrint getReport(String caminhoRelatorio, List<?> listaObjetos){
+
+		try {
+			JRDataSource jrds = new JRBeanCollectionDataSource(listaObjetos);
+			return JasperFillManager.fillReport(reportsPath().concat(caminhoRelatorio), getParametros(), jrds);
+			
 		} catch (JRException e) {
 			e.printStackTrace();
 		}

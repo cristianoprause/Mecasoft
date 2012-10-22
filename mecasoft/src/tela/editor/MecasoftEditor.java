@@ -73,7 +73,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 					setErroMessage(e4.getMessage());
 					return;
 				}catch(Exception ex){
-					if(ex.getMessage().contains("(login)=(admin) já existe")){
+					if(ex.getMessage() != null && ex.getMessage().contains("(login)=(admin) já existe")){
 						setErroMessage("Já existe um usuário com o login informado.");
 						return;
 					}

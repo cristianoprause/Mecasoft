@@ -4,29 +4,26 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
+@SuppressWarnings("deprecation")
 public class HibernateConnection {
 
 	private static SessionFactory sf;
 	private static Session session;
 	private static Transaction tx;
-	private static ServiceRegistry serviceRegistry;
 	private static Session sessionAutomatico;
 	private static Transaction txAutomatico;
 
-	public void initSystem() {
-
-		Configuration configuration = new Configuration();
-		configuration.configure();
-		serviceRegistry = new ServiceRegistryBuilder().applySettings(
-				configuration.getProperties()).buildServiceRegistry();
-		sf = configuration.buildSessionFactory(serviceRegistry);
-	}
-
+	 public void initSystem() {  
+		 // Cria uma configuração para a classe 
+		AnnotationConfiguration cfg = new AnnotationConfiguration();
+		 sf = cfg.configure().buildSessionFactory();
+		 create(cfg);
+	 }
+	
 	public static Session getSession() {
 		if (session == null)
 			openConnection();

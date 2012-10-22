@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import banco.modelo.Pessoa;
+import banco.modelo.ServicoPrestado;
 import banco.modelo.StatusServico;
 import banco.utils.StatusServicoUtils;
 
@@ -40,10 +41,14 @@ public class StatusServicoService extends MecasoftService<StatusServico>{
 		return getDAO().findAll();
 	}
 	
-	public List<StatusServico> findAllByFuncionarioAndPeriodo(Pessoa funcionario, Date dtInicial, Date dtFinal){
-		return getDAO().findAllByFuncionarioAndPeriodo(funcionario, dtInicial, dtFinal);
+	public List<StatusServico> findAllByFuncionarioAndPeriodoAndServico(Pessoa funcionario, Date dtInicial, Date dtFinal, ServicoPrestado servico){
+		return getDAO().findAllByFuncionarioAndPeriodoAndServico(funcionario, dtInicial, dtFinal, servico);
 	}
-
+	
+	public List<StatusServico> findAllByFuncionarioAndPeriodo(Pessoa funcionario, Date dtInicial, Date dtFinal){
+		return getDAO().findAllByFuncionarioAndPeriodoAndServico(funcionario, dtInicial, dtFinal, null);
+	}
+	
 	public StatusServico getStatusServico() {
 		return statusServico;
 	}

@@ -381,6 +381,11 @@
                   label="Duplicatas"
                   style="push">
             </command>
+            <command
+                  commandId="mecasoft.showFluxoTrabalhoCommand"
+                  label="Fluxo de trabalho"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -420,6 +425,11 @@
             defaultHandler="aplicacao.command.reports.ShowDuplicataCommand"
             id="mecasoft.showDuplicataCommand"
             name="Relatório de duplicatas">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.reports.ShowFluxoTrabalhoCommand"
+            id="mecasoft.showFluxoTrabalhoCommand"
+            name="Relatório de fluxo de trabalho">
       </command>
    </extension>
    <extension
