@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -45,6 +46,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import tela.dialog.ConfiguracaoDialog;
 import tela.dialog.SelecionarItemDialog;
 import tela.editingSupport.AcrescimoItemServicoEditingSupport;
 import tela.editingSupport.DataStatusServicoEditinfSupport;
@@ -699,8 +701,26 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(openQuestion("Deseja realmente cancelar esta ordem de serviço?")){
+					
+					//verifica se o usuario ja configurou os status
+					if(UsuarioHelper.getConfiguracaoPadrao() == null){
+						openError("Registre nas configurações os status padrões para poder cancelar a ordem de serviço.");
+						ConfiguracaoDialog cd = new ConfiguracaoDialog(getActiveShell());
+						if(cd.open() != IDialogConstants.OK_ID)
+							return;
+					}
+					
 					service.getServicoPrestado().setAtivo(false);
 					service.getServicoPrestado().setEmExecucao(false);
+					
+					//cria o status de concluido
+					StatusServico statusConcluido = new StatusServico();
+					statusConcluido.setFuncionario(service.getServicoPrestado().getUltimoStatus().getFuncionario());
+					statusConcluido.setServicoPrestado(service.getServicoPrestado());
+					statusConcluido.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinalizarServico());
+			
+					//adiciona o status de concluido na lista de status do serviço
+					service.getServicoPrestado().getListaStatus().add(statusConcluido);
 					
 					calcularTotais();
 					
@@ -907,16 +927,16 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtVeiculoObserveTextObserveWidget, servicegetServicoPrestadoVeiculomodeloObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ItemServico.class, new String[]{"descricao", "valorUnitario", "desconto", "acrescimo"});
-//		tvServico.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ItemServico.class, new String[]{"descricao", "valorUnitario", "desconto", "acrescimo"});
+		tvServico.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvServico.setContentProvider(listContentProvider);
 		//
 		IObservableList servicegetServicoPrestadoListaServicosObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaServicos");
 		tvServico.setInput(servicegetServicoPrestadoListaServicosObserveList);
 		//
 		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ItemServico.class, new String[]{"descricao", "quantidade", "valorUnitario", "desconto", "acrescimo", "total"});
-//		tvItens.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
+		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ItemServico.class, new String[]{"descricao", "quantidade", "valorUnitario", "desconto", "acrescimo", "total"});
+		tvItens.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
 		tvItens.setContentProvider(listContentProvider_1);
 		//
 		IObservableList servicegetServicoPrestadoListaProdutosObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaProdutos");
@@ -931,8 +951,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		cvNovoStatus.setInput(writableList);
 		//
 		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
-//		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
+		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
+		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
 		tvStatus.setContentProvider(listContentProvider_3);
 		//
 		IObservableList servicegetServicoPrestadoListaStatusObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaStatus");

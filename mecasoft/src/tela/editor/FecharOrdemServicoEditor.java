@@ -1,5 +1,6 @@
 package tela.editor;
 
+import static aplicacao.helper.LayoutHelper.getActiveShell;
 import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.ValidatorHelper.validar;
@@ -41,6 +42,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.componentes.MecasoftText;
 import tela.dialog.AdicionarFormaPagamentoDialog;
+import tela.dialog.ConfiguracaoDialog;
 import tela.editor.editorInput.FecharOrdemServicoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
@@ -92,6 +94,14 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		if(UsuarioHelper.getConfiguracaoPadrao() == null)
 			throw new ValidationException("Não é posível fechar a ordem de serviço.\n" +
 					"Va em Arquivo/Configurações e selecione o status para fechar as ordens de serviço.");
+		
+		//verifica se o usuario ja configurou os status
+		if(UsuarioHelper.getConfiguracaoPadrao() == null){
+			openInformation("Registre nas configurações os status padrões para poder cancelar a ordem de serviço.");
+			ConfiguracaoDialog cd = new ConfiguracaoDialog(getActiveShell());
+			if(cd.open() != IDialogConstants.OK_ID)
+				return;
+		}
 			
 		//salva as duplicatas, caso geradas
 		if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraDuplicata()){

@@ -64,8 +64,10 @@ public class ShowFluxoTrabalhoCommand extends ReportCommand{
 		ServicoPrestado sp = servicoService.find(prftd.getServicoNumero());
 		
 		//caso nao tenha encontrado o serviço informado pelo usuario
-		if(sp == null && prftd.getServicoNumero() != null)
+		if(sp == null && prftd.getServicoNumero() != null){
 			sp = new ServicoPrestado();
+			sp.setId(prftd.getServicoNumero());
+		}
 		
 		//todos os status que devem ser mostrados no relatorio
 		List<StatusServico> listaStatus = statusService.findAllByFuncionarioAndPeriodoAndServico(prftd.getFuncionario(), 
