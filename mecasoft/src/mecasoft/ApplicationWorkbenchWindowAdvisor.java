@@ -12,11 +12,15 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import aplicacao.helper.UsuarioHelper;
+import aplicacao.service.CaixaService;
 import aplicacao.service.ConfiguracaoService;
 import banco.modelo.Configuracao;
 
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
+	private ConfiguracaoService configuracaoService = new ConfiguracaoService();
+	private CaixaService caixaService = new CaixaService();
+	
 	public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
 		super(configurer);
 	}
@@ -50,16 +54,22 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		return openQuestion("Tem certeza que deseja finalizar o sistema?");
 	}
 	
-	@Override
-	public void postWindowOpen() {
-		verificacaoMenus();
-		verificarConfiguracoes();
-	}
-	
-	public void verificarConfiguracoes(){
-		List<Configuracao> configuracoes = new ConfiguracaoService().findAll();
+	public void verificacaoConfiguracoes(){
+		List<Configuracao> configuracoes = configuracaoService.findAll();
 		
 		if(!configuracoes.isEmpty())
 			UsuarioHelper.setConfiguracaoPadrao(configuracoes.get(0));
 	}
+	
+	public void verificacaoCaixa(){
+		UsuarioHelper.setCaixa(caixaService.findCaixaAtual());
+	}
+	
+	@Override
+	public void postWindowOpen() {
+		verificacaoMenus();
+		verificacaoConfiguracoes();
+		verificacaoCaixa();
+	}
+	
 }

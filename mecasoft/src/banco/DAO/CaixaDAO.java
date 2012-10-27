@@ -37,4 +37,13 @@ public class CaixaDAO extends HibernateConnection implements CaixaUtils{
 		return q.list();
 	}
 
+	@Override
+	public Caixa findUltimoCaixaByStatus(Boolean status) {
+		Query q = getSession().createQuery("select c from Caixa c where c.id = (select max(ca.id) from Caixa ca " +
+										"where (:status is null) or (ca.dataFechamento is null and :status is true) " +
+										"or (ca.dataFechamento is not null and :status is false))");
+		q.setParameter("status", status);
+		return (Caixa) q.uniqueResult();
+	}
+
 }

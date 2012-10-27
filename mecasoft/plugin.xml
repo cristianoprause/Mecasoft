@@ -363,6 +363,14 @@
                   </parameter>
                </command>
             </menu>
+            <menu
+                  label="Caixa">
+               <command
+                     commandId="mecasoft.abrirFecharCaixaCommand"
+                     label="Abrir/Fechar caixa"
+                     style="push">
+               </command>
+            </menu>
          </menu>
          <menu
                label="Relatório">
@@ -430,6 +438,11 @@
             defaultHandler="aplicacao.command.reports.ShowFluxoTrabalhoCommand"
             id="mecasoft.showFluxoTrabalhoCommand"
             name="Relatório de fluxo de trabalho">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.AbrirFecharCaixaCommand"
+            id="mecasoft.abrirFecharCaixaCommand"
+            name="Abrir/Fechar caixa">
       </command>
    </extension>
    <extension

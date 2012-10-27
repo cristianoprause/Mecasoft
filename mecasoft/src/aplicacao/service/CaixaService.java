@@ -28,6 +28,14 @@ public class CaixaService extends MecasoftService<Caixa>{
 	public Caixa find(Long id) {
 		return getDAO().find(id);
 	}
+	
+	public Caixa findCaixaAtual(){
+		return getDAO().findUltimoCaixaByStatus(true);
+	}
+	
+	public Caixa findUltimoCaixaAberto(){
+		return getDAO().findUltimoCaixaByStatus(false);
+	}
 
 	@Override
 	public List<Caixa> findAll() {
