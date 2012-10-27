@@ -149,7 +149,7 @@ public class StatusFuncionarioEditor extends EditorPart {
 		tvcData.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.DATEFORMATDATAHORA.format(((StatusServico)element).getData());
+				return FormatterHelper.getDateFormatData("dd/MM/yyyy HH:mm").format(((StatusServico)element).getData());
 			}
 		});
 		TableColumn tblclmnData = tvcData.getColumn();

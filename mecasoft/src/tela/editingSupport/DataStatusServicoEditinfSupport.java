@@ -37,7 +37,7 @@ public class DataStatusServicoEditinfSupport extends EditingSupport{
 		StatusServico ss = (StatusServico) element;
 		
 		if(ss != null)
-			return FormatterHelper.DATEFORMATDATAHORA.format(ss.getData());
+			return FormatterHelper.getDateFormatData("dd/MM/yyyy HH:mm").format(ss.getData());
 		
 		return "";
 	}
@@ -49,7 +49,7 @@ public class DataStatusServicoEditinfSupport extends EditingSupport{
 		
 		if(!v.isEmpty()){
 			try{
-				Date data = FormatterHelper.DATEFORMATDATAHORA.parse(v);
+				Date data = FormatterHelper.getDateFormatData("dd/MM/yyyy HH:mm").parse(v);
 				ss.setData(data);
 				viewer.refresh();
 			}catch(Exception e){

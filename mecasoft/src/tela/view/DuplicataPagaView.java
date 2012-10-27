@@ -98,7 +98,7 @@ public class DuplicataPagaView extends ViewPart {
 		
 		Calendar dtInicial = Calendar.getInstance();
 		dtInicial.add(Calendar.MONTH, -1);
-		txtDataInicial.setText(FormatterHelper.DATEFORMATDATA.format(dtInicial.getTime()));
+		txtDataInicial.setText(FormatterHelper.getDateFormatData().format(dtInicial.getTime()));
 		
 		Label lblAt = new Label(frmListaDeDuplicatas.getBody(), SWT.NONE);
 		formToolkit.adapt(lblAt, true, true);
@@ -111,7 +111,7 @@ public class DuplicataPagaView extends ViewPart {
 		formToolkit.paintBordersFor(txtDataFinal);
 		
 		Calendar dtFinal = Calendar.getInstance();
-		txtDataFinal.setText(FormatterHelper.DATEFORMATDATA.format(dtFinal.getTime()));
+		txtDataFinal.setText(FormatterHelper.getDateFormatData().format(dtFinal.getTime()));
 		
 		tvDuplicataPaga = new TableViewer(frmListaDeDuplicatas.getBody(), SWT.BORDER | SWT.FULL_SELECTION);
 		table = tvDuplicataPaga.getTable();
@@ -148,7 +148,7 @@ public class DuplicataPagaView extends ViewPart {
 		tvcDataPagamento.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.DATEFORMATDATA.format(((DuplicataPaga)element).getDataPagamento());
+				return FormatterHelper.getDateFormatData().format(((DuplicataPaga)element).getDataPagamento());
 			}
 		});
 		TableColumn tblclmnDataPagamento = tvcDataPagamento.getColumn();
@@ -209,8 +209,8 @@ public class DuplicataPagaView extends ViewPart {
 			actionBuscarPeriodo = new Action("Buscar por per\u00EDodo") {				@Override
 				public void run() {
 					try{
-						Date dtInicial = FormatterHelper.DATEFORMATDATA.parse(txtDataInicial.getText());
-						Date dtFinal = FormatterHelper.DATEFORMATDATA.parse(txtDataFinal.getText());
+						Date dtInicial = FormatterHelper.getDateFormatData().parse(txtDataInicial.getText());
+						Date dtFinal = FormatterHelper.getDateFormatData().parse(txtDataFinal.getText());
 						
 						tvDuplicataPaga.setInput(service.findAllByPeriodo(dtInicial, dtFinal));
 					}catch(Exception e){

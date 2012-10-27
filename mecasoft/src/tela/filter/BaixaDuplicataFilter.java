@@ -20,7 +20,7 @@ public class BaixaDuplicataFilter extends MecasoftFilter{
 		if(d.getServicoPrestado().getId().toString().matches(search.toLowerCase()))
 			return true;
 		
-		if(FormatterHelper.DATEFORMATDATA.format(d.getDataVencimento()).matches(search.toLowerCase()))
+		if(FormatterHelper.getDateFormatData().format(d.getDataVencimento()).matches(search.toLowerCase()))
 			return true;
 		
 		if(FormatterHelper.getDecimalFormat().format(d.getValor()).matches(search.toLowerCase()))

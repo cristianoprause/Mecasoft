@@ -11,11 +11,11 @@ import banco.modelo.StatusServico;
 
 public class FormatterHelper {
 
+//	public static SimpleDateFormat DATEFORMATDATAHORA = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//	public static SimpleDateFormat DATEFOTMATHORA = new SimpleDateFormat("HH:mm");
 	public static Locale BRAZIL = new Locale("pt", "BR");
-	public static SimpleDateFormat DATEFORMATDATA = new SimpleDateFormat("dd/MM/yyyy");
-	public static SimpleDateFormat DATEFORMATDATAHORA = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-	public static SimpleDateFormat DATEFOTMATHORA = new SimpleDateFormat("HH:mm");
 	private static DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance(BRAZIL);
+	private static SimpleDateFormat dateFormatData;
 	
 	public static String MECASOFTTXTCPF = "..-";
 	public static String MECASOFTTXTCNPJ = "../-";
@@ -32,6 +32,17 @@ public class FormatterHelper {
 	public static DecimalFormat getDecimalFormat(){
 		decimalFormat.setMinimumFractionDigits(2);
 		return decimalFormat;
+	}
+	
+	public static SimpleDateFormat getDateFormatData() {
+		dateFormatData = new SimpleDateFormat("dd/MM/yyyy");
+		dateFormatData.setLenient(false);
+		return dateFormatData;
+	}
+	
+	public static SimpleDateFormat getDateFormatData(String pattern){
+		dateFormatData = new SimpleDateFormat(pattern);
+		return dateFormatData;
 	}
 	
 	public static String formatarTempo(Calendar calendarTempo){

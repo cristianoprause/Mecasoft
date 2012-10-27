@@ -103,7 +103,7 @@ public class BaixaDuplicataView extends ViewPart {
 		//seta a data inicial como 1 mes atraz
 		Calendar dtInicial = Calendar.getInstance();
 		dtInicial.add(Calendar.MONTH, -1);
-		txtDataInicial.setText(FormatterHelper.DATEFORMATDATA.format(dtInicial.getTime()));
+		txtDataInicial.setText(FormatterHelper.getDateFormatData().format(dtInicial.getTime()));
 		
 		Label lblAte = new Label(frmBaixaDeDuplicatas.getBody(), SWT.NONE);
 		formToolkit.adapt(lblAte, true, true);
@@ -120,7 +120,7 @@ public class BaixaDuplicataView extends ViewPart {
 		
 		//seta a data final com a data atual
 		Calendar dtFinal = Calendar.getInstance();
-		txtDataFinal.setText(FormatterHelper.DATEFORMATDATA.format(dtFinal.getTime()));	
+		txtDataFinal.setText(FormatterHelper.getDateFormatData().format(dtFinal.getTime()));	
 		
 		tvDuplicata = new TableViewer(frmBaixaDeDuplicatas.getBody(), SWT.BORDER | SWT.FULL_SELECTION);
 		table = tvDuplicata.getTable();
@@ -157,7 +157,7 @@ public class BaixaDuplicataView extends ViewPart {
 		tvcDataVencimento.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.DATEFORMATDATA.format(((Duplicata)element).getDataVencimento());
+				return FormatterHelper.getDateFormatData().format(((Duplicata)element).getDataVencimento());
 			}
 		});
 		TableColumn tblclmnDataVencimento = tvcDataVencimento.getColumn();
@@ -226,8 +226,8 @@ public class BaixaDuplicataView extends ViewPart {
 					Date dtInicial;
 					Date dtFinal;
 					try{
-						dtInicial = FormatterHelper.DATEFORMATDATA.parse(txtDataInicial.getText());
-						dtFinal = FormatterHelper.DATEFORMATDATA.parse(txtDataFinal.getText());
+						dtInicial = FormatterHelper.getDateFormatData().parse(txtDataInicial.getText());
+						dtFinal = FormatterHelper.getDateFormatData().parse(txtDataFinal.getText());
 					}catch(Exception e){
 						openError("Informe o período corretamente.");
 						return;

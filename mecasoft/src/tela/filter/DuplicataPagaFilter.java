@@ -23,7 +23,7 @@ public class DuplicataPagaFilter extends MecasoftFilter{
 		if(d.getDuplicata().getServicoPrestado().getCliente().getNome().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(FormatterHelper.DATEFORMATDATA.format(d.getDataPagamento()).matches(search.toLowerCase()))
+		if(FormatterHelper.getDateFormatData().format(d.getDataPagamento()).matches(search.toLowerCase()))
 			return true;
 		
 		if(FormatterHelper.getDecimalFormat().format(d.getDuplicata().getValor()).matches(search.toLowerCase()))

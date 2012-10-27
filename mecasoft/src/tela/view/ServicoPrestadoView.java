@@ -98,7 +98,7 @@ public class ServicoPrestadoView extends ViewPart {
 		
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH, -1);
-		txtDataInicial.setText(FormatterHelper.DATEFORMATDATA.format(c.getTime()));
+		txtDataInicial.setText(FormatterHelper.getDateFormatData().format(c.getTime()));
 		
 		Label lblAte = new Label(frmServiosPrestados.getBody(), SWT.NONE);
 		formToolkit.adapt(lblAte, true, true);
@@ -110,7 +110,7 @@ public class ServicoPrestadoView extends ViewPart {
 		formToolkit.adapt(txtDataFinal);
 		formToolkit.paintBordersFor(txtDataFinal);
 
-		txtDataFinal.setText(FormatterHelper.DATEFORMATDATA.format(new Date()));
+		txtDataFinal.setText(FormatterHelper.getDateFormatData().format(new Date()));
 		
 		tvServicoPrestado = new TableViewer(frmServiosPrestados.getBody(), SWT.BORDER | SWT.FULL_SELECTION);
 		tvServicoPrestado.addDoubleClickListener(new IDoubleClickListener() {
@@ -220,8 +220,9 @@ public class ServicoPrestadoView extends ViewPart {
 					Date dtFinal = null;
 					
 					try{
-						dtInicial = FormatterHelper.DATEFORMATDATA.parse(txtDataInicial.getText());
-						dtFinal = FormatterHelper.DATEFORMATDATA.parse(txtDataFinal.getText());
+						dtInicial = FormatterHelper.getDateFormatData().parse(txtDataInicial.getText());
+						dtFinal = FormatterHelper.getDateFormatData().parse(txtDataFinal.getText());
+						System.out.println(dtInicial);
 					}catch(Exception e){
 						openError("Informe as datas corretamente.");
 						return;

@@ -120,10 +120,10 @@ public class ParametroRelatorioFluxoTrabalhoDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		try{
 			if(!txtDataInicial.getText().isEmpty())
-				dtInicial = FormatterHelper.DATEFORMATDATA.parse(txtDataInicial.getText());
+				dtInicial = FormatterHelper.getDateFormatData().parse(txtDataInicial.getText());
 			
 			if(!txtDataFinal.getText().isEmpty())
-				dtFinal = FormatterHelper.DATEFORMATDATA.parse(txtDataFinal.getText());
+				dtFinal = FormatterHelper.getDateFormatData().parse(txtDataFinal.getText());
 		}catch(Exception e){
 			setErrorMessage("Informe as datas corretamente.");
 			return;

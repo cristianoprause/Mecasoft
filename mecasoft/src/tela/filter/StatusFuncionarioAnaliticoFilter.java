@@ -18,7 +18,7 @@ public class StatusFuncionarioAnaliticoFilter extends MecasoftFilter{
 		if(ss.getStatus().getDescricao().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(FormatterHelper.DATEFORMATDATAHORA.format(ss.getData()).matches(search.toLowerCase()))
+		if(FormatterHelper.getDateFormatData("dd/MM/yyyy HH:mm").format(ss.getData()).matches(search.toLowerCase()))
 			return true;
 		
 		if(ss.getServicoPrestado().getId().toString().matches(search.toLowerCase()))

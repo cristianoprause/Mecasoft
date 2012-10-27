@@ -41,8 +41,7 @@ public class AtualizarStatusJob extends Job{
 //		while(HibernateConnection.getSession().isDirty()){}
 		HibernateConnection.autoCommit();
 		
-//		schedule(3600000);
-		schedule(60000);
+		schedule(3600000);
 		return Status.OK_STATUS;
 	}
 	
@@ -68,75 +67,78 @@ public class AtualizarStatusJob extends Job{
 				
 				
 				do{
-					Calendar dt = Calendar.getInstance();
-					
-					//se a data do status for menor que a data que deve ser colocada, cria um novo status para add o serviço
-					//Inicio manhã
-					if(UsuarioHelper.getConfiguracaoPadrao().getDtInicioManha() != null){
-						dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtInicioManha());
-						dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
+					//ignora domingos
+					if(data.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY){
+						Calendar dt = Calendar.getInstance();
 						
-						if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
-							StatusServico ss = new StatusServico();
-							ss.setData(dt.getTime());
-							ss.setFuncionario(statusAtual.getFuncionario());
-							ss.setServicoPrestado(statusAtual.getServicoPrestado());
-							ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio());
+						//se a data do status for menor que a data que deve ser colocada, cria um novo status para add o serviço
+						//Inicio manhã se ja nao tiver iniciado
+						if(UsuarioHelper.getConfiguracaoPadrao().getDtInicioManha() != null && statusAtual.getStatus().isPausar()){
+							dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtInicioManha());
+							dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
 							
-							servico.getListaStatus().add(ss);
+							if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
+								StatusServico ss = new StatusServico();
+								ss.setData(dt.getTime());
+								ss.setFuncionario(statusAtual.getFuncionario());
+								ss.setServicoPrestado(statusAtual.getServicoPrestado());
+								ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio());
+								
+								servico.getListaStatus().add(ss);
+							}
+							
 						}
 						
-					}
-					
-					//Final manhã
-					if(UsuarioHelper.getConfiguracaoPadrao().getDtFinalManha() != null){
-						dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtFinalManha());
-						dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
-						
-						if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
-							StatusServico ss = new StatusServico();
-							ss.setData(dt.getTime());
-							ss.setFuncionario(statusAtual.getFuncionario());
-							ss.setServicoPrestado(statusAtual.getServicoPrestado());
-							ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
+						//Final manhã se ja nao estiver parado
+						if(UsuarioHelper.getConfiguracaoPadrao().getDtFinalManha() != null && !statusAtual.getStatus().isPausar()){
+							dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtFinalManha());
+							dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
 							
-							servico.getListaStatus().add(ss);
-						}
-					}
-					
-					//Inicio tarde
-					if(UsuarioHelper.getConfiguracaoPadrao().getDtInicioTarde() != null){
-						dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtInicioTarde());
-						dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
-						
-						if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
-							StatusServico ss = new StatusServico();
-							ss.setData(dt.getTime());
-							ss.setFuncionario(statusAtual.getFuncionario());
-							ss.setServicoPrestado(statusAtual.getServicoPrestado());
-							ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio());
-							
-							servico.getListaStatus().add(ss);
+							if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
+								StatusServico ss = new StatusServico();
+								ss.setData(dt.getTime());
+								ss.setFuncionario(statusAtual.getFuncionario());
+								ss.setServicoPrestado(statusAtual.getServicoPrestado());
+								ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
+								
+								servico.getListaStatus().add(ss);
+							}
 						}
 						
-					}
-					
-					//Final tarde
-					if(UsuarioHelper.getConfiguracaoPadrao().getDtFinalTarde() != null){
-						dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtFinalTarde());
-						dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
-						
-						if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
-							StatusServico ss = new StatusServico();
-							ss.setData(dt.getTime());
-							ss.setFuncionario(statusAtual.getFuncionario());
-							ss.setServicoPrestado(statusAtual.getServicoPrestado());
-							ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
+						//Inicio tarde se ja nao tiver iniciado
+						if(UsuarioHelper.getConfiguracaoPadrao().getDtInicioTarde() != null && statusAtual.getStatus().isPausar()){
+							dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtInicioTarde());
+							dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
 							
-							servico.getListaStatus().add(ss);
+							if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
+								StatusServico ss = new StatusServico();
+								ss.setData(dt.getTime());
+								ss.setFuncionario(statusAtual.getFuncionario());
+								ss.setServicoPrestado(statusAtual.getServicoPrestado());
+								ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio());
+								
+								servico.getListaStatus().add(ss);
+							}
+							
+						}
+						
+						//Final tarde se ja nao estiver parado
+						if(UsuarioHelper.getConfiguracaoPadrao().getDtFinalTarde() != null && !statusAtual.getStatus().isPausar()){
+							dt.setTime(UsuarioHelper.getConfiguracaoPadrao().getDtFinalTarde());
+							dt.set(data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH));
+							
+							if(dt.compareTo(dataUltimoStatus) > 0 && dt.getTime().compareTo(new Date()) <= 0){
+								StatusServico ss = new StatusServico();
+								ss.setData(dt.getTime());
+								ss.setFuncionario(statusAtual.getFuncionario());
+								ss.setServicoPrestado(statusAtual.getServicoPrestado());
+								ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
+								
+								servico.getListaStatus().add(ss);
+							}
 						}
 					}
-					
+						
 					//adiciona 1 dia
 					data.add(Calendar.DAY_OF_MONTH, 1);
 					

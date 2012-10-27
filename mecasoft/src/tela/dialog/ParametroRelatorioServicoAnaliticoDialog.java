@@ -226,10 +226,10 @@ public class ParametroRelatorioServicoAnaliticoDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		try{
 			if(!txtDataInicial.getText().isEmpty())
-				dtInicial = FormatterHelper.DATEFORMATDATA.parse(txtDataInicial.getText());
+				dtInicial = FormatterHelper.getDateFormatData().parse(txtDataInicial.getText());
 			
 			if(!txtDataFinal.getText().isEmpty()){
-				dtFinal = FormatterHelper.DATEFORMATDATA.parse(txtDataFinal.getText());
+				dtFinal = FormatterHelper.getDateFormatData().parse(txtDataFinal.getText());
 				
 				//adiciona mais um dia para que apareçam todos os serviços do dia informado
 				Calendar c = Calendar.getInstance();

@@ -657,7 +657,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tvcData.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.DATEFORMATDATAHORA.format(((StatusServico)element).getData());
+				return FormatterHelper.getDateFormatData("dd/MM/yyyy HH:mm").format(((StatusServico)element).getData());
 			}
 
 			@Override
@@ -889,7 +889,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	public void setEnableButtonCancelFechar(){
 		btnCancelarOrdem.setEnabled(service.getServicoPrestado().isAtivo()
 				&& service.getServicoPrestado().getId() != null
-				&& service.getServicoPrestado().getListaProdutos().size() == 0
 				&& service.getServicoPrestado().getListaServicos().size() == 0);
 		
 		btnFecharOrdem.setEnabled(service.getServicoPrestado().isEmExecucao());
@@ -927,16 +926,16 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtVeiculoObserveTextObserveWidget, servicegetServicoPrestadoVeiculomodeloObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ItemServico.class, new String[]{"descricao", "valorUnitario", "desconto", "acrescimo"});
-		tvServico.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ItemServico.class, new String[]{"descricao", "valorUnitario", "desconto", "acrescimo"});
+//		tvServico.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvServico.setContentProvider(listContentProvider);
 		//
 		IObservableList servicegetServicoPrestadoListaServicosObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaServicos");
 		tvServico.setInput(servicegetServicoPrestadoListaServicosObserveList);
 		//
 		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ItemServico.class, new String[]{"descricao", "quantidade", "valorUnitario", "desconto", "acrescimo", "total"});
-		tvItens.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
+//		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ItemServico.class, new String[]{"descricao", "quantidade", "valorUnitario", "desconto", "acrescimo", "total"});
+//		tvItens.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
 		tvItens.setContentProvider(listContentProvider_1);
 		//
 		IObservableList servicegetServicoPrestadoListaProdutosObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaProdutos");
@@ -951,8 +950,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		cvNovoStatus.setInput(writableList);
 		//
 		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
-		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
-		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
+//		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
+//		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
 		tvStatus.setContentProvider(listContentProvider_3);
 		//
 		IObservableList servicegetServicoPrestadoListaStatusObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaStatus");

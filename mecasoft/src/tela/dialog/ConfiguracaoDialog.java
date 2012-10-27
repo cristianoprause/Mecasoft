@@ -137,7 +137,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtInicioManha.setOptions(MecasoftText.NUMEROS, 5);
 		txtInicioManha.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
 		txtInicioManha.setText(service.getConfiguracao().getDtInicioManha() == null ? "" :
-			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtInicioManha()));
+			FormatterHelper.getDateFormatData("HH:mm").format(service.getConfiguracao().getDtInicioManha()));
 		
 		Group grpStatusParaPeriodos = new Group(grpEmpresa, SWT.NONE);
 		grpStatusParaPeriodos.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 2));
@@ -170,7 +170,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtFinalManha.setOptions(MecasoftText.NUMEROS, 5);
 		txtFinalManha.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
 		txtFinalManha.setText(service.getConfiguracao().getDtFinalManha() == null ? "" :
-			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtFinalManha()));
+			FormatterHelper.getDateFormatData("HH:mm").format(service.getConfiguracao().getDtFinalManha()));
 		
 		Label lblInicioTarde = new Label(grpEmpresa, SWT.NONE);
 		lblInicioTarde.setText("In\u00EDcio tarde:");
@@ -180,7 +180,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtInicioTarde.setOptions(MecasoftText.NUMEROS, 5);
 		txtInicioTarde.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
 		txtInicioTarde.setText(service.getConfiguracao().getDtInicioTarde() == null ? "" :
-			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtInicioTarde()));
+			FormatterHelper.getDateFormatData("HH:mm").format(service.getConfiguracao().getDtInicioTarde()));
 		
 		Group grpStatusParaServios = new Group(grpEmpresa, SWT.NONE);
 		grpStatusParaServios.setLayout(new GridLayout(2, false));
@@ -204,7 +204,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		txtFinalTarde.setOptions(MecasoftText.NUMEROS, 5);
 		txtFinalTarde.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
 		txtFinalTarde.setText(service.getConfiguracao().getDtFinalTarde() == null ? "" :
-			FormatterHelper.DATEFOTMATHORA.format(service.getConfiguracao().getDtFinalTarde()));
+			FormatterHelper.getDateFormatData("HH:mm").format(service.getConfiguracao().getDtFinalTarde()));
 		
 		Group grpSenha = new Group(area, SWT.NONE);
 		grpSenha.setLayout(new GridLayout(2, false));
@@ -280,16 +280,16 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			
 			//verificar horario
 			if(!txtInicioManha.getText().isEmpty())
-				service.getConfiguracao().setDtInicioManha(FormatterHelper.DATEFOTMATHORA.parse(txtInicioManha.getText()));
+				service.getConfiguracao().setDtInicioManha(FormatterHelper.getDateFormatData("HH:mm").parse(txtInicioManha.getText()));
 			
 			if(!txtFinalManha.getText().isEmpty())
-				service.getConfiguracao().setDtFinalManha(FormatterHelper.DATEFOTMATHORA.parse(txtFinalManha.getText()));
+				service.getConfiguracao().setDtFinalManha(FormatterHelper.getDateFormatData("HH:mm").parse(txtFinalManha.getText()));
 			
 			if(!txtInicioTarde.getText().isEmpty())
-				service.getConfiguracao().setDtInicioTarde(FormatterHelper.DATEFOTMATHORA.parse(txtInicioTarde.getText()));
+				service.getConfiguracao().setDtInicioTarde(FormatterHelper.getDateFormatData("HH:mm").parse(txtInicioTarde.getText()));
 			
 			if(!txtFinalTarde.getText().isEmpty())
-				service.getConfiguracao().setDtFinalTarde(FormatterHelper.DATEFOTMATHORA.parse(txtFinalTarde.getText()));
+				service.getConfiguracao().setDtFinalTarde(FormatterHelper.getDateFormatData("HH:mm").parse(txtFinalTarde.getText()));
 			
 			service.saveOrUpdate();
 			

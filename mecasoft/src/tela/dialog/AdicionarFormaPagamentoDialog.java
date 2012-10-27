@@ -201,7 +201,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		tvcVencimento.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return FormatterHelper.DATEFORMATDATA.format(((Duplicata)element).getDataVencimento());
+				return FormatterHelper.getDateFormatData().format(((Duplicata)element).getDataVencimento());
 			}
 		});
 		TableColumn tblclmnVencimento = tvcVencimento.getColumn();
@@ -287,7 +287,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 			dtPrimeiraParcela = c.getTime();
 			
 			if(txtDataParcela.getText().isEmpty())
-				txtDataParcela.setText(FormatterHelper.DATEFORMATDATA.format(dtPrimeiraParcela));
+				txtDataParcela.setText(FormatterHelper.getDateFormatData().format(dtPrimeiraParcela));
 			
 			//gera as duplicatas
 			gerarDuplicata();
@@ -302,7 +302,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		try{
 			//pega a data da 1º parcela
 			Calendar data = Calendar.getInstance();
-			data.setTime(FormatterHelper.DATEFORMATDATA.parse(txtDataParcela.getText()));
+			data.setTime(FormatterHelper.getDateFormatData().parse(txtDataParcela.getText()));
 			
 			//pega o numero de parcelas
 			numeroParcelas = txtNumeroParcela.getText().isEmpty() ? 1 : new Integer(txtNumeroParcela.getText());

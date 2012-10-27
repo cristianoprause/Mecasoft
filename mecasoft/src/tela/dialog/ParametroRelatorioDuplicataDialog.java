@@ -161,10 +161,10 @@ public class ParametroRelatorioDuplicataDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		try{
 			if(!txtDtInicial.getText().isEmpty())
-				dtInicial = FormatterHelper.DATEFORMATDATA.parse(txtDtInicial.getText());
+				dtInicial = FormatterHelper.getDateFormatData().parse(txtDtInicial.getText());
 			
 			if(!txtDtFinal.getText().isEmpty())
-				dtFinal = FormatterHelper.DATEFORMATDATA.parse(txtDtFinal.getText());
+				dtFinal = FormatterHelper.getDateFormatData().parse(txtDtFinal.getText());
 			
 		}catch(Exception e){
 			setErrorMessage("Informe as datas corretamente.");
