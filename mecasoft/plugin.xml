@@ -370,6 +370,16 @@
                      label="Abrir/Fechar caixa"
                      style="push">
                </command>
+               <command
+                     commandId="mecasoft.sangriaCaixaCommand"
+                     label="Sangria de caixa"
+                     style="push">
+               </command>
+               <command
+                     commandId="mecasoft.suprimentoCaixaCommand"
+                     label="Suprimento de caixa"
+                     style="push">
+               </command>
             </menu>
          </menu>
          <menu
@@ -443,6 +453,16 @@
             defaultHandler="aplicacao.command.AbrirFecharCaixaCommand"
             id="mecasoft.abrirFecharCaixaCommand"
             name="Abrir/Fechar caixa">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.SangriaCaixaCommand"
+            id="mecasoft.sangriaCaixaCommand"
+            name="Sangria de caixa">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.SuprimentoCaixaCommand"
+            id="mecasoft.suprimentoCaixaCommand"
+            name="Suprimento de caixa">
       </command>
    </extension>
    <extension

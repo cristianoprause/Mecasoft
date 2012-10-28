@@ -22,6 +22,7 @@ import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.MessageHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.CaixaService;
+import aplicacao.service.MovimentacaoCaixaService;
 import tela.componentes.MecasoftText;
 
 public class AbrirFecharCaixaDialog extends TitleAreaDialog {
@@ -33,6 +34,7 @@ public class AbrirFecharCaixaDialog extends TitleAreaDialog {
 
 	private Caixa caixa;
 	private CaixaService service = new CaixaService();
+	private MovimentacaoCaixaService movimentacaoService = new MovimentacaoCaixaService();
 
 	public AbrirFecharCaixaDialog(Shell parentShell) {
 		super(parentShell);
@@ -112,6 +114,7 @@ public class AbrirFecharCaixaDialog extends TitleAreaDialog {
 			
 			txtDataAbertura.setText(FormatterHelper.getDateFormatData().format(caixa.getDataAbertura()));
 			txtDataFechamento.setText(FormatterHelper.getDateFormatData().format(new Date()));
+			txtValorFechamento.setText(FormatterHelper.getDecimalFormat().format(movimentacaoService.getTotalCaixa(caixa)));
 			
 			txtValorAbertura.setText(FormatterHelper.getDecimalFormat().format(caixa.getValorAbertura()));
 			txtValorAbertura.setEnabled(false);
