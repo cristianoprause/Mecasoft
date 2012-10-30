@@ -186,6 +186,11 @@
             id="tela.view.StatusFuncionarioView"
             name="Status atual dos funcionários">
       </view>
+      <view
+            class="tela.view.MovimentacaoCaixaView"
+            id="tela.view.MovimentacaoCaixaView"
+            name="Movimentações no caixa">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -379,6 +384,15 @@
                      commandId="mecasoft.suprimentoCaixaCommand"
                      label="Suprimento de caixa"
                      style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.ui.views.showView"
+                     id="mecasoft.menuServicoPrestado"
+                     label="Movimentações no caixa">
+                  <parameter
+                        name="org.eclipse.ui.views.showView.viewId"
+                        value="tela.view.MovimentacaoCaixaView">
+                  </parameter>
                </command>
             </menu>
          </menu>

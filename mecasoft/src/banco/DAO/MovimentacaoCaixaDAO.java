@@ -40,9 +40,11 @@ public class MovimentacaoCaixaDAO extends HibernateConnection implements Movimen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MovimentacaoCaixa> findAllByCaixa(Caixa caixa) {
-		Query q = getSession().createQuery("select m from MovimentacaoCaixa m where m.caixa = :caixa");
-		q.setParameter("caixa", caixa);
+	public List<MovimentacaoCaixa> findAllByCaixaAndTipo(Caixa caixa, Character tipo) {
+		Query q = getSession().createQuery("select m from MovimentacaoCaixa m where m.caixa = :caixa " +
+																			"and (m.tipo = :tipo or :tipo is null)");
+		q.setParameter("caixa", caixa)
+		.setParameter("tipo", tipo);
 		return q.list();
 	}
 

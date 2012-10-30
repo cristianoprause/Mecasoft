@@ -39,6 +39,17 @@ public class MovimentacaoCaixaService extends MecasoftService<MovimentacaoCaixa>
 		
 		return total;
 	}
+	
+	public BigDecimal getTotalCaixaByTipo(Caixa caixa, Character tipo){
+		List<MovimentacaoCaixa> listaMovimentacao = getDAO().findAllByCaixaAndTipo(caixa, tipo);
+		BigDecimal total = BigDecimal.ZERO;
+		
+		for(MovimentacaoCaixa m : listaMovimentacao){
+			total = total.add(m.getValor());
+		}
+		
+		return total;
+	}
 
 	@Override
 	public MovimentacaoCaixa find(Long id) {
@@ -51,7 +62,7 @@ public class MovimentacaoCaixaService extends MecasoftService<MovimentacaoCaixa>
 	}
 	
 	public List<MovimentacaoCaixa> findAllByCaixa(Caixa caixa){
-		return getDAO().findAllByCaixa(caixa);
+		return getDAO().findAllByCaixaAndTipo(caixa, null);
 	}
 
 	public MovimentacaoCaixa getMovimentacao() {

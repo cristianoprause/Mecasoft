@@ -7,6 +7,6 @@ import banco.modelo.MovimentacaoCaixa;
 
 public interface MovimentacaoCaixaUtils extends MecasoftUtils<MovimentacaoCaixa>{
 	
-	List<MovimentacaoCaixa> findAllByCaixa(Caixa caixa);
+	List<MovimentacaoCaixa> findAllByCaixaAndTipo(Caixa caixa, Character tipo);
 	
 }
