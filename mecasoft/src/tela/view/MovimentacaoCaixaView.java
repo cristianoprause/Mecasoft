@@ -59,6 +59,7 @@ public class MovimentacaoCaixaView extends ViewPart {
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Form frmMovimentaoNoCaixa = formToolkit.createForm(container);
+		frmMovimentaoNoCaixa.setImage(ResourceManager.getPluginImage("mecasoft", "assents/caixa/movimentacaoCaixa32.png"));
 		formToolkit.paintBordersFor(frmMovimentaoNoCaixa);
 		frmMovimentaoNoCaixa.setText("Movimentações no caixa");
 		frmMovimentaoNoCaixa.getBody().setLayout(new GridLayout(9, false));

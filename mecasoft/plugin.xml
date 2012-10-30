@@ -188,6 +188,7 @@
       </view>
       <view
             class="tela.view.MovimentacaoCaixaView"
+            icon="assents/caixa/movimentacaoCaixa16.png"
             id="tela.view.MovimentacaoCaixaView"
             name="Movimentações no caixa">
       </view>
@@ -372,21 +373,25 @@
                   label="Caixa">
                <command
                      commandId="mecasoft.abrirFecharCaixaCommand"
+                     icon="assents/caixa/openCaixa16.png"
                      label="Abrir/Fechar caixa"
                      style="push">
                </command>
                <command
                      commandId="mecasoft.sangriaCaixaCommand"
+                     icon="assents/caixa/sangriaCaixa16.png"
                      label="Sangria de caixa"
                      style="push">
                </command>
                <command
                      commandId="mecasoft.suprimentoCaixaCommand"
+                     icon="assents/caixa/suprimentoCaixa16.png"
                      label="Suprimento de caixa"
                      style="push">
                </command>
                <command
                      commandId="org.eclipse.ui.views.showView"
+                     icon="assents/caixa/movimentacaoCaixa16.png"
                      id="mecasoft.menuServicoPrestado"
                      label="Movimentações no caixa">
                   <parameter
