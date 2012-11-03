@@ -26,7 +26,6 @@ public class AtualizarStatusJob extends Job{
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		System.out.println("Iniciou o job");
  		List<ServicoPrestado> servicos = servicoService.findAllNaoConcluidosAutomatic();
 		monitor.beginTask("Adicionando os status...", servicos.size());
 		

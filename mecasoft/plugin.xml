@@ -361,7 +361,7 @@
                </command>
                <command
                      commandId="org.eclipse.ui.views.showView"
-                     label="Baixa de duplicatas"
+                     label="Duplicatas pagas"
                      style="push">
                   <parameter
                         name="org.eclipse.ui.views.showView.viewId"

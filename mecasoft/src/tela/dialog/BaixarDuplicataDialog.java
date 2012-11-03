@@ -1,6 +1,7 @@
 package tela.dialog;
 
 import static aplicacao.helper.MessageHelper.openInformation;
+import static aplicacao.helper.MessageHelper.openWarning;
 
 import java.math.BigDecimal;
 
@@ -25,11 +26,14 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.componentes.MecasoftText;
 import aplicacao.helper.FormatterHelper;
+import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataPagaService;
 import aplicacao.service.DuplicataService;
+import aplicacao.service.MovimentacaoCaixaService;
 import banco.connection.HibernateConnection;
 import banco.modelo.Duplicata;
 import banco.modelo.DuplicataPaga;
+import banco.modelo.MovimentacaoCaixa;
 
 public class BaixarDuplicataDialog extends TitleAreaDialog {
 	private Text txtValor;
@@ -43,6 +47,8 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 	private Duplicata duplicata;
 	private DuplicataPagaService service = new DuplicataPagaService();
 	private DuplicataService duplicataService = new DuplicataService();
+	private MovimentacaoCaixaService movimentacaoService = new MovimentacaoCaixaService();
+	private BigDecimal troco;
 
 	public BaixarDuplicataDialog(Shell parentShell, Duplicata duplicata) {
 		super(parentShell);
@@ -166,7 +172,6 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 			BigDecimal juro = service.getDuplicataPaga().getValorJuros() == null ? BigDecimal.ZERO : service.getDuplicataPaga().getValorJuros();
 			BigDecimal desconto = service.getDuplicataPaga().getValorDesconto() == null ? BigDecimal.ZERO : service.getDuplicataPaga().getValorDesconto();
 			BigDecimal valorRecebido = service.getDuplicataPaga().getValorRecebido() == null ? BigDecimal.ZERO : service.getDuplicataPaga().getValorRecebido();
-			BigDecimal troco;
 			BigDecimal valorTotal;
 			
 			valorTotal = valor.add(juro).subtract(desconto);
@@ -206,6 +211,21 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 			setErrorMessage("O valor do desconto não pode ser superior ao valor total da duplciata.");
 			return;
 		}
+		
+		BigDecimal valorCaixa = movimentacaoService.getTotalCaixa(UsuarioHelper.getCaixa());
+		if(troco.compareTo(valorCaixa) > 0)
+			openWarning("Atenção, o caixa não possui dinheiro suficiente para o troco.");
+		
+		//gera a movimentação no caixa
+		MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
+		movimentacao.setDuplicataPaga(service.getDuplicataPaga());
+		movimentacao.setMotivo("Baixa da duplicata número: " + duplicata.getNumero());
+		movimentacao.setStatus(MovimentacaoCaixa.STATUSDUPLICATA);
+		movimentacao.setTipo(MovimentacaoCaixa.TIPOENTRADA);
+		movimentacao.setValor(service.getDuplicataPaga().getValorTotal());
+		
+		movimentacaoService.setMovimentacao(movimentacao);
+		movimentacaoService.saveOrUpdate();
 		
 		duplicata.setPago(true);
 		duplicataService.setDuplicata(duplicata);

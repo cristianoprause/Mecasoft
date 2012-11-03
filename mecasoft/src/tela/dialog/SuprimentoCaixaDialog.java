@@ -88,7 +88,6 @@ public class SuprimentoCaixaDialog extends TitleAreaDialog {
 			validar(service.getMovimentacao());
 			
 			//demais informações
-			service.getMovimentacao().setCaixa(UsuarioHelper.getCaixa());
 			service.getMovimentacao().setStatus(MovimentacaoCaixa.STATUSSUPRIMENTO);
 			service.getMovimentacao().setTipo(MovimentacaoCaixa.TIPOENTRADA);
 			

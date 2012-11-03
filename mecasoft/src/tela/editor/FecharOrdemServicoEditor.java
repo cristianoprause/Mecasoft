@@ -1,8 +1,8 @@
 package tela.editor;
 
-import static aplicacao.helper.LayoutHelper.getActiveShell;
 import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.MessageHelper.openQuestion;
+import static aplicacao.helper.MessageHelper.openWarning;
 import static aplicacao.helper.ValidatorHelper.validar;
 
 import java.math.BigDecimal;
@@ -42,17 +42,18 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.componentes.MecasoftText;
 import tela.dialog.AdicionarFormaPagamentoDialog;
-import tela.dialog.ConfiguracaoDialog;
 import tela.editor.editorInput.FecharOrdemServicoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataService;
+import aplicacao.service.MovimentacaoCaixaService;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.Duplicata;
 import banco.modelo.FormaPagtoUtilizada;
 import banco.modelo.ItemServico;
+import banco.modelo.MovimentacaoCaixa;
 import banco.modelo.ProdutoServico;
 import banco.modelo.StatusServico;
 
@@ -73,8 +74,10 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	
 	private ServicoPrestadoService service = new ServicoPrestadoService();
 	private DuplicataService duplicataService = new DuplicataService();
+	private MovimentacaoCaixaService movimentacaoService = new MovimentacaoCaixaService();
 	private BigDecimal totalPago = BigDecimal.ZERO;
 	private List<Duplicata> listaDuplicatas = new ArrayList<Duplicata>();
+	private BigDecimal troco;
 
 	public FecharOrdemServicoEditor() {
 	}
@@ -88,27 +91,56 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			throw new ValidationException("Adicione ao menos uma forma de pagamento");
 		
 		if(totalPago.compareTo(service.getServicoPrestado().getValorTotal()) < 0)
-			throw new ValidationException("A soma do valor das formas de pagamento não pode ser inferior ao total da nota.");
+			throw new ValidationException("A soma do valor das formas de pagamento não pode ser inferior ao total do serviço.");
 			
 		//para fechar uma ordem de serviço, o usuário deve ter adicionado nas configurações qual status corresponde ao de serviço concluido
 		if(UsuarioHelper.getConfiguracaoPadrao() == null)
 			throw new ValidationException("Não é posível fechar a ordem de serviço.\n" +
 					"Va em Arquivo/Configurações e selecione o status para fechar as ordens de serviço.");
 		
-		//verifica se o usuario ja configurou os status
-		if(UsuarioHelper.getConfiguracaoPadrao() == null){
-			openInformation("Registre nas configurações os status padrões para poder cancelar a ordem de serviço.");
-			ConfiguracaoDialog cd = new ConfiguracaoDialog(getActiveShell());
-			if(cd.open() != IDialogConstants.OK_ID)
-				return;
-		}
-			
+		//verifica se o caixa esta aberto
+		if(UsuarioHelper.getCaixa() == null)
+			throw new ValidationException("O caixa esta fechado.\n" +
+					"Abra-o primeiro para depois fechar a ordem de serviço.");
+		
 		//salva as duplicatas, caso geradas
 		if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraDuplicata()){
 			for(Duplicata duplicata : listaDuplicatas){
 				duplicataService.setDuplicata(duplicata);
 				duplicataService.saveOrUpdate();
 			}
+		}
+		
+		//gera a movimentação no caixa
+		if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraPagVista()){
+		
+			BigDecimal valorCaixa = movimentacaoService.getTotalCaixa(UsuarioHelper.getCaixa());
+			if(troco.compareTo(valorCaixa) > 0)
+				openWarning("Atenção, o caixa não possui dinheiro suficiente para o troco.");
+			
+			MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
+			movimentacao.setMotivo("Serviço prestado para o cliente " + service.getServicoPrestado().getCliente().getNome());
+			movimentacao.setServicoPrestado(service.getServicoPrestado());
+			movimentacao.setStatus(MovimentacaoCaixa.STATUSSERVICO);
+			movimentacao.setTipo(MovimentacaoCaixa.TIPOENTRADA);
+			movimentacao.setValor(service.getServicoPrestado().getValorTotal());
+			
+			movimentacaoService.setMovimentacao(movimentacao);
+			movimentacaoService.saveOrUpdate();
+		
+		//caso possua duplicatas, a movimentação só sera gerada se a forma de pagamento possuir valor de entrada
+		}else if(service.getServicoPrestado().getValorEntrada().compareTo(BigDecimal.ZERO) > 0){
+			
+			MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
+			movimentacao.setMotivo("Valor de entrada do serviço prestado para o cliente " + service.getServicoPrestado().getCliente().getNome());
+			movimentacao.setServicoPrestado(service.getServicoPrestado());
+			movimentacao.setStatus(MovimentacaoCaixa.STATUSENTRADA);
+			movimentacao.setTipo(MovimentacaoCaixa.TIPOENTRADA);
+			movimentacao.setValor(service.getServicoPrestado().getValorEntrada());
+			
+			movimentacaoService.setMovimentacao(movimentacao);
+			movimentacaoService.saveOrUpdate();
+			
 		}
 			
 		//serviço concluido
@@ -374,7 +406,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		
 		service.getServicoPrestado().setValorTotal(service.getServicoPrestado().getValorTotal().subtract(desconto));
 		
-		BigDecimal troco = BigDecimal.ZERO;
+		troco = BigDecimal.ZERO;
 		totalPago = BigDecimal.ZERO;
 		for(FormaPagtoUtilizada pagto : service.getServicoPrestado().getListaFormaPagto()){
 			totalPago = totalPago.add(pagto.getValor());

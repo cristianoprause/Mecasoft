@@ -37,6 +37,7 @@ import tela.componentes.MecasoftText;
 import tela.dialog.BaixarDuplicataDialog;
 import tela.filter.BaixaDuplicataFilter;
 import aplicacao.helper.FormatterHelper;
+import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataService;
 import banco.modelo.Duplicata;
 
@@ -189,6 +190,11 @@ public class BaixaDuplicataView extends ViewPart {
 				if(selecao.isEmpty())
 					return;
 				
+				if(UsuarioHelper.getCaixa() == null){
+					openError("O caixa esta fechado.\nAbra-o primeiro para depois baixar as duplicatas.");
+					return;
+				}
+				
 				Duplicata duplicata = (Duplicata)selecao.getFirstElement();
 				new BaixarDuplicataDialog(getActiveShell(), duplicata).open();
 				
@@ -215,6 +221,11 @@ public class BaixaDuplicataView extends ViewPart {
 		{
 			actionBaixar = new Action("Baixar duplicata") {				@Override
 				public void run() {
+					if(UsuarioHelper.getCaixa() == null){
+						openError("O caixa esta fechado.\nAbra-o primeiro para depois baixar as duplicatas.");
+						return;
+					}
+					
 					new BaixarDuplicataDialog(getActiveShell(), new Duplicata()).open();
 				}
 			};

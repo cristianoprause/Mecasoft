@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import aplicacao.helper.UsuarioHelper;
+
 @Entity
 public class MovimentacaoCaixa implements Serializable{
 
@@ -23,6 +25,8 @@ public class MovimentacaoCaixa implements Serializable{
 	public static String STATUSSANGRIA = "Sangria";
 	public static String STATUSSUPRIMENTO = "Suprimento";
 	public static String STATUSSERVICO = "Serviço";
+	public static String STATUSENTRADA = "Entrada";
+	public static String STATUSDUPLICATA = "Duplicata";
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -49,7 +53,7 @@ public class MovimentacaoCaixa implements Serializable{
 	private MovimentacaoEstoque movimentacaoEstoque;
 	
 	@ManyToOne
-	private Caixa caixa;
+	private Caixa caixa = UsuarioHelper.getCaixa();
 	
 	@ManyToOne
 	private Pessoa funcionario;

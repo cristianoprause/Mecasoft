@@ -92,7 +92,6 @@ public class SangriaCaixaDialog extends TitleAreaDialog {
 				throw new ValidationException("O caixa não possui dinheiro suficiente para realizar esta sangria.");
 			
 			//demais informações
-			service.getMovimentacao().setCaixa(caixa);
 			service.getMovimentacao().setStatus(MovimentacaoCaixa.STATUSSANGRIA);
 			service.getMovimentacao().setTipo(MovimentacaoCaixa.TIPOSAIDA);
 			
