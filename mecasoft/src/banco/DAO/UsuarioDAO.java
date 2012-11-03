@@ -41,11 +41,15 @@ public class UsuarioDAO extends HibernateConnection implements UsuarioUtils{
 	}
 
 	@Override
-	public Usuario findByLoginSenha(String login, String senha) {
+	public Usuario findByLoginSenhaStatus(String login, String senha, Boolean status) {
 		try{
-			Query q = getSession().createQuery("select u from Usuario u where u.login like :login and u.senha like :senha and u.ativo is true");
+			Query q = getSession().createQuery("select u from Usuario u " +
+														"where (u.login like :login or :login is null) " +
+														"and (u.senha like :senha or :senha is null) " +
+														"and (u.ativo is :status or :status is null)");
 			q.setParameter("login", login);
-			q.setParameter("senha", senha);
+			q.setParameter("senha", senha)
+			.setParameter("status", status);
 			return (Usuario)q.uniqueResult();
 		}catch(NoResultException e){
 			return null;

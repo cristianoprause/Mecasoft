@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -19,12 +17,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import aplicacao.helper.PadraoHelper;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames={"login"}, name="loginUnico"))
 public class Usuario implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1926193181906226009L;
 
 	@Id
@@ -34,7 +28,7 @@ public class Usuario implements Serializable{
 	@Column
 	private boolean ativo = true;
 	
-	@Column(unique=true)
+	@Column
 	@NotEmpty(message="Informe o login.")
 	private String login;
 	

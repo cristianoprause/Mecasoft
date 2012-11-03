@@ -6,7 +6,7 @@ import banco.modelo.Usuario;
 
 public interface UsuarioUtils extends MecasoftUtils<Usuario>{
 
-	Usuario findByLoginSenha(String login, String senha);
+	Usuario findByLoginSenhaStatus(String login, String senha, Boolean status);
 	List<Usuario> findAllByStatus(boolean status);
 	
 }

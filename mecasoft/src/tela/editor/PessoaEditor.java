@@ -286,7 +286,7 @@ public class PessoaEditor extends MecasoftEditor {
 		txtComplemento.setLayoutData(gd_txtComplemento);
 		
 		Label lblVeculos = new Label(compositeConteudo, SWT.NONE);
-		lblVeculos.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		lblVeculos.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));	
 		lblVeculos.setText("Ve\u00EDculos:");
 		
 		tvVeiculo = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
@@ -476,6 +476,8 @@ public class PessoaEditor extends MecasoftEditor {
 					}
 					
 					service.getPessoa().getListaProduto().remove(fp);
+					fp.getId().getProduto().getListaFornecedores().remove(fp);
+					
 					tvProduto.refresh();
 					
 				}

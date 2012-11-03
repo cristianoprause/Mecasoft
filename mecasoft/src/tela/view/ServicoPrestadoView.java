@@ -222,7 +222,6 @@ public class ServicoPrestadoView extends ViewPart {
 					try{
 						dtInicial = FormatterHelper.getDateFormatData().parse(txtDataInicial.getText());
 						dtFinal = FormatterHelper.getDateFormatData().parse(txtDataFinal.getText());
-						System.out.println(dtInicial);
 					}catch(Exception e){
 						openError("Informe as datas corretamente.");
 						return;

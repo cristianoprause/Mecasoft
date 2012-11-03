@@ -39,6 +39,7 @@ import aplicacao.service.PessoaService;
 import aplicacao.service.UsuarioService;
 import banco.modelo.Papel;
 import banco.modelo.Pessoa;
+import banco.modelo.Usuario;
 
 public class UsuarioEditor extends MecasoftEditor{
 	public static final String ID = "tela.editor.usuarioEditor"; //$NON-NLS-1$
@@ -132,6 +133,11 @@ public class UsuarioEditor extends MecasoftEditor{
 			
 		if(!txtSenha.getText().equals(txtConfirmarSenha.getText()))
 			throw new ValidationException("Senha e confirmar senha não estão batendo.");
+		
+		//usuario unico
+		Usuario usuarioUnico = service.findByLogin(service.getUsuario().getLogin());
+		if(usuarioUnico != null && !service.getUsuario().equals(usuarioUnico))
+			throw new ValidationException("Já existe um usuário com o login informado.");
 			
 		service.saveOrUpdate();
 		MessageHelper.openInformation("Usuário salvo com sucesso!");

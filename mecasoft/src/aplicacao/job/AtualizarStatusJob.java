@@ -26,6 +26,7 @@ public class AtualizarStatusJob extends Job{
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
+		System.out.println("Iniciou o job");
  		List<ServicoPrestado> servicos = servicoService.findAllNaoConcluidosAutomatic();
 		monitor.beginTask("Adicionando os status...", servicos.size());
 		
@@ -85,6 +86,9 @@ public class AtualizarStatusJob extends Job{
 								ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio());
 								
 								servico.getListaStatus().add(ss);
+								
+								//como mudou, agora o ss é o statusAtual do serviço
+								statusAtual = ss;
 							}
 							
 						}
@@ -102,6 +106,9 @@ public class AtualizarStatusJob extends Job{
 								ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
 								
 								servico.getListaStatus().add(ss);
+								
+								//como mudou, agora o ss é o statusAtual do serviço
+								statusAtual = ss;
 							}
 						}
 						
@@ -118,6 +125,9 @@ public class AtualizarStatusJob extends Job{
 								ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio());
 								
 								servico.getListaStatus().add(ss);
+								
+								//como mudou, agora o ss é o statusAtual do serviço
+								statusAtual = ss;
 							}
 							
 						}
@@ -135,6 +145,9 @@ public class AtualizarStatusJob extends Job{
 								ss.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
 								
 								servico.getListaStatus().add(ss);
+								
+								//como mudou, agora o ss é o statusAtual do serviço
+								statusAtual = ss;
 							}
 						}
 					}
