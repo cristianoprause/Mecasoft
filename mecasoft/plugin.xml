@@ -400,6 +400,11 @@
                   </parameter>
                </command>
             </menu>
+            <command
+                  commandId="mecasoft.pagamentoFuncionarioCommand"
+                  label="Pagamento de funcionários"
+                  style="push">
+            </command>
          </menu>
          <menu
                label="Relatório">
@@ -482,6 +487,11 @@
             defaultHandler="aplicacao.command.SuprimentoCaixaCommand"
             id="mecasoft.suprimentoCaixaCommand"
             name="Suprimento de caixa">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.PagamentoFuncionarioCommand"
+            id="mecasoft.pagamentoFuncionarioCommand"
+            name="Pagamento de funcionários">
       </command>
    </extension>
    <extension

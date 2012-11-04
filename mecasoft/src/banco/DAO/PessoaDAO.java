@@ -1,5 +1,6 @@
 package banco.DAO;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -69,6 +70,20 @@ public class PessoaDAO extends HibernateConnection implements PessoaUtils{
 	public List<Pessoa> findAllByTipoFuncionario(TipoFuncionario tipo) {
 		Query q = getSession().createQuery("select p from Pessoa p where p.tipo = :tipo");
 		q.setParameter("tipo", tipo);
+		return q.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Pessoa> findAllFuncionarioAPagar() {
+		
+		Calendar primeiroDiaMes = Calendar.getInstance();
+		primeiroDiaMes.set(Calendar.DAY_OF_MONTH, 1);
+		
+		Query q = getSession().createQuery("select p from Pessoa p where p.ativo is true and p.tipoFuncionario is true "+
+				"and (p.dataUltimoPagto < :primeiroDiaMes or p.dataUltimoPagto is null)");
+		q.setParameter("primeiroDiaMes", primeiroDiaMes.getTime());
+		
 		return q.list();
 	}
 

@@ -10,13 +10,8 @@ import banco.modelo.StatusServico;
 
 public class FormatterHelper {
 
-	// public static SimpleDateFormat DATEFORMATDATAHORA = new
-	// SimpleDateFormat("dd/MM/yyyy HH:mm");
-	// public static SimpleDateFormat DATEFOTMATHORA = new
-	// SimpleDateFormat("HH:mm");
 	public static Locale BRAZIL = new Locale("pt", "BR");
-	private static DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat
-			.getInstance(BRAZIL);
+	private static DecimalFormat decimalFormat = new DecimalFormat("###0.00");
 	private static SimpleDateFormat dateFormatData;
 
 	public static String MECASOFTTXTCPF = "..-";

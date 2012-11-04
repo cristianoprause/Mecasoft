@@ -9,5 +9,6 @@ public interface PessoaUtils extends MecasoftUtils<Pessoa>{
 
 	List<Pessoa> findAllByTipoAndStatus(String tipo, Boolean status);
 	List<Pessoa> findAllByTipoFuncionario(TipoFuncionario tipo);
+	List<Pessoa> findAllFuncionarioAPagar();
 	
 }
