@@ -40,7 +40,7 @@ public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 	
 	@Override
 	public Duplicata findByNumero(String numero) {
-		Query q = getSession().createQuery("Select d from Duplicata d where d.numero like :numero");
+		Query q = getSession().createQuery("Select d from Duplicata d where d.numero like :numero and d.pago is false");
 		q.setParameter("numero", numero);
 		return (Duplicata) q.uniqueResult();
 	}

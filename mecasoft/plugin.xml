@@ -428,6 +428,11 @@
                   label="Fluxo de trabalho"
                   style="push">
             </command>
+            <command
+                  commandId="mecasoft.showMovimentacaoCaixaCommand"
+                  label="Movimentação de caixa"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -492,6 +497,11 @@
             defaultHandler="aplicacao.command.PagamentoFuncionarioCommand"
             id="mecasoft.pagamentoFuncionarioCommand"
             name="Pagamento de funcionários">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.reports.ShowMovimentacaoCaixaCommand"
+            id="mecasoft.showMovimentacaoCaixaCommand"
+            name="Movimentação de caixa">
       </command>
    </extension>
    <extension
