@@ -433,6 +433,11 @@
                   label="Movimentação de caixa"
                   style="push">
             </command>
+            <command
+                  commandId="mecasoft.showLivroCaixaCommand"
+                  label="Livro de caixa"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -502,6 +507,11 @@
             defaultHandler="aplicacao.command.reports.ShowMovimentacaoCaixaCommand"
             id="mecasoft.showMovimentacaoCaixaCommand"
             name="Movimentação de caixa">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.reports.ShowLivroCaixaCommand"
+            id="mecasoft.showLivroCaixaCommand"
+            name="Livro de caixa">
       </command>
    </extension>
    <extension
