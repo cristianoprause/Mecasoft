@@ -22,8 +22,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -48,6 +46,7 @@ import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
+import banco.connection.HibernateConnection;
 import banco.modelo.ForneceProduto;
 import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
@@ -127,13 +126,8 @@ public class ProdutoEditor extends MecasoftEditor {
 		txtLucro.text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				initDataBindings();
-			}
-		});
-		txtLucro.text.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
 				calcularValores();
+				initDataBindings();
 			}
 		});
 		txtLucro.setOptions(MecasoftText.NUMEROS, -1);
@@ -162,15 +156,6 @@ public class ProdutoEditor extends MecasoftEditor {
 		
 		tvFornecedores = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
 		tableFornecedores = tvFornecedores.getTable();
-		tableFornecedores.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.CR){
-					calcularValores();
-					initDataBindings();
-				}
-			}
-		});
 		tableFornecedores.setLinesVisible(true);
 		tableFornecedores.setHeaderVisible(true);
 		GridData gd_tableFornecedores = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 2);
@@ -189,7 +174,16 @@ public class ProdutoEditor extends MecasoftEditor {
 		tblclmnNome.setText("Nome");
 		
 		TableViewerColumn tvcValorUnitario = new TableViewerColumn(tvFornecedores, SWT.NONE);
-		tvcValorUnitario.setEditingSupport(new ForneceProdutoEditingSupport(tvFornecedores));
+		
+		ForneceProdutoEditingSupport fpes = new ForneceProdutoEditingSupport(tvFornecedores){
+			@Override
+			protected void setValue(Object element, Object value) {
+				super.setValue(element, value);
+				initDataBindings();
+			}
+		};
+		
+		tvcValorUnitario.setEditingSupport(fpes);
 		tvcValorUnitario.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -205,14 +199,6 @@ public class ProdutoEditor extends MecasoftEditor {
 		tblclmnValorUnitario.setText("Valor Unitário");
 		
 		Button btnAdicionar = new Button(compositeConteudo, SWT.NONE);
-		btnAdicionar.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				//foram adicionados aqui porque não era possivel pegar o tab na lista de fornecedores xD
-				calcularValores();
-				initDataBindings();
-			}
-		});
 		btnAdicionar.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/fornecedor/removeFornecedor16.png"));
 		btnAdicionar.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -243,7 +229,7 @@ public class ProdutoEditor extends MecasoftEditor {
 				if(openQuestion("Deseja realmente remover este fornecedor da lista?")){
 					service.getProdutoServico().getListaFornecedores().remove((ForneceProduto)selecao.getFirstElement());					
 					tvFornecedores.refresh();
-					calcularValores();
+//					calcularValores();
 					initDataBindings();
 				}
 			}
@@ -312,7 +298,6 @@ public class ProdutoEditor extends MecasoftEditor {
 		service.getProdutoServico().setValorUnitario(media.add(
 				service.getProdutoServico().getLucro() == null ? BigDecimal.ZERO : service.getProdutoServico().getLucro()));
 		
-//		initDataBindings();
 	}
 
 	@Override
@@ -359,5 +344,13 @@ public class ProdutoEditor extends MecasoftEditor {
 		bindingContext.bindValue(btnEstocavelObserveSelectionObserveWidget, servicegetProdutoServicoEstocavelObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public void setFocus() {
+		if(!HibernateConnection.isSessionRefresh(service.getProdutoServico()) && service.getProdutoServico().getId() != null)
+			service.setProdutoServico(service.find(service.getProdutoServico().getId()));
+		
+		initDataBindings();
 	}
 }

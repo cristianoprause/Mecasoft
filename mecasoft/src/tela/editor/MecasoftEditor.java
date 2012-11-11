@@ -146,10 +146,6 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	}
 	
 	@Override
-	public void setFocus() {
-	}
-	
-	@Override
 	public int promptToSaveOnClose() {
 		SimNaoCancelarDialog sncd = new SimNaoCancelarDialog(getActiveShell(), "Os dados foram alterados, deseja salvar antes de sair?");
 		try {

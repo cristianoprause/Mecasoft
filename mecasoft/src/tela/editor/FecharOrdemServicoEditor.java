@@ -50,6 +50,7 @@ import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataService;
 import aplicacao.service.MovimentacaoCaixaService;
 import aplicacao.service.ServicoPrestadoService;
+import banco.connection.HibernateConnection;
 import banco.modelo.Duplicata;
 import banco.modelo.FormaPagtoUtilizada;
 import banco.modelo.ItemServico;
@@ -467,5 +468,11 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtJurostextObserveTextObserveWidget, servicegetServicoPrestadoJurosObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public void setFocus() {
+		if(HibernateConnection.isSessionRefresh(service.getServicoPrestado()) && service.getServicoPrestado().getId() != null)
+			service.setServicoPrestado(service.find(service.getServicoPrestado().getId()));
 	}
 }

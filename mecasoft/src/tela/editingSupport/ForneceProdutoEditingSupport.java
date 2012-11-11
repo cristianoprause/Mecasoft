@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 
 import aplicacao.helper.FormatterHelper;
 import banco.modelo.ForneceProduto;
+import banco.modelo.ProdutoServico;
 
 public class ForneceProdutoEditingSupport extends EditingSupport{
 
@@ -47,10 +48,34 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 		
 		if(!valor.isEmpty()){
 			try{
-				((ForneceProduto)element).setValorUnitario(new BigDecimal(valor.replace(".", "").replace(",", ".")));
+				ForneceProduto fp = (ForneceProduto)element;
+				fp.setValorUnitario(new BigDecimal(valor.replace(".", "").replace(",", ".")));
+				
+				calcularValores(fp);
+				
 				viewer.refresh();
 			}catch(Exception e){}
 		}
+	}
+	
+	private void calcularValores(ForneceProduto forneceProd){
+		BigDecimal media = BigDecimal.ZERO;
+		ProdutoServico ps = forneceProd.getId().getProduto();
+		
+		for(ForneceProduto fp : ps.getListaFornecedores()){
+			if(fp.getValorUnitario() != null){
+				media = media.add(fp.getValorUnitario());
+			}
+		}
+		
+		if(ps.getListaFornecedores().size() != 0)
+			media = media.divide(new BigDecimal(ps.getListaFornecedores().size()));
+		else
+			media = BigDecimal.ZERO;
+		
+		ps.setCusto(media);
+		ps.setValorUnitario(media.add(ps.getLucro() == null ? BigDecimal.ZERO : ps.getLucro()));
+		
 	}
 
 }

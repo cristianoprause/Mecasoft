@@ -93,6 +93,13 @@ public class BaixaDuplicataView extends ViewPart {
 		lblPerodoDe.setText("Per\u00EDodo de");
 		
 		txtDataInicial = new MecasoftText(frmBaixaDeDuplicatas.getBody(), SWT.NONE);
+		txtDataInicial.text.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.CR)
+					actionBuscarPeriodo.run();
+			}
+		});
 		txtDataInicial.setOptions(MecasoftText.NUMEROS, 10);
 		txtDataInicial.addChars(FormatterHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
 		GridData gd_txtDataInicial = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -111,6 +118,13 @@ public class BaixaDuplicataView extends ViewPart {
 		lblAte.setText("at\u00E9");
 		
 		txtDataFinal = new MecasoftText(frmBaixaDeDuplicatas.getBody(), SWT.NONE);
+		txtDataFinal.text.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.CR)
+					actionBuscarPeriodo.run();
+			}
+		});
 		txtDataFinal.setOptions(MecasoftText.NUMEROS, 10);
 		txtDataFinal.addChars(FormatterHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
 		GridData gd_txtDataFinal = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -198,6 +212,8 @@ public class BaixaDuplicataView extends ViewPart {
 				Duplicata duplicata = (Duplicata)selecao.getFirstElement();
 				new BaixarDuplicataDialog(getActiveShell(), duplicata).open();
 				
+				actionBuscarPeriodo.run();
+				
 			}
 		});
 		mntmBaixar.setText("Baixar");
@@ -227,6 +243,7 @@ public class BaixaDuplicataView extends ViewPart {
 					}
 					
 					new BaixarDuplicataDialog(getActiveShell(), new Duplicata()).open();
+					actionBuscarPeriodo.run();
 				}
 			};
 			actionBaixar.setImageDescriptor(ResourceManager.getPluginImageDescriptor("mecasoft", "assents/duplicata/baixar20.png"));

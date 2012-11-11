@@ -66,6 +66,7 @@ import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.ServicoPrestadoService;
 import aplicacao.service.StatusService;
 import aplicacao.service.StatusServicoService;
+import banco.connection.HibernateConnection;
 import banco.modelo.ItemServico;
 import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
@@ -122,7 +123,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			
 		service.saveOrUpdate();
 		openInformation("Ordem de serviço registrada com sucesso!");
-		closeThisEditor();
 	}
 
 	@Override
@@ -878,6 +878,10 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	
 	@Override
 	public void setFocus() {
+		
+		if(!HibernateConnection.isSessionRefresh(service.getServicoPrestado()) && service.getServicoPrestado().getId() != null)
+			service.setServicoPrestado(service.find(service.getServicoPrestado().getId()));
+		
 		listaStatus = statusService.findAllAtivos();
 		initDataBindings();
 		if(!service.getServicoPrestado().isEmExecucao())
@@ -888,6 +892,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	
 	public void setEnableButtonCancelFechar(){
 		btnCancelarOrdem.setEnabled(service.getServicoPrestado().isAtivo()
+				&& service.getServicoPrestado().isEmExecucao()
 				&& service.getServicoPrestado().getId() != null
 				&& service.getServicoPrestado().getListaServicos().size() == 0);
 		

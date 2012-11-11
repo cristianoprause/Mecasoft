@@ -22,6 +22,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -105,6 +106,16 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		cbForma.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection selecao = (IStructuredSelection)cvForma.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				FormaPagamento forma = (FormaPagamento)selecao.getFirstElement();
+				
+				if(forma.isGeraDuplicata())
+					formaUtilizada.setValor(servico.getValorTotal());
+				
 				initDataBindings();
 			}
 		});
@@ -125,7 +136,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		txtNumeroParcela.text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				atualizarValores();
+				atualizarValores(false);
 			}
 		});
 		txtNumeroParcela.setEnabled(false);
@@ -139,7 +150,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		txtValorEntrada.text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				atualizarValores();
+				atualizarValores(false);
 			}
 		});
 		txtValorEntrada.setEnabled(false);
@@ -154,7 +165,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		txtDias.text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				atualizarValores();
+				atualizarValores(true);
 			}
 		});
 		txtDias.setEnabled(false);
@@ -258,7 +269,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 				validar(formaUtilizada);				
 				
 				if(formaUtilizada.getFormaPagamento().isGeraDuplicata())
-					atualizarValores();
+					atualizarValores(false);
 				
 				if(servico.getValorEntrada().compareTo(servico.getValorTotal()) > 0){
 					setErrorMessage("O valor de entrada não pode ser superior ao valor total");
@@ -275,7 +286,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		super.buttonPressed(buttonId);
 	}
 	
-	private void atualizarValores(){
+	private void atualizarValores(boolean atualizarData){
 		try{
 			//pega o periodo entre o vencimento de uma parcela e outra
 			diasParcelas = txtDias.getText().isEmpty() ? 30 : new Integer(txtDias.getText());
@@ -286,7 +297,7 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 			c.add(Calendar.DAY_OF_MONTH, diasParcelas);
 			dtPrimeiraParcela = c.getTime();
 			
-			if(txtDataParcela.getText().isEmpty())
+			if(txtDataParcela.getText().isEmpty() || atualizarData)
 				txtDataParcela.setText(FormatterHelper.getDateFormatData().format(dtPrimeiraParcela));
 			
 			//gera as duplicatas

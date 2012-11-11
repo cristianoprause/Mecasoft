@@ -37,6 +37,7 @@ import aplicacao.helper.ValidatorHelper;
 import aplicacao.service.PapelService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.UsuarioService;
+import banco.connection.HibernateConnection;
 import banco.modelo.Papel;
 import banco.modelo.Pessoa;
 import banco.modelo.Usuario;
@@ -183,6 +184,9 @@ public class UsuarioEditor extends MecasoftEditor{
 	
 	@Override
 	public void setFocus() {
+		
+		if(HibernateConnection.isSessionRefresh(service.getUsuario()) && service.getUsuario().getId() != null)
+			service.setUsuario(service.find(service.getUsuario().getId()));
 		
 		papeis = papelService.findAll();
 		initDataBindings();

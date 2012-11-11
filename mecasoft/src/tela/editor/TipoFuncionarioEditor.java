@@ -25,6 +25,7 @@ import tela.editor.editorInput.TipoFuncionarioEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.service.PessoaService;
 import aplicacao.service.TipoFuncionarioService;
+import banco.connection.HibernateConnection;
 import banco.modelo.Pessoa;
 
 public class TipoFuncionarioEditor extends MecasoftEditor {
@@ -103,5 +104,11 @@ public class TipoFuncionarioEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtNomeObserveTextObserveWidget, servicegetTipoNomeObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public void setFocus() {
+		if(HibernateConnection.isSessionRefresh(service.getTipo()) && service.getTipo().getId() != null)
+			service.setTipo(service.find(service.getTipo().getId()));
 	}
 }

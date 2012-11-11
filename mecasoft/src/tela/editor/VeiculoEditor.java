@@ -39,6 +39,7 @@ import aplicacao.helper.LayoutHelper;
 import aplicacao.service.PessoaService;
 import aplicacao.service.TipoVeiculoService;
 import aplicacao.service.VeiculoService;
+import banco.connection.HibernateConnection;
 import banco.modelo.Pessoa;
 import banco.modelo.TipoVeiculo;
 
@@ -234,6 +235,9 @@ public class VeiculoEditor extends MecasoftEditor {
 	
 	@Override
 	public void setFocus() {
+		
+		if(HibernateConnection.isSessionRefresh(service.getVeiculo()) && service.getVeiculo().getId() != null)
+			service.setVeiculo(service.find(service.getVeiculo().getId()));
 		
 		tipos = tipoService.findAll();
 		initDataBindings();

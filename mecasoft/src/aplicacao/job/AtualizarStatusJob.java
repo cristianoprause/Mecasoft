@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.jobs.Job;
 
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ServicoPrestadoService;
+import aplicacao.service.StatusServicoService;
 import banco.connection.HibernateConnection;
 import banco.modelo.ServicoPrestado;
 import banco.modelo.StatusServico;
@@ -18,10 +19,12 @@ import banco.modelo.StatusServico;
 public class AtualizarStatusJob extends Job{
 
 	private ServicoPrestadoService servicoService;
+	private StatusServicoService service;
 	
 	public AtualizarStatusJob(String name) {
 		super(name);
 		this.servicoService = new ServicoPrestadoService();
+		this.service = new StatusServicoService();
 	}
 
 	@Override
@@ -45,10 +48,18 @@ public class AtualizarStatusJob extends Job{
 		return Status.OK_STATUS;
 	}
 	
-	public static void atualizar(ServicoPrestado servico){
-		if(UsuarioHelper.getConfiguracaoPadrao() != null 
-				&& Calendar.getInstance().get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY){
+	public void atualizar(ServicoPrestado servico){
+		if(UsuarioHelper.getConfiguracaoPadrao() != null){
+			//pega ultimo status do serviço
 			StatusServico statusAtual = servico.getUltimoStatus();
+			
+			//pega ultimo status do funcionario registrado no status do serviço
+			StatusServico statusFuncionario = service.findStatusFuncionario(statusAtual.getFuncionario());
+			
+			//caso o status atual do funcionario seja diferente do status atual do serviço,
+			//este serviço nao deve ser atualizado, pois esta parado e o funcionario esta em outro servico
+			if(!statusAtual.equals(statusFuncionario))
+				return;
 			
 			if(statusAtual != null && (!statusAtual.getStatus().isPausar() 
 					                  || statusAtual.getStatus().equals(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal()))){

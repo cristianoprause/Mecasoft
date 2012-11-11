@@ -26,6 +26,7 @@ import tela.editor.editorInput.TipoVeiculoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.service.TipoVeiculoService;
 import aplicacao.service.VeiculoService;
+import banco.connection.HibernateConnection;
 import banco.modelo.TipoVeiculo;
 import banco.modelo.Veiculo;
 
@@ -122,6 +123,14 @@ public class TipoVeiculoEditor extends MecasoftEditor {
 		bindingContext.bindValue(btnHormetroObserveSelectionObserveWidget, servicegetTipoVeiculoHorimetroObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public void setFocus() {
+		if(HibernateConnection.isSessionRefresh(service.getTipoVeiculo()) && service.getTipoVeiculo().getId() != null)
+			service.setTipoVeiculo(service.find(service.getTipoVeiculo().getId()));
+		
+		initDataBindings();
 	}
 
 }

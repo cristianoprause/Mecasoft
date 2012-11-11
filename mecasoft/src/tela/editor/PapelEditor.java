@@ -20,6 +20,8 @@ import aplicacao.exception.ValidationException;
 import aplicacao.helper.MessageHelper;
 import aplicacao.helper.ValidatorHelper;
 import aplicacao.service.PapelService;
+import banco.connection.HibernateConnection;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -292,6 +294,14 @@ public class PapelEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtNomeObserveTextObserveWidget, servicegetPapelNomeObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public void setFocus() {
+		if(HibernateConnection.isSessionRefresh(service.getPapel()) && service.getPapel().getId() != null)
+			service.setPapel(service.find(service.getPapel().getId()));
+		
+		initDataBindings();
 	}
 
 }

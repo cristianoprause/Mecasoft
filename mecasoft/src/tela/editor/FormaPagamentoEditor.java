@@ -18,6 +18,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
+import banco.connection.HibernateConnection;
+
 import tela.editor.editorInput.FormaPagamentoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.service.FormaPagamentoService;
@@ -111,5 +113,13 @@ public class FormaPagamentoEditor extends MecasoftEditor {
 		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, servicegetFormaAtivoObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public void setFocus() {
+		if(HibernateConnection.isSessionRefresh(service.getForma()) && service.getForma().getId() != null)
+			service.setForma(service.find(service.getForma().getId()));
+		
+		initDataBindings();
 	}
 }

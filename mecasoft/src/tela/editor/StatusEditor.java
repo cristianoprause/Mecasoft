@@ -18,6 +18,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
+import banco.connection.HibernateConnection;
+
 import tela.editor.editorInput.StatusEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.UsuarioHelper;
@@ -125,5 +127,13 @@ public class StatusEditor extends MecasoftEditor {
 		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, servicegetStatusAtivoObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public void setFocus() {
+		if(HibernateConnection.isSessionRefresh(service.getStatus()) && service.getStatus().getId() != null)
+			service.setStatus(service.find(service.getStatus().getId()));
+		
+		initDataBindings();
 	}
 }

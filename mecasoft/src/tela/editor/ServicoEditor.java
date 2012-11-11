@@ -39,6 +39,7 @@ import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.service.ProdutoServicoService;
+import banco.connection.HibernateConnection;
 import banco.modelo.ProdutoServico;
 
 public class ServicoEditor extends MecasoftEditor {
@@ -225,5 +226,13 @@ public class ServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, servicegetProdutoServicoAtivoObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public void setFocus() {
+		if(HibernateConnection.isSessionRefresh(service.getProdutoServico()) && service.getProdutoServico().getId() != null)
+			service.setProdutoServico(service.find(service.getProdutoServico().getId()));
+		
+		initDataBindings();
 	}
 }

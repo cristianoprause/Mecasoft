@@ -69,6 +69,7 @@ public class HibernateConnection {
 
 	public static void commit() {
 		tx.commit();
+		session.clear();
 		tx = session.beginTransaction();
 	}
 
@@ -80,6 +81,10 @@ public class HibernateConnection {
 
 	public static void revertChanges(Object entidade) {
 		session.evict(entidade);
+	}
+	
+	public static boolean isSessionRefresh(Object modelo){
+		return !tx.isActive() || session.contains(modelo);
 	}
 
 	// para as consultas que sao influenciadas pela 2º session
