@@ -405,6 +405,11 @@
                   label="Pagamento de funcionários"
                   style="push">
             </command>
+            <command
+                  commandId="mecasoft.movimentacaoEstoqueCommand"
+                  label="Movimentação no estoque"
+                  style="push">
+            </command>
          </menu>
          <menu
                label="Relatório">
@@ -512,6 +517,11 @@
             defaultHandler="aplicacao.command.reports.ShowLivroCaixaCommand"
             id="mecasoft.showLivroCaixaCommand"
             name="Livro de caixa">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.MovimentacaoEstoqueCommand"
+            id="mecasoft.movimentacaoEstoqueCommand"
+            name="Movimentação do estoque">
       </command>
    </extension>
    <extension

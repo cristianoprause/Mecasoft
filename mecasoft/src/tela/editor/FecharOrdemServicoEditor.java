@@ -135,7 +135,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
 			movimentacao.setMotivo("Valor de entrada do serviço prestado para o cliente " + service.getServicoPrestado().getCliente().getNome());
 			movimentacao.setServicoPrestado(service.getServicoPrestado());
-			movimentacao.setStatus(MovimentacaoCaixa.STATUSENTRADA);
+			movimentacao.setStatus(MovimentacaoCaixa.STATUSSERVICO);
 			movimentacao.setTipo(MovimentacaoCaixa.TIPOENTRADA);
 			movimentacao.setValor(service.getServicoPrestado().getValorEntrada());
 			

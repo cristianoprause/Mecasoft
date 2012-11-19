@@ -15,6 +15,9 @@ public class MovimentacaoEstoque implements Serializable{
 
 	private static final long serialVersionUID = 4271489048116795265L;
 	
+	public static Character TIPOENTRADA = 'E';
+	public static Character TIPOSAIDA = 'S';
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;

@@ -172,7 +172,7 @@ public class MovimentacaoCaixaView extends ViewPart {
 				if(mc.getTipo().equals(MovimentacaoCaixa.TIPOENTRADA))
 					return "Entrada";
 				else
-					return "Saida";
+					return "Saída";
 			}
 		});
 		TableColumn tblclmnTipo = tvcTipo.getColumn();

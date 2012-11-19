@@ -25,9 +25,9 @@ public class MovimentacaoCaixa implements Serializable{
 	public static String STATUSSANGRIA = "Sangria";
 	public static String STATUSSUPRIMENTO = "Suprimento";
 	public static String STATUSSERVICO = "Serviço";
-	public static String STATUSENTRADA = "Entrada";
 	public static String STATUSDUPLICATA = "Duplicata";
 	public static String STATUSPAGAMENTOFUNCIONARIO =  "Pagamento de funcionário";
+	public static String STATUSCOMPRA = "Compra";
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
