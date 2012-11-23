@@ -115,6 +115,10 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 				
 				if(forma.isGeraDuplicata())
 					formaUtilizada.setValor(servico.getValorTotal());
+				else if(forma.isGeraPagVista()){
+					servico.setValorEntrada(BigDecimal.ZERO);
+					listaDuplicatas.clear();
+				}
 				
 				initDataBindings();
 			}

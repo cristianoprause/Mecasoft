@@ -53,6 +53,10 @@ public class AtualizarStatusJob extends Job{
 			//pega ultimo status do serviço
 			StatusServico statusAtual = servico.getUltimoStatus();
 			
+			//serviço ainda não iniciado, não há a necessidade de atualizar status
+			if(statusAtual == null)
+				return;
+			
 			//pega ultimo status do funcionario registrado no status do serviço
 			StatusServico statusFuncionario = service.findStatusFuncionario(statusAtual.getFuncionario());
 			

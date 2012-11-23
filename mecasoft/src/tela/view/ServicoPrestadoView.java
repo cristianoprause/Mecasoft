@@ -180,7 +180,7 @@ public class ServicoPrestadoView extends ViewPart {
 				if(status != null)
 					return status.getFuncionario().getNomeFantasia();
 				
-				return "";
+				return "Não há mecânico";
 			}
 		});
 		TableColumn tblclmnMecnico = tvcMecanico.getColumn();
@@ -197,7 +197,7 @@ public class ServicoPrestadoView extends ViewPart {
 				if(status != null)
 					return status.getStatus().getDescricao();
 				
-				return "";
+				return "Serviço não iniciado";
 			}
 		});
 		TableColumn tblclmnStatusAtual = tvcStatus.getColumn();

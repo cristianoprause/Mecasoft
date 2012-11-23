@@ -17,6 +17,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.Caixa;
+import banco.modelo.MovimentacaoCaixa;
 
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.MessageHelper;
@@ -142,6 +143,29 @@ public class AbrirFecharCaixaDialog extends TitleAreaDialog {
 			//valor e data de fechamento
 			try{
 				caixa.setValorFechamento(new BigDecimal(txtValorFechamento.getText().replace(",", ".")));
+				
+				//gera um suprimento para justificar o dinheiro extra
+				BigDecimal valorCaixa = movimentacaoService.getTotalCaixa(caixa);
+				if(caixa.getValorFechamento().compareTo(valorCaixa) > 0){
+					MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
+					movimentacao.setMotivo("Suprimento gerado ao fechar o caixa");
+					movimentacao.setStatus(MovimentacaoCaixa.STATUSSUPRIMENTO);
+					movimentacao.setTipo(MovimentacaoCaixa.TIPOENTRADA);
+					movimentacao.setValor(caixa.getValorFechamento().subtract(valorCaixa));
+					movimentacaoService.setMovimentacao(movimentacao);
+					movimentacaoService.saveOrUpdate();
+					
+				//gera uma sangria para justificar o dinheiro que esta faltando
+				}else if(caixa.getValorFechamento().compareTo(valorCaixa) < 0){
+					MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
+					movimentacao.setMotivo("Sangria gerada ao fechar o caixa");
+					movimentacao.setStatus(MovimentacaoCaixa.STATUSSANGRIA);
+					movimentacao.setTipo(MovimentacaoCaixa.TIPOSAIDA);
+					movimentacao.setValor(valorCaixa.subtract(caixa.getValorFechamento()));
+					movimentacaoService.setMovimentacao(movimentacao);
+					movimentacaoService.saveOrUpdate();
+				}
+				
 				caixa.setDataFechamento(new Date());
 			}catch(Exception e){
 				setErrorMessage("Informe o valor de fechamento do caixa");

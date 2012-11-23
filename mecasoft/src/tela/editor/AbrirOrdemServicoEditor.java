@@ -158,7 +158,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		btnSelecionarCliente.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnSelecionarCliente.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnSelecionarCliente.setText("Selecionar");
-		btnSelecionarCliente.setEnabled(service.getServicoPrestado().getId() == null);
+//		btnSelecionarCliente.setEnabled(service.getServicoPrestado().getId() == null);
 		
 		Label lblVeculo = new Label(compositeConteudo, SWT.NONE);
 		lblVeculo.setText("Ve\u00EDculo:");
@@ -182,7 +182,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		btnSelecionarVeiculo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnSelecionarVeiculo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnSelecionarVeiculo.setText("Selecionar");
-		btnSelecionarVeiculo.setEnabled(service.getServicoPrestado().getId() == null);
+//		btnSelecionarVeiculo.setEnabled(service.getServicoPrestado().getId() == null);
 		
 		Label lblServicosPrestados = new Label(compositeConteudo, SWT.NONE);
 		lblServicosPrestados.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
@@ -743,6 +743,11 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				try {
 					calcularTotais();
 					
+					if(service.getServicoPrestado().getListaStatus().isEmpty()){
+						setErroMessage("Adicione ao menos um status.");
+						return;
+					}
+					
 					getSite().getPage().openEditor(new FecharOrdemServicoEditorInput(service.getServicoPrestado()), FecharOrdemServicoEditor.ID);
 				} catch (PartInitException e1) {
 					e1.printStackTrace();
@@ -770,7 +775,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		setShowExcluir(false);
 		setShowSalvar(service.getServicoPrestado().isEmExecucao());
-//		service.organizarListas();
 		
 		setSite(site);
 		setInput(input);
@@ -888,6 +892,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			disposeSalvar();
 		
 		setEnableButtonCancelFechar();
+		btnSelecionarCliente.setEnabled(service.getServicoPrestado().getId() == null);
+		btnSelecionarVeiculo.setEnabled(service.getServicoPrestado().getId() == null);
 	}
 	
 	public void setEnableButtonCancelFechar(){

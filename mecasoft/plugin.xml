@@ -624,5 +624,21 @@
             pattern="mecasoft/mecasoft.menuStatus">
       </activityPatternBinding>
    </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="mecasoft.application"
+            name="MECASOFT">
+         <property
+               name="windowImages"
+               value="assents/logo/mecanica16X16.png,assents/logo/mecanica32X32.png,assents/logo/mecanica64X64.png">
+         </property>
+         <property
+               name="appName"
+               value="MECASOFT">
+         </property>
+      </product>
+   </extension>
 
 </plugin>

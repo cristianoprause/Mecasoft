@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 public class ServicoPrestado implements Serializable{
@@ -84,7 +83,6 @@ public class ServicoPrestado implements Serializable{
 	private List<ItemServico> listaProdutos = new ArrayList<ItemServico>();
 	
 	@OneToMany(mappedBy="servicoPrestado", orphanRemoval=true)
-	@NotEmpty(message="Adicione ao menos um status.")
 	@Cascade(value={CascadeType.ALL})
 	private List<StatusServico> listaStatus = new ArrayList<StatusServico>();
 	
