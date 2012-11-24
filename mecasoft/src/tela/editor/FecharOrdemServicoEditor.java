@@ -1,5 +1,6 @@
 package tela.editor;
 
+import static aplicacao.helper.LayoutHelper.getActiveShell;
 import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.MessageHelper.openWarning;
@@ -14,13 +15,13 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -274,6 +275,25 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		lblFormasDePagamento.setText("Formas de pagamento:");
 		
 		tvFormaPagamento = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
+		tvFormaPagamento.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection selecao = (IStructuredSelection)tvFormaPagamento.getSelection();
+				
+				if(selecao.isEmpty())
+					return;
+				
+				FormaPagtoUtilizada fpu = (FormaPagtoUtilizada)selecao.getFirstElement();
+				AdicionarFormaPagamentoDialog afpd = new AdicionarFormaPagamentoDialog(getActiveShell(), service.getServicoPrestado(), fpu, true, listaDuplicatas);
+				
+				if(afpd.open() == IDialogConstants.OK_ID){
+					calcularTotais();
+					tvFormaPagamento.refresh();
+					
+					if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraDuplicata())
+						listaDuplicatas = afpd.getListaDuplicatas();
+				}
+			}
+		});
 		table = tvFormaPagamento.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -307,7 +327,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		btnAdicionar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				AdicionarFormaPagamentoDialog afpd = new AdicionarFormaPagamentoDialog(LayoutHelper.getActiveShell(), service.getServicoPrestado());
+				AdicionarFormaPagamentoDialog afpd = new AdicionarFormaPagamentoDialog(LayoutHelper.getActiveShell(), service.getServicoPrestado(), new FormaPagtoUtilizada(), false, null);
 				if(afpd.open() == IDialogConstants.OK_ID){
 					calcularTotais();
 					tvFormaPagamento.refresh();
@@ -340,8 +360,11 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 					calcularTotais();
 					tvFormaPagamento.refresh();
 					
+					//reativa o botao de adicionar formas de pagamento
+					//e apaga a lista de duplicatas
 					if(service.getServicoPrestado().getListaFormaPagto().isEmpty()){
 						btnAdicionar.setEnabled(true);
+						listaDuplicatas.clear();
 						return;
 					}
 					
@@ -458,8 +481,8 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtTrocotextObserveTextObserveWidget, servicegetServicoPrestadoTrocoObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), FormaPagtoUtilizada.class, new String[]{"formaPagamento.nome", "valor"});
-		tvFormaPagamento.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), FormaPagtoUtilizada.class, new String[]{"formaPagamento.nome", "valor"});
+//		tvFormaPagamento.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvFormaPagamento.setContentProvider(listContentProvider);
 		//
 		IObservableList servicegetServicoPrestadoListaFormaPagtoObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaFormaPagto");

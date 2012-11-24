@@ -15,9 +15,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class FormaPagtoUtilizada implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2216864617210689815L;
 	
 	@Id

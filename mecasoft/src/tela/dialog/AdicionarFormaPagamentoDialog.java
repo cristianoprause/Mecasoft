@@ -68,25 +68,42 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 	private List<Duplicata> listaDuplicatas;
 	private Integer numeroParcelas;
 	private Integer diasParcelas = 30;
+	private boolean isEdicao;
 	private BigDecimal resto;
 	private FormaPagtoUtilizada formaUtilizada;
 	private ServicoPrestado servico;
 	
-	public AdicionarFormaPagamentoDialog(Shell parentShell, ServicoPrestado servico) {
+	public AdicionarFormaPagamentoDialog(Shell parentShell, ServicoPrestado servico, FormaPagtoUtilizada fpu, boolean isEdicao,
+			List<Duplicata> listaDuplicata) {
 		super(parentShell);
+		this.isEdicao = isEdicao;
 		listaFormaPagto = formaPagamentoService.findAllAtivos();
 		
 		this.servico = servico;
 		
-		listaDuplicatas = new ArrayList<Duplicata>();
+		//edição... duplicatas
+		if(isEdicao)
+			this.listaDuplicatas = listaDuplicata;
+		else
+			this.listaDuplicatas = new ArrayList<Duplicata>();
 		
-		formaUtilizada = new FormaPagtoUtilizada();
+		formaUtilizada = fpu;
 		formaUtilizada.setServicoPrestado(servico);
-		formaUtilizada.setValor(servico.getValorTotal());
 		
 		//desconta do valor total caso o serviço ja tenha alguma forma pagando uma parte dele
-		for(FormaPagtoUtilizada forma : servico.getListaFormaPagto())
-			formaUtilizada.setValor(formaUtilizada.getValor().subtract(forma.getValor()));
+		//e apenas se não for uma edição da forma de pagamento
+		if(!isEdicao){
+			
+			formaUtilizada.setValor(servico.getValorTotal());
+			for(FormaPagtoUtilizada forma : servico.getListaFormaPagto()){
+				if(forma.getValor().compareTo(formaUtilizada.getValor()) > 0){
+					formaUtilizada.setValor(BigDecimal.ZERO);
+					break;
+				}else
+					formaUtilizada.setValor(formaUtilizada.getValor().subtract(forma.getValor()));
+			}
+		}else
+			formaUtilizada.setValor(fpu.getValor());
 		
 	}
 
@@ -124,6 +141,8 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 			}
 		});
 		cbForma.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		//edição...
+		cbForma.setEnabled(!isEdicao);
 		
 		Label lblValor = new Label(container, SWT.NONE);
 		lblValor.setText("Valor:");
@@ -146,6 +165,10 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		txtNumeroParcela.setEnabled(false);
 		txtNumeroParcela.setOptions(MecasoftText.NUMEROS, -1);
 		txtNumeroParcela.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		//edição.. numero de parcelas
+		if(isEdicao && formaUtilizada.getFormaPagamento().isGeraDuplicata())
+			txtNumeroParcela.setText(listaDuplicatas.size()+"");
 		
 		Label lblValorEntrada = new Label(container, SWT.NONE);
 		lblValorEntrada.setText("Valor entrada:");
@@ -177,6 +200,29 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		txtDias.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtDias.setText(diasParcelas.toString());
 		
+		//edição.. dias entre parcelas
+		if(isEdicao && formaUtilizada.getFormaPagamento().isGeraDuplicata()){
+			//verifica se tem 1 parcela ou mais
+			//caso tenha 1, pega da data atual ate a data da parcela
+			//caso tenha mais, pega da data da 1º parcela ate a data da 2º
+			int parcela = 0;
+			Calendar dtInicial = Calendar.getInstance();
+			if(listaDuplicatas.size() > 1){
+				dtInicial.setTime(listaDuplicatas.get(parcela).getDataVencimento());
+				parcela++;
+			}
+			
+			Calendar totalDias = Calendar.getInstance();
+			totalDias.setTime(listaDuplicatas.get(parcela).getDataVencimento());
+			//calcula
+			totalDias.add(Calendar.DAY_OF_MONTH, dtInicial.get(Calendar.DAY_OF_MONTH) * -1);
+			totalDias.add(Calendar.MONTH, dtInicial.get(Calendar.MONTH) * -1);
+			totalDias.add(Calendar.YEAR, dtInicial.get(Calendar.YEAR) * -1);
+			
+			txtDias.setText(totalDias.get(Calendar.DAY_OF_MONTH)+"");
+			
+		}
+		
 		Label lblDtParcela = new Label(container, SWT.NONE);
 		lblDtParcela.setText("Dt. primeira parcela:");
 		
@@ -191,6 +237,11 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 		txtDataParcela.setOptions(MecasoftText.NUMEROS, 10);
 		txtDataParcela.addChars(FormatterHelper.MECASOFTTXTDATA, new Integer[]{2, 4}, null, null);
 		txtDataParcela.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		//edição.. dia da primeira parcela
+		if(isEdicao && formaUtilizada.getFormaPagamento().isGeraDuplicata()){
+			txtDataParcela.setText(FormatterHelper.getDateFormatData().format(listaDuplicatas.get(0).getDataVencimento()));
+		}
 		
 		tvDuplicatas = new TableViewer(container, SWT.BORDER | SWT.FULL_SELECTION);
 		tableDuplicatas = tvDuplicatas.getTable();
@@ -280,7 +331,9 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 					return;
 				}
 				
-				servico.getListaFormaPagto().add(formaUtilizada);
+				//caso não seja uma edição...
+				if(!isEdicao)
+					servico.getListaFormaPagto().add(formaUtilizada);
 			} catch (ValidationException e) {
 				setErrorMessage(e.getMessage());
 				return;
