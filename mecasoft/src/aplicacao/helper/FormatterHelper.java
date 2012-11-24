@@ -38,6 +38,7 @@ public class FormatterHelper {
 
 	public static SimpleDateFormat getDateFormatData(String pattern) {
 		dateFormatData = new SimpleDateFormat(pattern);
+		dateFormatData.setLenient(false);
 		return dateFormatData;
 	}
 

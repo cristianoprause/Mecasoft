@@ -47,13 +47,18 @@ public class AcrescimoItemServicoEditingSupport extends EditingSupport{
 			ItemServico is = (ItemServico)element;
 			
 			if(!valor.isEmpty()){
-				is.setAcrescimo(new BigDecimal(valor.replace(",", ".")));
 				
-				BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
-					.subtract(is.getDesconto()).add(is.getAcrescimo());
-				is.setTotal(total);
+				BigDecimal v = new BigDecimal(valor.replace(",", "."));
 				
-				viewer.refresh();
+				if(v.compareTo(BigDecimal.ZERO) >= 0){
+					is.setAcrescimo(v);
+					
+					BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
+						.subtract(is.getDesconto()).add(is.getAcrescimo());
+					is.setTotal(total);
+					
+					viewer.refresh();
+				}
 			}
 		}catch(Exception e){}
 	}

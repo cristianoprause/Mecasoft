@@ -50,18 +50,21 @@ public class QuantidadeItemServicoEditingSupport extends EditingSupport{
 			if(!quantidade.isEmpty()){
 				Integer valorQuantidade = Integer.parseInt(quantidade);
 				
-				if(is.getItem().isEstocavel() && is.getItem().getQuantidade().compareTo(valorQuantidade) < 0){
-					openWarning("Quantidade insuficiente em estoque.");
-					return;
+				if(valorQuantidade.compareTo(0) >= 0){
+				
+					if(is.getItem().isEstocavel() && is.getItem().getQuantidade().compareTo(valorQuantidade) < 0){
+						openWarning("Quantidade insuficiente em estoque.");
+						return;
+					}
+					
+					is.setQuantidade(valorQuantidade);
+					
+					BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
+						.subtract(is.getDesconto()).add(is.getAcrescimo());
+					
+					is.setTotal(total);
+					viewer.refresh();
 				}
-				
-				is.setQuantidade(valorQuantidade);
-				
-				BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
-					.subtract(is.getDesconto()).add(is.getAcrescimo());
-				
-				is.setTotal(total);
-				viewer.refresh();
 			}
 		}catch(Exception e){}
 		

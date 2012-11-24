@@ -51,18 +51,21 @@ public class DescontoItemServicoEditingSupport extends EditingSupport{
 			if(!valor.isEmpty()){
 				
 				BigDecimal desconto = new BigDecimal(valor.replace(",", "."));
-				BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
-					.subtract(desconto).add(is.getAcrescimo());
 				
-				if(total.compareTo(BigDecimal.ZERO) < 0){
-					openWarning("O desconto não pode ser superior ao valor total.");
-					return;
+				if(desconto.compareTo(BigDecimal.ZERO) >= 0){
+					BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
+						.subtract(desconto).add(is.getAcrescimo());
+					
+					if(total.compareTo(BigDecimal.ZERO) < 0){
+						openWarning("O desconto não pode ser superior ao valor total.");
+						return;
+					}
+					
+					is.setDesconto(desconto);
+					is.setTotal(total);
+					
+					viewer.refresh();
 				}
-				
-				is.setDesconto(desconto);
-				is.setTotal(total);
-				
-				viewer.refresh();
 			}
 		}catch(Exception e){}
 				

@@ -48,12 +48,15 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 		
 		if(!valor.isEmpty()){
 			try{
-				ForneceProduto fp = (ForneceProduto)element;
-				fp.setValorUnitario(new BigDecimal(valor.replace(".", "").replace(",", ".")));
-				
-				calcularValores(fp);
-				
-				viewer.refresh();
+				BigDecimal preco = new BigDecimal(valor.replace(".", "").replace(",", "."));
+				if(preco.compareTo(BigDecimal.ZERO) >= 0){
+					ForneceProduto fp = (ForneceProduto)element;
+					fp.setValorUnitario(preco);
+					
+					calcularValores(fp);
+					
+					viewer.refresh();
+				}
 			}catch(Exception e){}
 		}
 	}
