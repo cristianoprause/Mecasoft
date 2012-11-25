@@ -175,7 +175,7 @@ public class AbrirFecharCaixaDialog extends TitleAreaDialog {
 		
 		service.setCaixa(caixa);
 		service.saveOrUpdate();
-		HibernateConnection.commit();
+		HibernateConnection.commitSemClear();
 		
 		if(caixa.getDataFechamento() == null)
 			MessageHelper.openInformation("Caixa aberto com sucesso!");

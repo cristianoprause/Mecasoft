@@ -133,11 +133,11 @@ public class UsuarioEditor extends MecasoftEditor{
 		ValidatorHelper.validar(service.getUsuario());
 			
 		if(!txtSenha.getText().equals(txtConfirmarSenha.getText()))
-			throw new ValidationException("Senha e confirmar senha não estão batendo.");
+			throw new ValidationException("A senha não coincide com a confirmação.");
 		
 		//usuario unico
-		Usuario usuarioUnico = service.findByLogin(service.getUsuario().getLogin());
-		if(usuarioUnico != null && !service.getUsuario().equals(usuarioUnico))
+		List<Usuario> listaUsuario = service.findByLogin(service.getUsuario().getLogin());
+		if(listaUsuario.size() >= 2 || (!listaUsuario.isEmpty() && service.getUsuario().getId() == null))
 			throw new ValidationException("Já existe um usuário com o login informado.");
 			
 		service.saveOrUpdate();

@@ -333,6 +333,24 @@ public class Pessoa implements Serializable{
 		this.tipo = tipo;
 	}
 	
+	public String getTipoPessoa(){
+		String tipo  = "";
+		if(getTipoCliente())
+			tipo = "Cliente";
+		if(getTipoFornecedor()){
+			if(!tipo.isEmpty())
+				tipo += ", ";
+			tipo += "Fornecedor";
+		}
+		if(getTipoFuncionario()){
+			if(!tipo.isEmpty())
+				tipo += ", ";
+			tipo += "Funcionário";
+		}
+		
+		return tipo;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

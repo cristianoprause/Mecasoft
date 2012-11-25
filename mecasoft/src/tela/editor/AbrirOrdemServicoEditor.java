@@ -152,6 +152,13 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					//remove o veículo para evitar que o veículo nao pertença ao dono
 					service.getServicoPrestado().setVeiculo(null);
 					txtVeiculo.setText("");
+				}else{
+					service.getServicoPrestado().setCliente(null);
+					txtCliente.setText("");
+					
+					//remove o veículo
+					service.getServicoPrestado().setVeiculo(null);
+					txtVeiculo.setText("");
 				}
 			}
 		});
@@ -176,6 +183,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				if(v != null){
 					txtVeiculo.setText(v.getModelo());
 					service.getServicoPrestado().setVeiculo(v);
+				}else{
+					txtVeiculo.setText("");
+					service.getServicoPrestado().setVeiculo(null);
 				}
 			}
 		});
@@ -741,16 +751,19 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					calcularTotais();
+//					calcularTotais();
 					
 					if(service.getServicoPrestado().getListaStatus().isEmpty()){
 						setErroMessage("Adicione ao menos um status.");
 						return;
 					}
 					
+					salvarRegistro();
 					getSite().getPage().openEditor(new FecharOrdemServicoEditorInput(service.getServicoPrestado()), FecharOrdemServicoEditor.ID);
 				} catch (PartInitException e1) {
 					e1.printStackTrace();
+				} catch (ValidationException e2) {
+					setErroMessage(e2.getMessage());
 				}
 			}
 		});

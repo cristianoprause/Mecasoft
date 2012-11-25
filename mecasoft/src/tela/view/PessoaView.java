@@ -120,22 +120,7 @@ public class PessoaView extends ViewPart {
 		tvcTipo.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				Pessoa p = (Pessoa) element;
-				String tipo  = "";
-				if(p.getTipoCliente())
-					tipo = "Cliente";
-				if(p.getTipoFornecedor()){
-					if(!tipo.isEmpty())
-						tipo += ", ";
-					tipo += "Fornecedor";
-				}
-				if(p.getTipoFuncionario()){
-					if(!tipo.isEmpty())
-						tipo += ", ";
-					tipo += "Funcionário";
-				}
-				
-				return tipo;
+				return ((Pessoa)element).getTipoPessoa();
 			}
 		});
 		TableColumn tblclmnTipo = tvcTipo.getColumn();
@@ -180,9 +165,6 @@ public class PessoaView extends ViewPart {
 
 	}
 
-	/**
-	 * Create the actions.
-	 */
 	private void createActions() {
 		// Create the actions
 		{

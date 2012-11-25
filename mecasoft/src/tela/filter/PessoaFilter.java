@@ -26,6 +26,9 @@ public class PessoaFilter extends MecasoftFilter{
 		if(pessoa.getFoneFax().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
+		if(pessoa.getTipoPessoa().toLowerCase().matches(search.toLowerCase()))
+			return true;
+		
 		return false;
 	}
 

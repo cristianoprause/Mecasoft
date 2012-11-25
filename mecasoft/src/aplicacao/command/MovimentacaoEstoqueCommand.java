@@ -67,7 +67,7 @@ public class MovimentacaoEstoqueCommand extends AbstractHandler{
 				produtoService.saveOrUpdate();
 				
 				openInformation("Movimentação no estoque realizada com sucesso!");
-				HibernateConnection.commit();
+				HibernateConnection.commitSemClear();
 				
 			}catch(Exception e){
 				openError("Ouve um erro ao registrar a movimentação:\n" + e.getMessage());

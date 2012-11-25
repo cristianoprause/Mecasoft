@@ -70,10 +70,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 	private Combo cbStatusFinal;
 	private ComboViewer cvFinalizarServico;
 
-	/**
-	 * Create the dialog.
-	 * @param parentShell
-	 */
 	public ConfiguracaoDialog(Shell parentShell) {
 		super(parentShell);
 		
@@ -89,10 +85,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		
 	}
 
-	/**
-	 * Create contents of the dialog.
-	 * @param parent
-	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setMessage("Selecione a pessoa cadastrada que representa a empresa e informe os horarios de espediente");
@@ -235,10 +227,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		return area;
 	}
 
-	/**
-	 * Create contents of the button bar.
-	 * @param parent
-	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
@@ -261,7 +249,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 				}
 				
 				if(!txtNovaSenha.getText().equals(txtConfirmarSenha.getText())){
-					setErrorMessage("Nova senha e confirmar senha não estão batendo.");
+					setErrorMessage("A senha não coincide com a confirmação.");
 					return;
 				}
 				
@@ -279,23 +267,35 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			}
 			
 			//verificar horario
+			//inicio manhã
 			if(!txtInicioManha.getText().isEmpty())
 				service.getConfiguracao().setDtInicioManha(FormatterHelper.getDateFormatData("HH:mm").parse(txtInicioManha.getText()));
+			else
+				service.getConfiguracao().setDtInicioManha(null);
 			
+			//final manhã
 			if(!txtFinalManha.getText().isEmpty())
 				service.getConfiguracao().setDtFinalManha(FormatterHelper.getDateFormatData("HH:mm").parse(txtFinalManha.getText()));
+			else
+				service.getConfiguracao().setDtFinalManha(null);
 			
+			//inicio tarde 
 			if(!txtInicioTarde.getText().isEmpty())
 				service.getConfiguracao().setDtInicioTarde(FormatterHelper.getDateFormatData("HH:mm").parse(txtInicioTarde.getText()));
+			else
+				service.getConfiguracao().setDtInicioTarde(null);
 			
+			//final tarde
 			if(!txtFinalTarde.getText().isEmpty())
 				service.getConfiguracao().setDtFinalTarde(FormatterHelper.getDateFormatData("HH:mm").parse(txtFinalTarde.getText()));
+			else
+				service.getConfiguracao().setDtFinalTarde(null);
 			
 			service.saveOrUpdate();
 			
 			UsuarioHelper.setConfiguracaoPadrao(service.getConfiguracao());
-			openInformation("Configuraçõe salvas com sucesso!");
-			HibernateConnection.commit();
+			openInformation("Configurações salvas com sucesso!");
+			HibernateConnection.commitSemClear();
 			super.okPressed();
 			
 		}catch (ValidationException e) {
@@ -319,9 +319,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		return (Pessoa)sid.getElementoSelecionado();
 	}
 
-	/**
-	 * Return the initial size of the dialog.
-	 */
 	@Override
 	protected Point getInitialSize() {
 		return new Point(462, 493);

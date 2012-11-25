@@ -72,13 +72,18 @@ public class HibernateConnection {
 		session.clear();
 		tx = session.beginTransaction();
 	}
+	
+	public static void commitSemClear(){
+		tx.commit();
+		tx = session.beginTransaction();
+	}
 
 	public static void autoCommit() {
 		txAutomatico.commit();
 		sessionAutomatico.clear();
 		txAutomatico = sessionAutomatico.beginTransaction();
 	}
-
+	
 	public static void revertChanges(Object entidade) {
 		session.evict(entidade);
 	}

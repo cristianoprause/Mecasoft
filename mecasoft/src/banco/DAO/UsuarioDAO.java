@@ -64,4 +64,14 @@ public class UsuarioDAO extends HibernateConnection implements UsuarioUtils{
 		return q.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Usuario> findAllByLoginAndStatus(String login, Boolean status) {
+		Query q = getSession().createQuery("select u from Usuario u where (u.login like :login or :login is null) " +
+																	"and (u.ativo is :status or :status is null) ");
+		q.setParameter("login", login)
+		.setParameter("status", status);
+		return q.list();
+	}
+
 }

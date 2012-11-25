@@ -664,16 +664,16 @@ public class PessoaEditor extends MecasoftEditor {
 		bindingContext.bindValue(cbCargoObserveEnabledObserveWidget, funcionarioServicegetFuncionarioTipoFuncionarioObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ForneceProduto.class, new String[]{"id.produto.descricao", "valorUnitario"});
-		tvProduto.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ForneceProduto.class, new String[]{"id.produto.descricao", "valorUnitario"});
+//		tvProduto.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvProduto.setContentProvider(listContentProvider_1);
 		//
 		IObservableList funcionarioServicegetFuncionarioListaProdutoObserveList = PojoObservables.observeList(Realm.getDefault(), service.getPessoa(), "listaProduto");
 		tvProduto.setInput(funcionarioServicegetFuncionarioListaProdutoObserveList);
 		//
 		ObservableListContentProvider listContentProvider_2 = new ObservableListContentProvider();
-		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_2.getKnownElements(), Veiculo.class, new String[]{"modelo", "placa"});
-		tvVeiculo.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
+//		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_2.getKnownElements(), Veiculo.class, new String[]{"modelo", "placa"});
+//		tvVeiculo.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
 		tvVeiculo.setContentProvider(listContentProvider_2);
 		//
 		IObservableList funcionarioServicegetFuncionarioListaVeiculoObserveList = PojoObservables.observeList(Realm.getDefault(), service.getPessoa(), "listaVeiculo");

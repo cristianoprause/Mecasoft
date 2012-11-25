@@ -30,8 +30,8 @@ public class UsuarioService extends MecasoftService<Usuario>{
 		return getDAO().findByLoginSenhaStatus(login, senha, true);
 	}
 	
-	public Usuario findByLogin(String login){
-		return getDAO().findByLoginSenhaStatus(login, null, null);
+	public List<Usuario> findByLogin(String login){
+		return getDAO().findAllByLoginAndStatus(login, true);
 	}
 	
 	public List<Usuario> findAll(){

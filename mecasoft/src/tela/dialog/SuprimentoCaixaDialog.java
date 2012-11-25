@@ -92,7 +92,7 @@ public class SuprimentoCaixaDialog extends TitleAreaDialog {
 			service.getMovimentacao().setTipo(MovimentacaoCaixa.TIPOENTRADA);
 			
 			service.saveOrUpdate();
-			HibernateConnection.commit();
+			HibernateConnection.commitSemClear();
 			
 			openInformation("Suprimento realizado com sucesso!");
 			
