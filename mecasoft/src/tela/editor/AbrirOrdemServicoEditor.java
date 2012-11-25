@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
@@ -100,9 +101,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private Button btnCancelarOrdem;
 	private Button btnFecharOrdem;
 	private Button btnRemoverStatus;
+	
 	private ServicoPrestadoProdutoFilter produtoFilter = new ServicoPrestadoProdutoFilter();
 	private ServicoPrestadoServicoFilter servicoFilter = new ServicoPrestadoServicoFilter();
-	
 	private ServicoPrestadoService service = new ServicoPrestadoService();
 	private ProdutoServicoService prodServService = new ProdutoServicoService();
 	private StatusService statusService = new StatusService();
@@ -110,6 +111,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private StatusServicoService statusServicoService = new StatusServicoService();
 	private List<Status> listaStatus;
 	private Pessoa funcionario;
+	private FecharOrdemServicoEditorInput fosei;
 
 	public AbrirOrdemServicoEditor() {
 		listaStatus = statusService.findAllAtivos();
@@ -312,6 +314,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				if(openQuestion("Deseja realmente remover este serviço da lista?")){
 					ItemServico is = (ItemServico)selecao.getFirstElement();
 					service.getServicoPrestado().getListaServicos().remove(is);
+					service.getServicoPrestado().getListaProdutos().remove(is);
 					
 					setEnableButtonCancelFechar();
 					
@@ -735,7 +738,15 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					calcularTotais();
 					
 					service.saveOrUpdate();
+
+					//caso o fechar ordem de serviço esteja aberto
+					IEditorPart iep = getIEPFecharOrdem();
+					if(iep != null)
+						getSite().getPage().closeEditor(iep, false);
+					
 					openInformation("Ordem de serviço cancelada com sucesso!");
+					
+					
 					closeThisEditor();
 				}
 			}
@@ -751,15 +762,22 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-//					calcularTotais();
+					
+					validar(service.getServicoPrestado());
+					
+					calcularTotais();
 					
 					if(service.getServicoPrestado().getListaStatus().isEmpty()){
 						setErroMessage("Adicione ao menos um status.");
 						return;
 					}
 					
-					salvarRegistro();
-					getSite().getPage().openEditor(new FecharOrdemServicoEditorInput(service.getServicoPrestado()), FecharOrdemServicoEditor.ID);
+					//caso o editor de fechar ordem esteja aberto
+					IEditorPart iep = getIEPFecharOrdem();
+					if(iep != null)
+						return;
+					
+					getSite().getPage().openEditor(fosei, FecharOrdemServicoEditor.ID);
 				} catch (PartInitException e1) {
 					e1.printStackTrace();
 				} catch (ValidationException e2) {
@@ -788,6 +806,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		setShowExcluir(false);
 		setShowSalvar(service.getServicoPrestado().isEmExecucao());
+		
+		fosei = new FecharOrdemServicoEditorInput(service.getServicoPrestado());
 		
 		setSite(site);
 		setInput(input);
@@ -938,6 +958,19 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		service.getServicoPrestado().setValorTotal(total);
 		
 	}
+	
+	@SuppressWarnings("deprecation")
+	private IEditorPart getIEPFecharOrdem(){
+		IEditorPart iepResult = null;
+		
+		for(IEditorPart iep : getSite().getPage().getEditors()){
+			if(iep.getEditorInput().equals(fosei))
+				iepResult = iep;
+		}
+		
+		return iepResult;
+	}
+	
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//

@@ -47,6 +47,7 @@ public class ShowDuplicataCommand extends ReportCommand{
 		param.put("FUNCIONARIO_ID", prdd.getFuncionario() == null ? null : prdd.getFuncionario().getId());
 		param.put("SERVICO_ID", prdd.getNumeroServico());
 		param.put("PAGO", prdd.isPago());
+		param.put("ASSINATURA", false);
 		
 		return param;
 	}

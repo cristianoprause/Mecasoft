@@ -326,6 +326,9 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 				if(formaUtilizada.getFormaPagamento().isGeraDuplicata())
 					atualizarValores(false);
 				
+				if(servico.getValorEntrada() == null)
+					servico.setValorEntrada(BigDecimal.ZERO);
+				
 				if(servico.getValorEntrada().compareTo(servico.getValorTotal()) > 0){
 					setErrorMessage("O valor de entrada não pode ser superior ao valor total");
 					return;
