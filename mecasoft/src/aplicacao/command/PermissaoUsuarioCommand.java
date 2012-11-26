@@ -12,41 +12,58 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IActivityManager;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 
+import aplicacao.helper.UsuarioHelper;
+import banco.modelo.Papel;
+
 public class PermissaoUsuarioCommand extends AbstractHandler{
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		List<String> permissoes = new ArrayList<String>();
 		
-//		Papel papel = UsuarioHelper.getUsuarioLogado().getPapel();
+		Papel papel = UsuarioHelper.getUsuarioLogado().getPapel();
 		
 		IWorkbenchActivitySupport activitySupport = PlatformUI.getWorkbench().getActivitySupport();
 		IActivityManager activityManager = activitySupport.getActivityManager();
 		Set<String> enabledActivities = new HashSet<String>();
 		
-//		if(papel.getCadUsuario()){
+		if(papel.getCadUsuario()){
 			permissoes.add("tela.view.activityUsuario");
 			permissoes.add("tela.view.activityPapel");
-//		}
+		}
 		
-//		if(papel.getCadPessoa()){
+		if(papel.getCadPessoa()){
 			permissoes.add("tela.view.activityPessoa");
 			permissoes.add("tela.view.activityTipoFuncionario");
-//		}
+		}
 		
-//		if(papel.getCadVeiculo()){
+		if(papel.getCadVeiculo()){
 			permissoes.add("tela.view.activityVeiculo");
 			permissoes.add("tela.view.activityTipoVeiculo");
-//		}
+		}
 		
-//		if(papel.getCadProduto())
+		if(papel.getCadProduto())
 			permissoes.add("tela.view.activityProduto");
 		
-//		if(papel.getCadServico())
+		if(papel.getCadServico())
 			permissoes.add("tela.view.activityServico");
 		
-//		if(papel.getGerServico())
+		if(papel.getCadFormaPagto())
+			permissoes.add("tela.view.activityFormaPagto");
+		
+		if(papel.getGerServico()){
 			permissoes.add("tela.view.activityStatus");
+			permissoes.add("tela.view.activityServicoPrestado");
+		}
+		
+		if(papel.getGerDuplicata())
+			permissoes.add("tela.view.activityGerarDuplicata");
+		
+		if(papel.getGerCaixa())
+			permissoes.add("tela.view.activityCaixa");
+		
+		if(papel.getGerarRelatorio())
+			permissoes.add("tela.view.activityRelatorio");
 
 		for(String permissao : permissoes)
 			if (activityManager.getActivity(permissao).isDefined())

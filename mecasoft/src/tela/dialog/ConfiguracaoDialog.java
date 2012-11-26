@@ -8,10 +8,12 @@ import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -46,6 +48,7 @@ import aplicacao.service.StatusService;
 import aplicacao.service.UsuarioService;
 import banco.connection.HibernateConnection;
 import banco.modelo.Configuracao;
+import banco.modelo.Papel;
 import banco.modelo.Pessoa;
 import banco.modelo.Status;
 import banco.modelo.Usuario;
@@ -65,11 +68,13 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 	private StatusService statusService = new StatusService();
 	private List<Status> statusIniciais;
 	private List<Status> statusFinais;
+	private Usuario user;
 	private ComboViewer cvStatusInicio;
 	private ComboViewer cvStatusFinal;
 	private Combo cbStatusInicio;
 	private Combo cbStatusFinal;
 	private ComboViewer cvFinalizarServico;
+	private Combo cbFinalizarServico;
 
 	public ConfiguracaoDialog(Shell parentShell) {
 		super(parentShell);
@@ -83,6 +88,15 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		//busca os status
 		statusIniciais = statusService.findAllAtivosByFuncao(false);
 		statusFinais = statusService.findAllAtivosByFuncao(true);
+		
+		//permissao do usuário
+		if(UsuarioHelper.getUsuarioLogado() == null){
+			Papel p = new Papel();
+			p.setGerServico(false);
+			user = new Usuario();
+			user.setPapel(p);
+		}else
+			user = UsuarioHelper.getUsuarioLogado();
 		
 	}
 
@@ -187,7 +201,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		lblFinalizarServico.setText("Finalizar:");
 		
 		cvFinalizarServico = new ComboViewer(grpStatusParaServios, SWT.READ_ONLY);
-		Combo cbFinalizarServico = cvFinalizarServico.getCombo();
+		cbFinalizarServico = cvFinalizarServico.getCombo();
 		cbFinalizarServico.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblFinalTarde = new Label(grpEmpresa, SWT.NONE);
@@ -421,6 +435,28 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		IObservableValue cvFinalizarServicoObserveSingleSelection = ViewersObservables.observeSingleSelection(cvFinalizarServico);
 		IObservableValue servicegetConfiguracaoStatusFinalizarServicoObserveValue = PojoObservables.observeValue(service.getConfiguracao(), "statusFinalizarServico");
 		bindingContext.bindValue(cvFinalizarServicoObserveSingleSelection, servicegetConfiguracaoStatusFinalizarServicoObserveValue, null, null);
+		//
+		IObservableValue observeEnabledTxtInicioManhaObserveWidget = WidgetProperties.enabled().observe(txtInicioManha);
+		IObservableValue gerServicoUsergetPapelObserveValue = PojoProperties.value("gerServico").observe(user.getPapel());
+		bindingContext.bindValue(observeEnabledTxtInicioManhaObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
+		//
+		IObservableValue observeEnabledTxtFinalManhaObserveWidget = WidgetProperties.enabled().observe(txtFinalManha);
+		bindingContext.bindValue(observeEnabledTxtFinalManhaObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
+		//
+		IObservableValue observeEnabledTxtInicioTardeObserveWidget = WidgetProperties.enabled().observe(txtInicioTarde);
+		bindingContext.bindValue(observeEnabledTxtInicioTardeObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
+		//
+		IObservableValue observeEnabledTxtFinalTardetextObserveWidget = WidgetProperties.enabled().observe(txtFinalTarde.text);
+		bindingContext.bindValue(observeEnabledTxtFinalTardetextObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
+		//
+		IObservableValue observeEnabledCbStatusInicioObserveWidget = WidgetProperties.enabled().observe(cbStatusInicio);
+		bindingContext.bindValue(observeEnabledCbStatusInicioObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
+		//
+		IObservableValue observeEnabledCbStatusFinalObserveWidget = WidgetProperties.enabled().observe(cbStatusFinal);
+		bindingContext.bindValue(observeEnabledCbStatusFinalObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
+		//
+		IObservableValue observeEnabledCbFinalizarServicoObserveWidget = WidgetProperties.enabled().observe(cbFinalizarServico);
+		bindingContext.bindValue(observeEnabledCbFinalizarServicoObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
 		//
 		return bindingContext;
 	}

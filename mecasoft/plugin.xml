@@ -333,6 +333,7 @@
          <menu
                label="Financeiro">
             <menu
+                  id="mecasoft.menuServicoPrestado"
                   label="Serviço">
                <command
                      commandId="org.eclipse.ui.views.showView"
@@ -356,6 +357,7 @@
                </command>
             </menu>
             <menu
+                  id="mecasoft.menuGerarDuplicata"
                   label="Duplicatas">
                <command
                      commandId="org.eclipse.ui.views.showView"
@@ -379,6 +381,7 @@
                </command>
             </menu>
             <menu
+                  id="mecasoft.menuCaixa"
                   label="Caixa">
                <command
                      commandId="mecasoft.abrirFecharCaixaCommand"
@@ -416,6 +419,7 @@
             </command>
          </menu>
          <menu
+               id="mecasoft.menuRelatorio"
                label="Relatório">
             <command
                   commandId="mecasoft.showServicoSinteticoCommand"
@@ -626,6 +630,51 @@
             activityId="tela.view.activityStatus"
             isEqualityPattern="false"
             pattern="mecasoft/mecasoft.menuStatus">
+      </activityPatternBinding>
+      <activity
+            id="tela.view.activityFormaPagto"
+            name="activity Forma de pagamento">
+      </activity>
+      <activityPatternBinding
+            activityId="tela.view.activityFormaPagto"
+            isEqualityPattern="false"
+            pattern="mecasoft/mecasoft.menuFormaPagamento">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="tela.view.activityServicoPrestado"
+            isEqualityPattern="false"
+            pattern="mecasoft/mecasoft.menuServicoPrestado">
+      </activityPatternBinding>
+      <activity
+            id="tela.view.activityServicoPrestado"
+            name="activity Servico prestado">
+      </activity>
+      <activity
+            id="tela.view.activityGerarDuplicata"
+            name="activity Gerar duplicata">
+      </activity>
+      <activityPatternBinding
+            activityId="tela.view.activityGerarDuplicata"
+            isEqualityPattern="false"
+            pattern="mecasoft/mecasoft.menuGerarDuplicata">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="tela.view.activityCaixa"
+            isEqualityPattern="false"
+            pattern="mecasoft/mecasoft.menuCaixa">
+      </activityPatternBinding>
+      <activity
+            id="tela.view.activityCaixa"
+            name="activity Caixa">
+      </activity>
+      <activity
+            id="tela.view.activityRelatorio"
+            name="activity Relatório">
+      </activity>
+      <activityPatternBinding
+            activityId="tela.view.activityRelatorio"
+            isEqualityPattern="false"
+            pattern="mecasoft/mecasoft.menuRelatorio">
       </activityPatternBinding>
    </extension>
    <extension
