@@ -3,6 +3,7 @@ package tela.dialog;
 import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.ValidatorHelper.validar;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -293,6 +294,59 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 				service.getConfiguracao().setDtFinalTarde(FormatterHelper.getDateFormatData("HH:mm").parse(txtFinalTarde.getText()));
 			else
 				service.getConfiguracao().setDtFinalTarde(null);
+			
+			Calendar c = Calendar.getInstance();
+			//verifica se o inicio manha é um horario da manhã mesmo
+			if(service.getConfiguracao().getDtInicioManha() != null){
+				c.setTime(service.getConfiguracao().getDtInicioManha());
+				if(c.get(Calendar.AM_PM) == Calendar.PM){
+					setErrorMessage("Horário inválido para o início da manhã.");
+					return;
+				}
+			}
+			
+			//verifica se o final manha é um horario da manhã mesmo
+			if(service.getConfiguracao().getDtFinalManha() != null){
+				c.setTime(service.getConfiguracao().getDtFinalManha());
+				if(c.get(Calendar.AM_PM) == Calendar.PM && c.get(Calendar.HOUR) != 0){
+					setErrorMessage("Horário inválido para o final da manhã.");
+					return;
+				}
+			}
+			
+			//verifica se o final da manhã é maior que o inicio da manhã
+			if(service.getConfiguracao().getDtInicioManha() != null && service.getConfiguracao().getDtFinalManha() != null){
+				if(service.getConfiguracao().getDtFinalManha().compareTo(service.getConfiguracao().getDtInicioManha()) <= 0){
+					setErrorMessage("Horário do final da manhã deve ser maior que o horário do início da manhã.");
+					return;
+				}
+			}
+			
+			//verfica se o horário inicio tarde é um horario da tarde mesmo
+			if(service.getConfiguracao().getDtInicioTarde() != null){
+				c.setTime(service.getConfiguracao().getDtInicioTarde());
+				if(c.get(Calendar.AM_PM) == Calendar.AM){
+					setErrorMessage("Horário inválido para o início da tarde.");
+					return;
+				}
+			}
+			
+			//verifica se o horário final tarde é um horario da tarde mesmo
+			if(service.getConfiguracao().getDtFinalTarde() != null){
+				c.setTime(service.getConfiguracao().getDtFinalTarde());
+				if(c.get(Calendar.AM_PM) == Calendar.AM && c.get(Calendar.HOUR) != 0){
+					setErrorMessage("Horário inválido para o final da tarde.");
+					return;
+				}
+			}
+			
+			//verifica se hora final tarde é maior que hora inicio tarde
+			if(service.getConfiguracao().getDtFinalTarde() != null && service.getConfiguracao().getDtInicioTarde() != null){
+				if(service.getConfiguracao().getDtFinalTarde().compareTo(service.getConfiguracao().getDtInicioTarde()) <= 0){
+					setErrorMessage("Horário do final da tarde deve ser superior que o horário do início da tarde.");
+					return;
+				}
+			}
 			
 			service.saveOrUpdate();
 			
