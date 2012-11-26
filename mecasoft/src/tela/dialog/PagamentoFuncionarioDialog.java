@@ -172,6 +172,12 @@ public class PagamentoFuncionarioDialog extends TitleAreaDialog {
 			return;
 		}
 		
+		BigDecimal salario = new BigDecimal(txtSalario.getText().replaceAll(",", "."));
+		if(salario.compareTo(desconto) < 0){
+			setErrorMessage("O desconto não pode ser superior ao salário do funcionário.");
+			return;
+		}
+		
 		//gera nova movimentacao
 		MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
 		movimentacao.setFuncionario(service.getPessoa());
