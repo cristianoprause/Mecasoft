@@ -66,6 +66,7 @@ public class ServicoPrestadoView extends ViewPart {
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Form frmServiosPrestados = formToolkit.createForm(container);
+		frmServiosPrestados.setImage(ResourceManager.getPluginImage("mecasoft", "assents/servicoPrestado/servicoPrestado32.png"));
 		formToolkit.paintBordersFor(frmServiosPrestados);
 		frmServiosPrestados.setText("Servi\u00E7os Prestados");
 		frmServiosPrestados.getBody().setLayout(new GridLayout(5, false));

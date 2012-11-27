@@ -64,6 +64,7 @@ public class DuplicataPagaView extends ViewPart {
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Form frmListaDeDuplicatas = formToolkit.createForm(container);
+		frmListaDeDuplicatas.setImage(ResourceManager.getPluginImage("mecasoft", "assents/duplicata/duplicataPaga32.png"));
 		formToolkit.paintBordersFor(frmListaDeDuplicatas);
 		frmListaDeDuplicatas.setText("Lista de duplicatas pagas");
 		frmListaDeDuplicatas.getBody().setLayout(new GridLayout(4, false));

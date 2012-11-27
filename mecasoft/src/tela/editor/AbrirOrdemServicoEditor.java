@@ -8,6 +8,7 @@ import static aplicacao.helper.MessageHelper.openWarning;
 import static aplicacao.helper.ValidatorHelper.validar;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -71,6 +72,7 @@ import banco.connection.HibernateConnection;
 import banco.modelo.ItemServico;
 import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
+import banco.modelo.ServicoPrestado;
 import banco.modelo.Status;
 import banco.modelo.StatusServico;
 import banco.modelo.Veiculo;
@@ -837,9 +839,28 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				return ((Veiculo)element).getModelo();
 			}
 		});
-		sid.setElements(service.getServicoPrestado().getCliente().getListaVeiculo().toArray());
+		sid.setElements(possiveisVeiculos().toArray());
 		
 		return (Veiculo) sid.getElementoSelecionado();
+	}
+	
+	private List<Veiculo> possiveisVeiculos(){
+		List<Veiculo> listaVeiculo = service.getServicoPrestado().getCliente().getListaVeiculo();
+		List<Veiculo> listaResult = new ArrayList<Veiculo>();
+		List<ServicoPrestado> listaServico = service.findAllNaoConcluidos();
+		
+		for(Veiculo v : listaVeiculo){
+			boolean inConsert = false;
+			for(ServicoPrestado s : listaServico){
+				if(s.getVeiculo().equals(v))
+					inConsert = true;
+			}
+			
+			if(!inConsert)
+				listaResult.add(v);
+		}
+		
+		return listaResult;
 	}
 	
 	private ProdutoServico selecionarServico(){
@@ -897,8 +918,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		ItemServico is = new ItemServico();
 		is.setDescricao(ps.getDescricao());
 		is.setValorUnitario(ps.getValorUnitario());
-		is.setQuantidade(0);
-		is.setTotal(BigDecimal.ZERO);
+		is.setQuantidade(1);
+		is.setTotal(ps.getValorUnitario());
 		is.setItem(ps);
 		is.setServicoPrestado(service.getServicoPrestado());
 		service.getServicoPrestado().getListaProdutos().add(is);

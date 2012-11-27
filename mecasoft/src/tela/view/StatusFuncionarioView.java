@@ -59,6 +59,7 @@ public class StatusFuncionarioView extends ViewPart {
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Form frmStatusDoFuncionrio = formToolkit.createForm(container);
+		frmStatusDoFuncionrio.setImage(ResourceManager.getPluginImage("mecasoft", "assents/statusFuncionario/statusFuncionario32.png"));
 		formToolkit.paintBordersFor(frmStatusDoFuncionrio);
 		frmStatusDoFuncionrio.setText("Status do funcion\u00E1rio");
 		frmStatusDoFuncionrio.getBody().setLayout(new GridLayout(2, false));

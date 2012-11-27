@@ -77,11 +77,13 @@
       </editor>
       <editor
             class="tela.editor.AbrirOrdemServicoEditor"
+            icon="assents/servicoPrestado/servicoPrestado16.png"
             id="tela.editor.AbrirOrdemServicoEditor"
             name="Abrir ordem de serviço">
       </editor>
       <editor
             class="tela.editor.FecharOrdemServicoEditor"
+            icon="assents/servicoPrestado/servicoPrestado16.png"
             id="tela.editor.FecharOrdemServicoEditor"
             name="Fechar ordem de serviço">
       </editor>
@@ -93,6 +95,7 @@
       </editor>
       <editor
             class="tela.editor.StatusFuncionarioEditor"
+            icon="assents/statusFuncionario/statusFuncionario16.png"
             id="tela.editor.StatusFuncionarioEditor"
             name="Status geral do funcionário">
       </editor>
@@ -155,6 +158,7 @@
       </view>
       <view
             class="tela.view.ServicoPrestadoView"
+            icon="assents/servicoPrestado/servicoPrestado16.png"
             id="tela.view.ServicoPrestadoView"
             name="Serviços Prestados">
       </view>
@@ -178,11 +182,13 @@
       </view>
       <view
             class="tela.view.DuplicataPagaView"
+            icon="assents/duplicata/duplicataPaga16.png"
             id="tela.view.DuplicataPagaView"
             name="Lista de duplicatas pagas">
       </view>
       <view
             class="tela.view.StatusFuncionarioView"
+            icon="assents/statusFuncionario/statusFuncionario16.png"
             id="tela.view.StatusFuncionarioView"
             name="Status atual dos funcionários">
       </view>
@@ -330,6 +336,7 @@
                   label="Serviço">
                <command
                      commandId="org.eclipse.ui.views.showView"
+                     icon="assents/servicoPrestado/servicoPrestado16.png"
                      id="mecasoft.menuServicoPrestado"
                      label="Serviços">
                   <parameter
@@ -339,6 +346,7 @@
                </command>
                <command
                      commandId="org.eclipse.ui.views.showView"
+                     icon="assents/statusFuncionario/statusFuncionario16.png"
                      id="mecasoft.menuStatusFuncionario"
                      label="Status dos funcionários">
                   <parameter
@@ -361,6 +369,7 @@
                </command>
                <command
                      commandId="org.eclipse.ui.views.showView"
+                     icon="assents/duplicata/duplicataPaga16.png"
                      label="Duplicatas pagas"
                      style="push">
                   <parameter
@@ -403,11 +412,6 @@
             <command
                   commandId="mecasoft.pagamentoFuncionarioCommand"
                   label="Pagamento de funcionários"
-                  style="push">
-            </command>
-            <command
-                  commandId="mecasoft.movimentacaoEstoqueCommand"
-                  label="Movimentação no estoque"
                   style="push">
             </command>
          </menu>

@@ -123,10 +123,39 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			}
 		}
 		
+		//fera movimentação no caixa para o pagamento dos produtos
+		BigDecimal valorCaixa = movimentacaoService.getTotalCaixa(UsuarioHelper.getCaixa());
+		for(ItemServico item : service.getServicoPrestado().getListaProdutos()){
+			if(item.getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO)){
+				//caso o caixa não possua dinheiro suficiente, gera um suprimento
+				if(valorCaixa.compareTo(item.getTotal()) < 0){
+					MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
+					movimentacao.setMotivo("Suprimento para pagamento de peças");
+					movimentacao.setServicoPrestado(service.getServicoPrestado());
+					movimentacao.setStatus(MovimentacaoCaixa.STATUSSUPRIMENTO);
+					movimentacao.setTipo(MovimentacaoCaixa.TIPOENTRADA);
+					movimentacao.setValor(item.getTotal());
+					
+					movimentacaoService.setMovimentacao(movimentacao);
+					movimentacaoService.saveOrUpdate();
+				}
+				
+				//sangria para o pagamento da peça
+				MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
+				movimentacao.setMotivo("Sangria para pagamento de peças");
+				movimentacao.setServicoPrestado(service.getServicoPrestado());
+				movimentacao.setStatus(MovimentacaoCaixa.STATUSSANGRIA);
+				movimentacao.setTipo(MovimentacaoCaixa.TIPOSAIDA);
+				movimentacao.setValor(item.getTotal());
+				
+				movimentacaoService.setMovimentacao(movimentacao);
+				movimentacaoService.saveOrUpdate();
+			}
+		}
+		
 		//gera a movimentação no caixa
 		if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraPagVista()){
 		
-			BigDecimal valorCaixa = movimentacaoService.getTotalCaixa(UsuarioHelper.getCaixa());
 			if(troco.compareTo(valorCaixa) > 0)
 				openWarning("Atenção, o caixa não possui dinheiro suficiente para o troco.");
 			

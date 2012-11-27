@@ -102,9 +102,12 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		
 		txtEmpresa = new Text(grpEmpresa, SWT.BORDER);
 		txtEmpresa.setEnabled(false);
-		txtEmpresa.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		GridData gd_txtEmpresa = new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 1);
+		gd_txtEmpresa.widthHint = 254;
+		txtEmpresa.setLayoutData(gd_txtEmpresa);
 		
 		Button btnSelecionar = new Button(grpEmpresa, SWT.NONE);
+		btnSelecionar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnSelecionar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -321,7 +324,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(462, 493);
+		return new Point(488, 493);
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();

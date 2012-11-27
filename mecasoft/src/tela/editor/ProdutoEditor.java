@@ -146,6 +146,7 @@ public class ProdutoEditor extends MecasoftEditor {
 		new Label(compositeConteudo, SWT.NONE);
 		
 		btnEstocavel = new Button(compositeConteudo, SWT.CHECK);
+		btnEstocavel.setEnabled(false);
 		btnEstocavel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnEstocavel.setText("Necess\u00E1rio ter em estoque");
 		new Label(compositeConteudo, SWT.NONE);
