@@ -1,9 +1,7 @@
 package banco.modelo;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,26 +12,11 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Configuracao implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5712072341645546025L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column
-	private Date dtInicioManha;
-	
-	@Column
-	private Date dtFinalManha;
-	
-	@Column
-	private Date dtInicioTarde;
-	
-	@Column
-	private Date dtFinalTarde;
 	
 	@OneToOne
 	private Pessoa representanteEmpresa;
@@ -50,38 +33,6 @@ public class Configuracao implements Serializable{
 	@NotNull(message="Selecione o status final padrão de cada serviço.")
 	private Status statusFinalizarServico;
 	
-	public Date getDtInicioManha() {
-		return dtInicioManha;
-	}
-
-	public void setDtInicioManha(Date dtInicioManha) {
-		this.dtInicioManha = dtInicioManha;
-	}
-
-	public Date getDtFinalManha() {
-		return dtFinalManha;
-	}
-
-	public void setDtFinalManha(Date dtFinalManha) {
-		this.dtFinalManha = dtFinalManha;
-	}
-
-	public Date getDtInicioTarde() {
-		return dtInicioTarde;
-	}
-
-	public void setDtInicioTarde(Date dtInicioTarde) {
-		this.dtInicioTarde = dtInicioTarde;
-	}
-
-	public Date getDtFinalTarde() {
-		return dtFinalTarde;
-	}
-
-	public void setDtFinalTarde(Date dtFinalTarde) {
-		this.dtFinalTarde = dtFinalTarde;
-	}
-
 	public Pessoa getRepresentanteEmpresa() {
 		return representanteEmpresa;
 	}

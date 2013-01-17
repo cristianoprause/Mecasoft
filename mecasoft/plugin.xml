@@ -211,6 +211,11 @@
                   label="Configurações"
                   style="push">
             </command>
+            <command
+                  commandId="mecasoft.pontoCommand"
+                  label="Sistema de ponto"
+                  style="push">
+            </command>
             <separator
                   name="mecasoft.separator1"
                   visible="true">
@@ -530,6 +535,11 @@
             defaultHandler="aplicacao.command.MovimentacaoEstoqueCommand"
             id="mecasoft.movimentacaoEstoqueCommand"
             name="Movimentação do estoque">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.PontoCommand"
+            id="mecasoft.pontoCommand"
+            name="Sistema de ponto">
       </command>
    </extension>
    <extension

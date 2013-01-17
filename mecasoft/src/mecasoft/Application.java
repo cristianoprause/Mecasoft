@@ -11,7 +11,6 @@ import org.eclipse.ui.PlatformUI;
 
 import tela.dialog.LoginDialog;
 import aplicacao.helper.UsuarioHelper;
-import aplicacao.job.AtualizarStatusJob;
 import aplicacao.service.ConfiguracaoService;
 import banco.connection.HibernateConnection;
 import banco.modelo.Configuracao;
@@ -34,7 +33,6 @@ public class Application implements IApplication {
 			LoginDialog ld = new LoginDialog(display.getActiveShell());
 			if(ld.open() == IDialogConstants.OK_ID){
 				verificacaoConfiguracoes();
-				new AtualizarStatusJob("Atualizando status dos serviços...").schedule();
 				int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
 				if (returnCode == PlatformUI.RETURN_RESTART) {
 					return IApplication.EXIT_RESTART;

@@ -3,7 +3,6 @@ package tela.dialog;
 import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.ValidatorHelper.validar;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -37,9 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 
-import tela.componentes.MecasoftText;
 import aplicacao.exception.ValidationException;
-import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ConfiguracaoService;
@@ -55,10 +52,6 @@ import banco.modelo.Usuario;
 
 public class ConfiguracaoDialog extends TitleAreaDialog {
 	private Text txtEmpresa;
-	private MecasoftText txtInicioTarde;
-	private MecasoftText txtInicioManha;
-	private MecasoftText txtFinalManha;
-	private MecasoftText txtFinalTarde;
 	private Text txtSenhaAtual;
 	private Text txtNovaSenha;
 	private Text txtConfirmarSenha;
@@ -136,21 +129,8 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		btnSelecionar.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnSelecionar.setText("Selecionar");
 		
-		Label lblInicioManha = new Label(grpEmpresa, SWT.NONE);
-		lblInicioManha.setText("In\u00EDcio manh\u00E3:");
-		
-		txtInicioManha = new MecasoftText(grpEmpresa, SWT.NONE);
-		GridData gridData = (GridData) txtInicioManha.text.getLayoutData();
-		gridData.widthHint = 100;
-		gridData.grabExcessHorizontalSpace = false;
-		txtInicioManha.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		txtInicioManha.setOptions(MecasoftText.NUMEROS, 5);
-		txtInicioManha.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
-		txtInicioManha.setText(service.getConfiguracao().getDtInicioManha() == null ? "" :
-			FormatterHelper.getDateFormatData("HH:mm").format(service.getConfiguracao().getDtInicioManha()));
-		
 		Group grpStatusParaPeriodos = new Group(grpEmpresa, SWT.NONE);
-		grpStatusParaPeriodos.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 2));
+		grpStatusParaPeriodos.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 6, 2));
 		grpStatusParaPeriodos.setText("Status para per\u00EDodos");
 		grpStatusParaPeriodos.setLayout(new GridLayout(2, false));
 		
@@ -168,33 +148,9 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		cbStatusFinal = cvStatusFinal.getCombo();
 		cbStatusFinal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblFinalManha = new Label(grpEmpresa, SWT.NONE);
-		lblFinalManha.setText("Final manh\u00E3:");
-		
-		txtFinalManha = new MecasoftText(grpEmpresa, SWT.NONE);
-		GridData gridData_1 = (GridData) txtFinalManha.text.getLayoutData();
-		gridData_1.verticalAlignment = SWT.TOP;
-		gridData_1.widthHint = 100;
-		gridData_1.grabExcessHorizontalSpace = false;
-		txtFinalManha.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		txtFinalManha.setOptions(MecasoftText.NUMEROS, 5);
-		txtFinalManha.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
-		txtFinalManha.setText(service.getConfiguracao().getDtFinalManha() == null ? "" :
-			FormatterHelper.getDateFormatData("HH:mm").format(service.getConfiguracao().getDtFinalManha()));
-		
-		Label lblInicioTarde = new Label(grpEmpresa, SWT.NONE);
-		lblInicioTarde.setText("In\u00EDcio tarde:");
-		
-		txtInicioTarde = new MecasoftText(grpEmpresa, SWT.NONE);
-		txtInicioTarde.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		txtInicioTarde.setOptions(MecasoftText.NUMEROS, 5);
-		txtInicioTarde.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
-		txtInicioTarde.setText(service.getConfiguracao().getDtInicioTarde() == null ? "" :
-			FormatterHelper.getDateFormatData("HH:mm").format(service.getConfiguracao().getDtInicioTarde()));
-		
 		Group grpStatusParaServios = new Group(grpEmpresa, SWT.NONE);
 		grpStatusParaServios.setLayout(new GridLayout(2, false));
-		grpStatusParaServios.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 2));
+		grpStatusParaServios.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 6, 2));
 		grpStatusParaServios.setText("Status para servi\u00E7os");
 		
 		Label lblFinalizarServico = new Label(grpStatusParaServios, SWT.NONE);
@@ -203,18 +159,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		cvFinalizarServico = new ComboViewer(grpStatusParaServios, SWT.READ_ONLY);
 		cbFinalizarServico = cvFinalizarServico.getCombo();
 		cbFinalizarServico.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblFinalTarde = new Label(grpEmpresa, SWT.NONE);
-		lblFinalTarde.setText("Final tarde:");
-		
-		txtFinalTarde = new MecasoftText(grpEmpresa, SWT.NONE);
-		GridData gridData_2 = (GridData) txtFinalTarde.text.getLayoutData();
-		gridData_2.grabExcessHorizontalSpace = false;
-		gridData_2.widthHint = 100;
-		txtFinalTarde.setOptions(MecasoftText.NUMEROS, 5);
-		txtFinalTarde.addChars(FormatterHelper.MECASOFTTXTHORA, new Integer[]{-2}, null, null);
-		txtFinalTarde.setText(service.getConfiguracao().getDtFinalTarde() == null ? "" :
-			FormatterHelper.getDateFormatData("HH:mm").format(service.getConfiguracao().getDtFinalTarde()));
 		
 		Group grpSenha = new Group(area, SWT.NONE);
 		grpSenha.setLayout(new GridLayout(2, false));
@@ -275,91 +219,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 				user.setSenha(txtNovaSenha.getText());
 				usuarioService.setUsuario(user);
 				usuarioService.saveOrUpdate();
-			}
-			
-			//verifica se foi informado ao menos um horario para inciar e outro para concluir
-			if((txtInicioManha.getText().isEmpty() && txtInicioTarde.getText().isEmpty())
-				|| (txtFinalManha.getText().isEmpty() && txtFinalTarde.getText().isEmpty())){
-				setErrorMessage("Informe ao menos um horário para inciar os serviços e outro para concluir.");
-				return;
-			}
-			
-			//verificar horario
-			//inicio manhã
-			if(!txtInicioManha.getText().isEmpty())
-				service.getConfiguracao().setDtInicioManha(FormatterHelper.getDateFormatData("HH:mm").parse(txtInicioManha.getText()));
-			else
-				service.getConfiguracao().setDtInicioManha(null);
-			
-			//final manhã
-			if(!txtFinalManha.getText().isEmpty())
-				service.getConfiguracao().setDtFinalManha(FormatterHelper.getDateFormatData("HH:mm").parse(txtFinalManha.getText()));
-			else
-				service.getConfiguracao().setDtFinalManha(null);
-			
-			//inicio tarde 
-			if(!txtInicioTarde.getText().isEmpty())
-				service.getConfiguracao().setDtInicioTarde(FormatterHelper.getDateFormatData("HH:mm").parse(txtInicioTarde.getText()));
-			else
-				service.getConfiguracao().setDtInicioTarde(null);
-			
-			//final tarde
-			if(!txtFinalTarde.getText().isEmpty())
-				service.getConfiguracao().setDtFinalTarde(FormatterHelper.getDateFormatData("HH:mm").parse(txtFinalTarde.getText()));
-			else
-				service.getConfiguracao().setDtFinalTarde(null);
-			
-			Calendar c = Calendar.getInstance();
-			//verifica se o inicio manha é um horario da manhã mesmo
-			if(service.getConfiguracao().getDtInicioManha() != null){
-				c.setTime(service.getConfiguracao().getDtInicioManha());
-				if(c.get(Calendar.AM_PM) == Calendar.PM){
-					setErrorMessage("Horário inválido para o início da manhã.");
-					return;
-				}
-			}
-			
-			//verifica se o final manha é um horario da manhã mesmo
-			if(service.getConfiguracao().getDtFinalManha() != null){
-				c.setTime(service.getConfiguracao().getDtFinalManha());
-				if(c.get(Calendar.AM_PM) == Calendar.PM && c.get(Calendar.HOUR) != 0){
-					setErrorMessage("Horário inválido para o final da manhã.");
-					return;
-				}
-			}
-			
-			//verifica se o final da manhã é maior que o inicio da manhã
-			if(service.getConfiguracao().getDtInicioManha() != null && service.getConfiguracao().getDtFinalManha() != null){
-				if(service.getConfiguracao().getDtFinalManha().compareTo(service.getConfiguracao().getDtInicioManha()) <= 0){
-					setErrorMessage("Horário do final da manhã deve ser maior que o horário do início da manhã.");
-					return;
-				}
-			}
-			
-			//verfica se o horário inicio tarde é um horario da tarde mesmo
-			if(service.getConfiguracao().getDtInicioTarde() != null){
-				c.setTime(service.getConfiguracao().getDtInicioTarde());
-				if(c.get(Calendar.AM_PM) == Calendar.AM){
-					setErrorMessage("Horário inválido para o início da tarde.");
-					return;
-				}
-			}
-			
-			//verifica se o horário final tarde é um horario da tarde mesmo
-			if(service.getConfiguracao().getDtFinalTarde() != null){
-				c.setTime(service.getConfiguracao().getDtFinalTarde());
-				if(c.get(Calendar.AM_PM) == Calendar.AM && c.get(Calendar.HOUR) != 0){
-					setErrorMessage("Horário inválido para o final da tarde.");
-					return;
-				}
-			}
-			
-			//verifica se hora final tarde é maior que hora inicio tarde
-			if(service.getConfiguracao().getDtFinalTarde() != null && service.getConfiguracao().getDtInicioTarde() != null){
-				if(service.getConfiguracao().getDtFinalTarde().compareTo(service.getConfiguracao().getDtInicioTarde()) <= 0){
-					setErrorMessage("Horário do final da tarde deve ser superior que o horário do início da tarde.");
-					return;
-				}
 			}
 			
 			service.saveOrUpdate();
@@ -436,20 +295,8 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		IObservableValue servicegetConfiguracaoStatusFinalizarServicoObserveValue = PojoObservables.observeValue(service.getConfiguracao(), "statusFinalizarServico");
 		bindingContext.bindValue(cvFinalizarServicoObserveSingleSelection, servicegetConfiguracaoStatusFinalizarServicoObserveValue, null, null);
 		//
-		IObservableValue observeEnabledTxtInicioManhaObserveWidget = WidgetProperties.enabled().observe(txtInicioManha);
-		IObservableValue gerServicoUsergetPapelObserveValue = PojoProperties.value("gerServico").observe(user.getPapel());
-		bindingContext.bindValue(observeEnabledTxtInicioManhaObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
-		//
-		IObservableValue observeEnabledTxtFinalManhaObserveWidget = WidgetProperties.enabled().observe(txtFinalManha);
-		bindingContext.bindValue(observeEnabledTxtFinalManhaObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
-		//
-		IObservableValue observeEnabledTxtInicioTardeObserveWidget = WidgetProperties.enabled().observe(txtInicioTarde);
-		bindingContext.bindValue(observeEnabledTxtInicioTardeObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
-		//
-		IObservableValue observeEnabledTxtFinalTardetextObserveWidget = WidgetProperties.enabled().observe(txtFinalTarde.text);
-		bindingContext.bindValue(observeEnabledTxtFinalTardetextObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
-		//
 		IObservableValue observeEnabledCbStatusInicioObserveWidget = WidgetProperties.enabled().observe(cbStatusInicio);
+		IObservableValue gerServicoUsergetPapelObserveValue = PojoProperties.value("gerServico").observe(user.getPapel());
 		bindingContext.bindValue(observeEnabledCbStatusInicioObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
 		//
 		IObservableValue observeEnabledCbStatusFinalObserveWidget = WidgetProperties.enabled().observe(cbStatusFinal);
