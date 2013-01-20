@@ -22,9 +22,6 @@ public class ProdutoFilter extends MecasoftFilter{
 		if(p.getValorUnitario().toString().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(p.getQuantidade().toString().toLowerCase().matches(search.toLowerCase()))
-			return true;
-		
 		return false;
 	}
 

@@ -24,9 +24,6 @@ import aplicacao.helper.PadraoHelper;
 @Entity
 public class ProdutoServico implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4257821782999163779L;
 	
 	public static String TIPOPRODUTO = "produto";
@@ -40,14 +37,8 @@ public class ProdutoServico implements Serializable{
 	private boolean ativo = true;
 	
 	@Column
-	private boolean estocavel;
-	
-	@Column
 	@NotEmpty(message="Informe a descrição.")
 	private String descricao;
-	
-	@Column
-	private Integer quantidade = 0;
 	
 	@Column
 	private String tipo;
@@ -106,14 +97,6 @@ public class ProdutoServico implements Serializable{
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
 	}
 
 	public String getTipo() {
@@ -189,12 +172,4 @@ public class ProdutoServico implements Serializable{
 		return true;
 	}
 
-	public boolean isEstocavel() {
-		return estocavel;
-	}
-
-	public void setEstocavel(boolean estocavel) {
-		this.estocavel = estocavel;
-	}
-	
 }

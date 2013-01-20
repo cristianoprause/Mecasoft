@@ -532,11 +532,6 @@
             name="Livro de caixa">
       </command>
       <command
-            defaultHandler="aplicacao.command.MovimentacaoEstoqueCommand"
-            id="mecasoft.movimentacaoEstoqueCommand"
-            name="Movimentação do estoque">
-      </command>
-      <command
             defaultHandler="aplicacao.command.PontoCommand"
             id="mecasoft.pontoCommand"
             name="Sistema de ponto">

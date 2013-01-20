@@ -55,14 +55,12 @@ public class ProdutoEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.ProdutoEditor"; //$NON-NLS-1$
 	private Text txtDescricao;
-	private Text txtQuantidade;
 	private Text txtCusto;
 	private Text txtValorUnitario;
 	private Table tableFornecedores;
 	private MecasoftText txtLucro;
 	private TableViewer tvFornecedores;
 	private Button btnAtivo;
-	private Button btnEstocavel;
 	
 	private ProdutoServicoService service = new ProdutoServicoService();
 	private PessoaService pessoaService = new PessoaService();
@@ -101,15 +99,6 @@ public class ProdutoEditor extends MecasoftEditor {
 		btnAtivo = new Button(compositeConteudo, SWT.CHECK);
 		btnAtivo.setText("Ativo");
 		
-		Label lblQuantidade = new Label(compositeConteudo, SWT.NONE);
-		lblQuantidade.setText("Quantidade:");
-		
-		txtQuantidade = new Text(compositeConteudo, SWT.BORDER);
-		txtQuantidade.setEnabled(false);
-		txtQuantidade.setEditable(false);
-		txtQuantidade.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeConteudo, SWT.NONE);
-		
 		Label lblCusto = new Label(compositeConteudo, SWT.NONE);
 		lblCusto.setText("Custo:");
 		
@@ -143,12 +132,6 @@ public class ProdutoEditor extends MecasoftEditor {
 		txtValorUnitario.setEnabled(false);
 		txtValorUnitario.setEditable(false);
 		txtValorUnitario.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeConteudo, SWT.NONE);
-		
-		btnEstocavel = new Button(compositeConteudo, SWT.CHECK);
-		btnEstocavel.setEnabled(false);
-		btnEstocavel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnEstocavel.setText("Necess\u00E1rio ter em estoque");
 		new Label(compositeConteudo, SWT.NONE);
 		
 		Label lblFornecedores = new Label(compositeConteudo, SWT.NONE);
@@ -312,10 +295,6 @@ public class ProdutoEditor extends MecasoftEditor {
 		IObservableValue servicegetProdutoServicoDescricaoObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "descricao");
 		bindingContext.bindValue(txtDescricaoObserveTextObserveWidget, servicegetProdutoServicoDescricaoObserveValue, null, null);
 		//
-		IObservableValue txtQuantidadeObserveTextObserveWidget = SWTObservables.observeText(txtQuantidade, SWT.Modify);
-		IObservableValue servicegetProdutoServicoQuantidadeObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "quantidade");
-		bindingContext.bindValue(txtQuantidadeObserveTextObserveWidget, servicegetProdutoServicoQuantidadeObserveValue, null, null);
-		//
 		IObservableValue txtCustoObserveTextObserveWidget = SWTObservables.observeText(txtCusto, SWT.Modify);
 		IObservableValue servicegetProdutoServicoCustoObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "custo");
 		bindingContext.bindValue(txtCustoObserveTextObserveWidget, servicegetProdutoServicoCustoObserveValue, null, null);
@@ -339,10 +318,6 @@ public class ProdutoEditor extends MecasoftEditor {
 		IObservableValue btnAtivoObserveSelectionObserveWidget = SWTObservables.observeSelection(btnAtivo);
 		IObservableValue servicegetProdutoServicoAtivoObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "ativo");
 		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, servicegetProdutoServicoAtivoObserveValue, null, null);
-		//
-		IObservableValue btnEstocavelObserveSelectionObserveWidget = SWTObservables.observeSelection(btnEstocavel);
-		IObservableValue servicegetProdutoServicoEstocavelObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "estocavel");
-		bindingContext.bindValue(btnEstocavelObserveSelectionObserveWidget, servicegetProdutoServicoEstocavelObserveValue, null, null);
 		//
 		return bindingContext;
 	}

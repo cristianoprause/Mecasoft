@@ -143,18 +143,6 @@ public class ProdutoView extends ViewPart {
 					tblclmnValorUnitario.setWidth(100);
 					tblclmnValorUnitario.setText("Valor Unitário");
 				}
-				{
-					TableViewerColumn tvcQuantEstoque = new TableViewerColumn(tvProduto, SWT.NONE);
-					tvcQuantEstoque.setLabelProvider(new ColumnLabelProvider(){
-						@Override
-						public String getText(Object element) {
-							return ((ProdutoServico)element).getQuantidade().toString();
-						}
-					});
-					TableColumn tblclmnQuantidadeEstoque = tvcQuantEstoque.getColumn();
-					tblclmnQuantidadeEstoque.setWidth(146);
-					tblclmnQuantidadeEstoque.setText("Quantidade Estoque");
-				}
 			}
 			frmListaDeProdutos.getToolBarManager().add(actionAtualizar);
 			frmListaDeProdutos.getToolBarManager().add(actionNovo);

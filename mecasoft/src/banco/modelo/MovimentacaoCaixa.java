@@ -51,9 +51,6 @@ public class MovimentacaoCaixa implements Serializable{
 	private Date dataMovimentacao = new Date();
 	
 	@ManyToOne
-	private MovimentacaoEstoque movimentacaoEstoque;
-	
-	@ManyToOne
 	private Caixa caixa = UsuarioHelper.getCaixa();
 	
 	@ManyToOne
@@ -111,14 +108,6 @@ public class MovimentacaoCaixa implements Serializable{
 
 	public void setDataMovimentacao(Date dataMovimentacao) {
 		this.dataMovimentacao = dataMovimentacao;
-	}
-
-	public MovimentacaoEstoque getMovimentacaoEstoque() {
-		return movimentacaoEstoque;
-	}
-
-	public void setMovimentacaoEstoque(MovimentacaoEstoque movimentacaoEstoque) {
-		this.movimentacaoEstoque = movimentacaoEstoque;
 	}
 
 	public Caixa getCaixa() {

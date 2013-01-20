@@ -32,7 +32,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
 
-import tela.componentes.MecasoftText;
 import tela.dialog.SelecionarItemDialog;
 import tela.editor.editorInput.ServicoEditorInput;
 import aplicacao.exception.ValidationException;
@@ -49,7 +48,6 @@ public class ServicoEditor extends MecasoftEditor {
 	private Table tableProdutos;
 	
 	private ProdutoServicoService service = new ProdutoServicoService();
-	private MecasoftText txtValorBase;
 	private TableViewer tvProdutos;
 	private Button btnAtivo;
 
@@ -76,19 +74,6 @@ public class ServicoEditor extends MecasoftEditor {
 		
 		txtDescricao = new Text(compositeConteudo, SWT.BORDER);
 		txtDescricao.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		
-		Label lblValorBase = new Label(compositeConteudo, SWT.NONE);
-		lblValorBase.setText("Valor base:");
-		
-		txtValorBase = new MecasoftText(compositeConteudo, SWT.NONE);
-		txtValorBase.setOptions(MecasoftText.NUMEROS, -1);
-		txtValorBase.addChars(",", new Integer[]{-2}, null, null);
-		((GridData) txtValorBase.text.getLayoutData()).widthHint = 203;
-		txtValorBase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		
-		btnAtivo = new Button(compositeConteudo, SWT.CHECK);
-		btnAtivo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnAtivo.setText("Ativo");
 		
 		Label lblProdutosParametrizados = new Label(compositeConteudo, SWT.NONE);
 		lblProdutosParametrizados.setText("Produtos parametrizados:");
@@ -163,6 +148,12 @@ public class ServicoEditor extends MecasoftEditor {
 		});
 		btnRemover.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
 		btnRemover.setText("Remover");
+		
+		btnAtivo = new Button(compositeConteudo, SWT.CHECK);
+		btnAtivo.setText("Ativo");
+		new Label(compositeConteudo, SWT.NONE);
+		new Label(compositeConteudo, SWT.NONE);
+		new Label(compositeConteudo, SWT.NONE);
 		initDataBindings();
 		
 	}
@@ -202,16 +193,20 @@ public class ServicoEditor extends MecasoftEditor {
 	public boolean isDirty() {
 		return service.isDirty();
 	}
+
+	@Override
+	public void setFocus() {
+		if(HibernateConnection.isSessionRefresh(service.getProdutoServico()) && service.getProdutoServico().getId() != null)
+			service.setProdutoServico(service.find(service.getProdutoServico().getId()));
+		
+		initDataBindings();
+	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
 		IObservableValue txtDescricaoObserveTextObserveWidget = SWTObservables.observeText(txtDescricao, SWT.Modify);
 		IObservableValue servicegetProdutoServicoDescricaoObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "descricao");
 		bindingContext.bindValue(txtDescricaoObserveTextObserveWidget, servicegetProdutoServicoDescricaoObserveValue, null, null);
-		//
-		IObservableValue txtValorBasetextObserveTextObserveWidget = SWTObservables.observeText(txtValorBase.text, SWT.Modify);
-		IObservableValue servicegetProdutoServicoValorUnitarioObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "valorUnitario");
-		bindingContext.bindValue(txtValorBasetextObserveTextObserveWidget, servicegetProdutoServicoValorUnitarioObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
 //		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ProdutoServico.class, new String[]{"descricao", "valorUnitario"});
@@ -226,13 +221,5 @@ public class ServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(btnAtivoObserveSelectionObserveWidget, servicegetProdutoServicoAtivoObserveValue, null, null);
 		//
 		return bindingContext;
-	}
-
-	@Override
-	public void setFocus() {
-		if(HibernateConnection.isSessionRefresh(service.getProdutoServico()) && service.getProdutoServico().getId() != null)
-			service.setProdutoServico(service.find(service.getProdutoServico().getId()));
-		
-		initDataBindings();
 	}
 }
