@@ -30,13 +30,7 @@ public class ItemServico implements Serializable{
 	private BigDecimal total;
 	
 	@Column
-	private BigDecimal acrescimo = BigDecimal.ZERO;
-	
-	@Column
 	private BigDecimal valorUnitario;
-	
-	@Column
-	private BigDecimal desconto = BigDecimal.ZERO;
 	
 	@Column
 	private String descricao;
@@ -72,28 +66,12 @@ public class ItemServico implements Serializable{
 		this.total = total;
 	}
 
-	public BigDecimal getAcrescimo() {
-		return acrescimo;
-	}
-
-	public void setAcrescimo(BigDecimal acrescimo) {
-		this.acrescimo = acrescimo;
-	}
-
 	public BigDecimal getValorUnitario() {
 		return valorUnitario;
 	}
 
 	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
-	}
-
-	public BigDecimal getDesconto() {
-		return desconto;
-	}
-
-	public void setDesconto(BigDecimal desconto) {
-		this.desconto = desconto;
 	}
 
 	public String getDescricao() {

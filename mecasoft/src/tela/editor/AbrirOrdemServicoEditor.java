@@ -50,9 +50,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.dialog.ConfiguracaoDialog;
 import tela.dialog.SelecionarItemDialog;
-import tela.editingSupport.AcrescimoItemServicoEditingSupport;
 import tela.editingSupport.DataStatusServicoEditinfSupport;
-import tela.editingSupport.DescontoItemServicoEditingSupport;
 import tela.editingSupport.QuantidadeItemServicoEditingSupport;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import tela.editor.editorInput.FecharOrdemServicoEditorInput;
@@ -231,43 +229,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		TableColumn tblclmnValorBase = tvcValorBase.getColumn();
-		tblclmnValorBase.setWidth(127);
+		tblclmnValorBase.setWidth(259);
 		tblclmnValorBase.setText("Valor Base");
-		
-		TableViewerColumn tvcDesconto = new TableViewerColumn(tvServico, SWT.NONE);
-		tvcDesconto.setEditingSupport(new DescontoItemServicoEditingSupport(tvServico));
-		tvcDesconto.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return FormatterHelper.getDecimalFormat().format(((ItemServico)element).getDesconto());
-			}
-		});
-		TableColumn tblclmnDesconto = tvcDesconto.getColumn();
-		tblclmnDesconto.setWidth(136);
-		tblclmnDesconto.setText("Desconto");
-		
-		TableViewerColumn tvcAcrescimo = new TableViewerColumn(tvServico, SWT.NONE);
-		tvcAcrescimo.setEditingSupport(new AcrescimoItemServicoEditingSupport(tvServico));
-		tvcAcrescimo.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return FormatterHelper.getDecimalFormat().format(((ItemServico)element).getAcrescimo());
-			}
-		});
-		TableColumn tblclmnAcrescimo = tvcAcrescimo.getColumn();
-		tblclmnAcrescimo.setWidth(136);
-		tblclmnAcrescimo.setText("Acrescimo");
-		
-		TableViewerColumn tvcTotalServico = new TableViewerColumn(tvServico, SWT.NONE);
-		tvcTotalServico.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return FormatterHelper.getDecimalFormat().format(((ItemServico)element).getTotal());
-			}
-		});
-		TableColumn tblclmnTotalServico = tvcTotalServico.getColumn();
-		tblclmnTotalServico.setWidth(100);
-		tblclmnTotalServico.setText("Total");
 		
 		btnAdicionarServio = new Button(compositeConteudo, SWT.NONE);
 		btnAdicionarServio.addSelectionListener(new SelectionAdapter() {
@@ -374,30 +337,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		TableColumn tblclmnValorUnitario = tvcValorUnitario.getColumn();
 		tblclmnValorUnitario.setWidth(100);
 		tblclmnValorUnitario.setText("Valor Unit\u00E1rio");
-		
-		TableViewerColumn tvcDescontoItens = new TableViewerColumn(tvItens, SWT.NONE);
-		tvcDescontoItens.setEditingSupport(new DescontoItemServicoEditingSupport(tvItens));
-		tvcDescontoItens.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return FormatterHelper.getDecimalFormat().format(((ItemServico)element).getDesconto());
-			}
-		});
-		TableColumn tblclmnDesconto_1 = tvcDescontoItens.getColumn();
-		tblclmnDesconto_1.setWidth(100);
-		tblclmnDesconto_1.setText("Desconto");
-		
-		TableViewerColumn tvcAcrescimoItens = new TableViewerColumn(tvItens, SWT.NONE);
-		tvcAcrescimoItens.setEditingSupport(new AcrescimoItemServicoEditingSupport(tvItens));
-		tvcAcrescimoItens.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return FormatterHelper.getDecimalFormat().format(((ItemServico)element).getAcrescimo());
-			}
-		});
-		TableColumn tblclmnAcrescimoProduto = tvcAcrescimoItens.getColumn();
-		tblclmnAcrescimoProduto.setWidth(100);
-		tblclmnAcrescimoProduto.setText("Acrescimo");
 		
 		TableViewerColumn tvcTotal = new TableViewerColumn(tvItens, SWT.NONE);
 		tvcTotal.setLabelProvider(new ColumnLabelProvider(){
@@ -901,8 +840,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	}
 	
 	public BigDecimal calculaTotal(ItemServico is){
-		return is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
-			.subtract(is.getDesconto()).add(is.getAcrescimo());
+		return is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()));
 	}
 	
 	public void adicionarItens(ProdutoServico ps){
@@ -1004,7 +942,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtVeiculoObserveTextObserveWidget, servicegetServicoPrestadoVeiculomodeloObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ItemServico.class, new String[]{"descricao", "valorUnitario", "desconto", "acrescimo"});
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ItemServico.class, new String[]{"descricao", "valorUnitario"});
 //		tvServico.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvServico.setContentProvider(listContentProvider);
 		//
@@ -1012,7 +950,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tvServico.setInput(servicegetServicoPrestadoListaServicosObserveList);
 		//
 		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ItemServico.class, new String[]{"descricao", "quantidade", "valorUnitario", "desconto", "acrescimo", "total"});
+//		IObservableMap[] observeMaps_1 = PojoObservables.observeMaps(listContentProvider_1.getKnownElements(), ItemServico.class, new String[]{"descricao", "quantidade", "valorUnitario", "total"});
 //		tvItens.setLabelProvider(new ObservableMapLabelProvider(observeMaps_1));
 		tvItens.setContentProvider(listContentProvider_1);
 		//
@@ -1028,8 +966,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		cvNovoStatus.setInput(writableList);
 		//
 		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
-//		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
+		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
+		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
 		tvStatus.setContentProvider(listContentProvider_3);
 		//
 		IObservableList servicegetServicoPrestadoListaStatusObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaStatus");

@@ -29,6 +29,8 @@ import aplicacao.service.PapelService;
 import banco.modelo.Papel;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 
 public class PapelView extends ViewPart {
 
@@ -70,6 +72,13 @@ public class PapelView extends ViewPart {
 		lblBuscar.setText("Buscar:");
 		
 		txtFiltro = new Text(frmListaDePapis.getBody(), SWT.BORDER);
+		txtFiltro.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				filtro.setSearch(txtFiltro.getText());
+				tvPapel.refresh();
+			}
+		});
 		txtFiltro.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtFiltro.setMessage("Filtro...");
 		formToolkit.adapt(txtFiltro, true, true);

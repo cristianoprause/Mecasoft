@@ -52,8 +52,7 @@ public class QuantidadeItemServicoEditingSupport extends EditingSupport{
 				
 					is.setQuantidade(valorQuantidade);
 					
-					BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()))
-						.subtract(is.getDesconto()).add(is.getAcrescimo());
+					BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()));
 					
 					is.setTotal(total);
 					viewer.refresh();
