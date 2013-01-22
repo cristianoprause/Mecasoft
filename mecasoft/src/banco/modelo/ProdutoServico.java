@@ -46,12 +46,6 @@ public class ProdutoServico implements Serializable{
 	@Column(precision=14, scale=2)
 	private BigDecimal valorUnitario = BigDecimal.ZERO;
 	
-	@Column(precision=14,scale=2)
-	private BigDecimal lucro = BigDecimal.ZERO;
-	
-	@Column(precision=14,scale=2)
-	private BigDecimal custo = BigDecimal.ZERO;
-	
 	@OneToMany(mappedBy="id.produto", orphanRemoval=true)
 	@Cascade(value= {CascadeType.ALL})
 	private List<ForneceProduto> listaFornecedores = new ArrayList<ForneceProduto>();
@@ -113,22 +107,6 @@ public class ProdutoServico implements Serializable{
 
 	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
-	}
-
-	public BigDecimal getLucro() {
-		return lucro;
-	}
-
-	public void setLucro(BigDecimal lucro) {
-		this.lucro = lucro;
-	}
-
-	public BigDecimal getCusto() {
-		return custo;
-	}
-
-	public void setCusto(BigDecimal custo) {
-		this.custo = custo;
 	}
 
 	public List<ForneceProduto> getListaFornecedores() {

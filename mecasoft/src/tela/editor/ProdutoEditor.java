@@ -4,24 +4,23 @@ import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.ValidatorHelper.validar;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -37,7 +36,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
 
-import tela.componentes.MecasoftText;
 import tela.dialog.SelecionarItemDialog;
 import tela.editingSupport.ForneceProdutoEditingSupport;
 import tela.editor.editorInput.ProdutoEditorInput;
@@ -55,10 +53,8 @@ public class ProdutoEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.ProdutoEditor"; //$NON-NLS-1$
 	private Text txtDescricao;
-	private Text txtCusto;
-	private Text txtValorUnitario;
+	private Text txtMediaUnitaria;
 	private Table tableFornecedores;
-	private MecasoftText txtLucro;
 	private TableViewer tvFornecedores;
 	private Button btnAtivo;
 	
@@ -99,39 +95,13 @@ public class ProdutoEditor extends MecasoftEditor {
 		btnAtivo = new Button(compositeConteudo, SWT.CHECK);
 		btnAtivo.setText("Ativo");
 		
-		Label lblCusto = new Label(compositeConteudo, SWT.NONE);
-		lblCusto.setText("Custo:");
+		Label lblMediaUnitaria = new Label(compositeConteudo, SWT.NONE);
+		lblMediaUnitaria.setText("M\u00E9dia val. unit\u00E1rio:");
 		
-		txtCusto = new Text(compositeConteudo, SWT.BORDER);
-		txtCusto.setEnabled(false);
-		txtCusto.setEditable(false);
-		txtCusto.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeConteudo, SWT.NONE);
-		
-		Label lblLucro = new Label(compositeConteudo, SWT.NONE);
-		lblLucro.setText("Lucro:");
-		
-		txtLucro = new MecasoftText(compositeConteudo, SWT.NONE);
-		txtLucro.text.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				calcularValores();
-				initDataBindings();
-			}
-		});
-		txtLucro.setOptions(MecasoftText.NUMEROS, -1);
-		txtLucro.addChars(",", new Integer[]{-2}, null, null);
-		txtLucro.setEditable(true);
-		txtLucro.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		new Label(compositeConteudo, SWT.NONE);
-		
-		Label lblValorUnitrio = new Label(compositeConteudo, SWT.NONE);
-		lblValorUnitrio.setText("Valor unit\u00E1rio:");
-		
-		txtValorUnitario = new Text(compositeConteudo, SWT.BORDER);
-		txtValorUnitario.setEnabled(false);
-		txtValorUnitario.setEditable(false);
-		txtValorUnitario.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtMediaUnitaria = new Text(compositeConteudo, SWT.BORDER);
+		txtMediaUnitaria.setEnabled(false);
+		txtMediaUnitaria.setEditable(false);
+		txtMediaUnitaria.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		
 		Label lblFornecedores = new Label(compositeConteudo, SWT.NONE);
@@ -265,25 +235,6 @@ public class ProdutoEditor extends MecasoftEditor {
 		return (Pessoa) sid.getElementoSelecionado();
 	}
 	
-	private void calcularValores(){
-		BigDecimal media = BigDecimal.ZERO;
-		for(ForneceProduto fp : service.getProdutoServico().getListaFornecedores()){
-			if(fp.getValorUnitario() != null){
-				media = media.add(fp.getValorUnitario());
-			}
-		}
-		
-		if(service.getProdutoServico().getListaFornecedores().size() != 0)
-			media = media.divide(new BigDecimal(service.getProdutoServico().getListaFornecedores().size()));
-		else
-			media = BigDecimal.ZERO;
-		
-		service.getProdutoServico().setCusto(media);
-		service.getProdutoServico().setValorUnitario(media.add(
-				service.getProdutoServico().getLucro() == null ? BigDecimal.ZERO : service.getProdutoServico().getLucro()));
-		
-	}
-
 	@Override
 	public boolean isDirty() {
 		return service.isDirty();
@@ -295,21 +246,13 @@ public class ProdutoEditor extends MecasoftEditor {
 		IObservableValue servicegetProdutoServicoDescricaoObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "descricao");
 		bindingContext.bindValue(txtDescricaoObserveTextObserveWidget, servicegetProdutoServicoDescricaoObserveValue, null, null);
 		//
-		IObservableValue txtCustoObserveTextObserveWidget = SWTObservables.observeText(txtCusto, SWT.Modify);
-		IObservableValue servicegetProdutoServicoCustoObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "custo");
-		bindingContext.bindValue(txtCustoObserveTextObserveWidget, servicegetProdutoServicoCustoObserveValue, null, null);
-		//
-		IObservableValue txtLucrotextObserveTextObserveWidget = SWTObservables.observeText(txtLucro.text, SWT.Modify);
-		IObservableValue servicegetProdutoServicoLucroObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "lucro");
-		bindingContext.bindValue(txtLucrotextObserveTextObserveWidget, servicegetProdutoServicoLucroObserveValue, null, null);
-		//
-		IObservableValue txtValorUnitarioObserveTextObserveWidget = SWTObservables.observeText(txtValorUnitario, SWT.Modify);
+		IObservableValue txtValorUnitarioObserveTextObserveWidget = SWTObservables.observeText(txtMediaUnitaria, SWT.Modify);
 		IObservableValue servicegetProdutoServicoValorUnitarioObserveValue = PojoObservables.observeValue(service.getProdutoServico(), "valorUnitario");
 		bindingContext.bindValue(txtValorUnitarioObserveTextObserveWidget, servicegetProdutoServicoValorUnitarioObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ForneceProduto.class, new String[]{"id.pessoa.nomeFantasia", "valorUnitario"});
-//		tvFornecedores.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ForneceProduto.class, new String[]{"id.pessoa.nomeFantasia", "valorUnitario"});
+		tvFornecedores.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvFornecedores.setContentProvider(listContentProvider);
 		//
 		IObservableList servicegetProdutoServicoListaFornecedoresObserveList = PojoObservables.observeList(Realm.getDefault(), service.getProdutoServico(), "listaFornecedores");

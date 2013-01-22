@@ -50,8 +50,9 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.dialog.ConfiguracaoDialog;
 import tela.dialog.SelecionarItemDialog;
-import tela.editingSupport.DataStatusServicoEditinfSupport;
+import tela.editingSupport.DataStatusServicoEditingSupport;
 import tela.editingSupport.QuantidadeItemServicoEditingSupport;
+import tela.editingSupport.ValorUnitarioItemServico;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import tela.editor.editorInput.FecharOrdemServicoEditorInput;
 import tela.filter.ServicoPrestadoProdutoFilter;
@@ -218,19 +219,20 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		TableColumn tblclmnServico = tvcServico.getColumn();
-		tblclmnServico.setWidth(165);
+		tblclmnServico.setWidth(283);
 		tblclmnServico.setText("Servi\u00E7o");
 		
-		TableViewerColumn tvcValorBase = new TableViewerColumn(tvServico, SWT.NONE);
-		tvcValorBase.setLabelProvider(new ColumnLabelProvider(){
+		TableViewerColumn tvcValorServico = new TableViewerColumn(tvServico, SWT.NONE);
+		tvcValorServico.setEditingSupport(new ValorUnitarioItemServico(tvServico));
+		tvcValorServico.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
 				return FormatterHelper.getDecimalFormat().format(((ItemServico)element).getValorUnitario());
 			}
 		});
-		TableColumn tblclmnValorBase = tvcValorBase.getColumn();
-		tblclmnValorBase.setWidth(259);
-		tblclmnValorBase.setText("Valor Base");
+		TableColumn tblclmnValorServico = tvcValorServico.getColumn();
+		tblclmnValorServico.setWidth(259);
+		tblclmnValorServico.setText("Valor");
 		
 		btnAdicionarServio = new Button(compositeConteudo, SWT.NONE);
 		btnAdicionarServio.addSelectionListener(new SelectionAdapter() {
@@ -328,6 +330,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnQuantidade.setText("Quantidade");
 		
 		TableViewerColumn tvcValorUnitario = new TableViewerColumn(tvItens, SWT.NONE);
+		tvcValorUnitario.setEditingSupport(new ValorUnitarioItemServico(tvItens));
 		tvcValorUnitario.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -607,7 +610,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnStatus.setText("Status");
 		
 		TableViewerColumn tvcData = new TableViewerColumn(tvStatus, SWT.NONE);
-		tvcData.setEditingSupport(new DataStatusServicoEditinfSupport(tvStatus));
+		tvcData.setEditingSupport(new DataStatusServicoEditingSupport(tvStatus));
 		tvcData.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -966,8 +969,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		cvNovoStatus.setInput(writableList);
 		//
 		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
-		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
-		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
+//		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
+//		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
 		tvStatus.setContentProvider(listContentProvider_3);
 		//
 		IObservableList servicegetServicoPrestadoListaStatusObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaStatus");

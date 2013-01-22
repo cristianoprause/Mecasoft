@@ -1,8 +1,7 @@
 package tela.editingSupport;
 
-import static aplicacao.helper.MessageHelper.openWarning;
-
-import java.util.Date;
+import java.math.BigDecimal;
+import java.text.ParseException;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -10,17 +9,18 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 
 import aplicacao.helper.FormatterHelper;
-import banco.modelo.StatusServico;
+import banco.modelo.ItemServico;
 
-public class DataStatusServicoEditinfSupport extends EditingSupport{
+public class ValorUnitarioItemServico extends EditingSupport{
 
 	private TableViewer viewer;
-	
-	public DataStatusServicoEditinfSupport(TableViewer viewer) {
+
+	public ValorUnitarioItemServico(TableViewer viewer) {
 		super(viewer);
 		this.viewer = viewer;
 	}
 
+	
 	@Override
 	protected CellEditor getCellEditor(Object element) {
 		TextCellEditor tce = new TextCellEditor(viewer.getTable());
@@ -34,29 +34,30 @@ public class DataStatusServicoEditinfSupport extends EditingSupport{
 
 	@Override
 	protected Object getValue(Object element) {
-		StatusServico ss = (StatusServico) element;
+		ItemServico is = (ItemServico)element;
 		
-		if(ss != null)
-			return FormatterHelper.getDateFormatData("dd/MM/yyyy HH:mm").format(ss.getData());
+		if(is.getValorUnitario() != null)
+			return FormatterHelper.getDecimalFormat().format(is.getValorUnitario());
 		
 		return "";
 	}
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		StatusServico ss = (StatusServico) element;
-		String v = (String)value;
+		ItemServico is = (ItemServico)element;
+		String val = (String)value;
 		
-		if(!v.isEmpty()){
-			try{
-				Date data = FormatterHelper.getDateFormatData("dd/MM/yyyy HH:mm").parse(v);
-				ss.setData(data);
+		if(!val.isEmpty()){
+			try {
+				is.setValorUnitario(new BigDecimal(FormatterHelper.getDecimalFormat().parse(val).toString()));
+				is.setTotal(is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade())));
+				
 				viewer.refresh();
-			}catch(Exception e){
-				openWarning("Informe a data e hora corretamente no formato: dd/mm/aaaa hh:mm");
+			} catch (ParseException e) {
+				e.printStackTrace();
 			}
+			
 		}
-		
 	}
 
 }

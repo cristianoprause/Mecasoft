@@ -76,8 +76,7 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 		else
 			media = BigDecimal.ZERO;
 		
-		ps.setCusto(media);
-		ps.setValorUnitario(media.add(ps.getLucro() == null ? BigDecimal.ZERO : ps.getLucro()));
+		ps.setValorUnitario(media);
 		
 	}
 

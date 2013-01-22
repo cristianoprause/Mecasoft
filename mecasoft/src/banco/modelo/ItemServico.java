@@ -14,9 +14,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class ItemServico implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1085293949054197011L;
 	
 	@Id
