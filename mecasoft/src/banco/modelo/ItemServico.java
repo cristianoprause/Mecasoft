@@ -36,6 +36,9 @@ public class ItemServico implements Serializable{
 	private ProdutoServico item;
 	
 	@ManyToOne
+	private Pessoa fornecedor;
+	
+	@ManyToOne
 	@JoinColumn(name="servicoPrestado_id")
 	private ServicoPrestado servicoPrestado;
 
@@ -93,6 +96,14 @@ public class ItemServico implements Serializable{
 
 	public void setServicoPrestado(ServicoPrestado servicoPrestado) {
 		this.servicoPrestado = servicoPrestado;
+	}
+
+	public Pessoa getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Pessoa fornecedor) {
+		this.fornecedor = fornecedor;
 	}
 
 	@Override

@@ -19,10 +19,12 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -77,11 +79,10 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	private MecasoftText txtTotalServico;
 	private MecasoftText txtTotalItem;
 	private MecasoftText txtLocomocao;
-	private MecasoftText txtMaoObra;
 	private MecasoftText txtDesconto;
 	private MecasoftText txtTroco;
 	private TableViewer tvFormaPagamento;
-	private MecasoftText txtJuros;
+	private MecasoftText txtIss;
 	private Button btnAdicionar;
 	
 	private ServicoPrestadoService service = new ServicoPrestadoService();
@@ -296,34 +297,19 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		txtLocomocao.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		
-		Label lblMaoDeObra = new Label(compositeConteudo, SWT.NONE);
-		lblMaoDeObra.setText("M\u00E3o de obra:");
+		Label lblIss = new Label(compositeConteudo, SWT.NONE);
+		lblIss.setText("Iss:");
 		
-		txtMaoObra = new MecasoftText(compositeConteudo, SWT.NONE);
-		txtMaoObra.text.addFocusListener(new FocusAdapter() {
+		txtIss = new MecasoftText(compositeConteudo, SWT.NONE);
+		txtIss.text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				calcularTotais();
 			}
 		});
-		txtMaoObra.setOptions(MecasoftText.NUMEROS, -1);
-		txtMaoObra.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
-		txtMaoObra.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		new Label(compositeConteudo, SWT.NONE);
-		
-		Label lblJuros = new Label(compositeConteudo, SWT.NONE);
-		lblJuros.setText("Juros:");
-		
-		txtJuros = new MecasoftText(compositeConteudo, SWT.NONE);
-		txtJuros.text.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				calcularTotais();
-			}
-		});
-		txtJuros.setOptions(MecasoftText.NUMEROS, -1);
-		txtJuros.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
-		txtJuros.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtIss.setOptions(MecasoftText.NUMEROS, 4);
+		txtIss.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
+		txtIss.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
 		
 		Label lblDesconto = new Label(compositeConteudo, SWT.NONE);
@@ -501,14 +487,16 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	private void calcularTotais(){
 		BigDecimal totalServico = service.getServicoPrestado().getTotalServico();
 		BigDecimal totalItens = service.getServicoPrestado().getTotalItens();
-		BigDecimal maoObra = service.getServicoPrestado().getTotalMaoObra();
 		BigDecimal locomocao = service.getServicoPrestado().getTotalLocomocao();
-		BigDecimal juros = service.getServicoPrestado().getJuros();
+		BigDecimal iss = service.getServicoPrestado().getIss();
 		
-		service.getServicoPrestado().setValorTotal(totalServico.add(totalItens).add(maoObra).add(locomocao).add(juros));
+		//calcula o valor total e adiciona a porcentagem de iss
+		service.getServicoPrestado().setValorTotal(totalServico.add(totalItens).add(locomocao));
+		BigDecimal valorIss = service.getServicoPrestado().getValorTotal().divide(new BigDecimal(100)).multiply(iss);
+		service.getServicoPrestado().setValorTotal(service.getServicoPrestado().getValorTotal().add(valorIss));
 		
+		//adiciona descontos ao servico
 		BigDecimal desconto = service.getServicoPrestado().getDesconto() == null ? BigDecimal.ZERO : service.getServicoPrestado().getDesconto();
-		
 		service.getServicoPrestado().setValorTotal(service.getServicoPrestado().getValorTotal().subtract(desconto));
 		
 		troco = BigDecimal.ZERO;
@@ -528,6 +516,12 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	public boolean isDirty() {
 		return service.isDirty();
 	}
+
+	@Override
+	public void setFocus() {
+		if(HibernateConnection.isSessionRefresh(service.getServicoPrestado()) && service.getServicoPrestado().getId() != null)
+			service.setServicoPrestado(service.find(service.getServicoPrestado().getId()));
+	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
@@ -542,10 +536,6 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		IObservableValue txtLocomocaotextObserveTextObserveWidget = SWTObservables.observeText(txtLocomocao.text, SWT.Modify);
 		IObservableValue servicegetServicoPrestadoTotalLocomocaoObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "totalLocomocao");
 		bindingContext.bindValue(txtLocomocaotextObserveTextObserveWidget, servicegetServicoPrestadoTotalLocomocaoObserveValue, null, null);
-		//
-		IObservableValue txtMaoObratextObserveTextObserveWidget = SWTObservables.observeText(txtMaoObra.text, SWT.Modify);
-		IObservableValue servicegetServicoPrestadoTotalMaoObraObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "totalMaoObra");
-		bindingContext.bindValue(txtMaoObratextObserveTextObserveWidget, servicegetServicoPrestadoTotalMaoObraObserveValue, null, null);
 		//
 		IObservableValue txtDescontotextObserveTextObserveWidget = SWTObservables.observeText(txtDesconto.text, SWT.Modify);
 		IObservableValue servicegetServicoPrestadoDescontoObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "desconto");
@@ -567,16 +557,10 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		IObservableList servicegetServicoPrestadoListaFormaPagtoObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaFormaPagto");
 		tvFormaPagamento.setInput(servicegetServicoPrestadoListaFormaPagtoObserveList);
 		//
-		IObservableValue txtJurostextObserveTextObserveWidget = SWTObservables.observeText(txtJuros.text, SWT.Modify);
-		IObservableValue servicegetServicoPrestadoJurosObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "juros");
-		bindingContext.bindValue(txtJurostextObserveTextObserveWidget, servicegetServicoPrestadoJurosObserveValue, null, null);
+		IObservableValue observeTextTxtIsstextObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtIss.text);
+		IObservableValue issServicegetServicoPrestadoObserveValue = PojoProperties.value("iss").observe(service.getServicoPrestado());
+		bindingContext.bindValue(observeTextTxtIsstextObserveWidget, issServicegetServicoPrestadoObserveValue, null, null);
 		//
 		return bindingContext;
-	}
-
-	@Override
-	public void setFocus() {
-		if(HibernateConnection.isSessionRefresh(service.getServicoPrestado()) && service.getServicoPrestado().getId() != null)
-			service.setServicoPrestado(service.find(service.getServicoPrestado().getId()));
 	}
 }

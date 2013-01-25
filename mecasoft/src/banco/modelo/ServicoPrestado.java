@@ -43,9 +43,6 @@ public class ServicoPrestado implements Serializable{
 	private BigDecimal totalLocomocao = BigDecimal.ZERO;
 	
 	@Column
-	private BigDecimal totalMaoObra = BigDecimal.ZERO;
-	
-	@Column
 	private BigDecimal valorTotal;
 	
 	@Column
@@ -58,13 +55,13 @@ public class ServicoPrestado implements Serializable{
 	private BigDecimal valorEntrada = BigDecimal.ZERO;
 	
 	@Column
-	private BigDecimal juros = BigDecimal.ZERO;
-	
-	@Column
 	private Date dataAbertura = new Date();
 	
 	@Column
 	private Date dataFechamento;
+	
+	@Column
+	private BigDecimal iss = BigDecimal.ZERO;
 	
 	@ManyToOne
 	@NotNull(message="Selecione o cliente.")
@@ -133,14 +130,6 @@ public class ServicoPrestado implements Serializable{
 		this.totalLocomocao = totalLocomocao;
 	}
 
-	public BigDecimal getTotalMaoObra() {
-		return totalMaoObra;
-	}
-
-	public void setTotalMaoObra(BigDecimal totalMaoObra) {
-		this.totalMaoObra = totalMaoObra;
-	}
-
 	public BigDecimal getValorTotal() {
 		return valorTotal;
 	}
@@ -171,14 +160,6 @@ public class ServicoPrestado implements Serializable{
 
 	public void setValorEntrada(BigDecimal valorEntrada) {
 		this.valorEntrada = valorEntrada;
-	}
-
-	public BigDecimal getJuros() {
-		return juros;
-	}
-
-	public void setJuros(BigDecimal juros) {
-		this.juros = juros;
 	}
 
 	public Date getDataAbertura() {
@@ -243,6 +224,14 @@ public class ServicoPrestado implements Serializable{
 
 	public void setListaFormaPagto(List<FormaPagtoUtilizada> listaFormaPagto) {
 		this.listaFormaPagto = listaFormaPagto;
+	}
+
+	public BigDecimal getIss() {
+		return iss;
+	}
+
+	public void setValorIss(BigDecimal iss) {
+		this.iss = iss;
 	}
 
 	@Override
