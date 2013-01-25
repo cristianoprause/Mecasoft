@@ -76,6 +76,8 @@ import banco.modelo.ServicoPrestado;
 import banco.modelo.Status;
 import banco.modelo.StatusServico;
 import banco.modelo.Veiculo;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
@@ -570,6 +572,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				if(openQuestion("Deseja realmente remover este status do serviço?")){
 					StatusServico ss = (StatusServico)selecao.getFirstElement();
 					service.getServicoPrestado().getListaStatus().remove(ss);
+					txtStatusAtual.setText(service.getServicoPrestado().getUltimoStatus().getStatus().getDescricao());
 					tvStatus.refresh();
 				}
 				
@@ -596,7 +599,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		lblStatus.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		lblStatus.setText("Status:");
 		
-		tvStatus = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
+		tvStatus = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION | SWT.NONE);
 		tableStatus = tvStatus.getTable();
 		tableStatus.setLinesVisible(true);
 		tableStatus.setHeaderVisible(true);
@@ -669,6 +672,39 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		TableColumn tblclmnFuncionario = tvcFuncionario.getColumn();
 		tblclmnFuncionario.setWidth(299);
 		tblclmnFuncionario.setText("Funcion\u00E1rio");
+		
+		Menu menu = new Menu(tableStatus);
+		tableStatus.setMenu(menu);
+		
+		MenuItem mntmInverterStatus = new MenuItem(menu, SWT.NONE);
+		mntmInverterStatus.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				StatusServico statusAtual = service.getServicoPrestado().getUltimoStatus();
+				
+				if(statusAtual == null)
+					return;
+				
+				if(UsuarioHelper.getConfiguracaoPadrao() == null){
+					setErroMessage("Para concluir esta operação, primeiro registre os status em Arquivo/Configurações");
+					return;
+				}
+				
+				StatusServico novoStatus = new StatusServico();
+				novoStatus.setFuncionario(statusAtual.getFuncionario());
+				novoStatus.setServicoPrestado(service.getServicoPrestado());
+				
+				if(statusAtual.getStatus().isPausar())
+					novoStatus.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio());
+				else
+					novoStatus.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
+				
+				service.getServicoPrestado().getListaStatus().add(novoStatus);
+				txtStatusAtual.setText(novoStatus.getStatus().getDescricao());
+				tvStatus.refresh();
+			}
+		});
+		mntmInverterStatus.setText("Inverter Status");
 		new Label(compositeConteudo, SWT.NONE);
 		
 		btnCancelarOrdem = createNewButton();

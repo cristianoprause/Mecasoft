@@ -10,11 +10,9 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -251,8 +249,8 @@ public class ProdutoEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtValorUnitarioObserveTextObserveWidget, servicegetProdutoServicoValorUnitarioObserveValue, null, null);
 		//
 		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ForneceProduto.class, new String[]{"id.pessoa.nomeFantasia", "valorUnitario"});
-		tvFornecedores.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
+//		IObservableMap[] observeMaps = PojoObservables.observeMaps(listContentProvider.getKnownElements(), ForneceProduto.class, new String[]{"id.pessoa.nomeFantasia", "valorUnitario"});
+//		tvFornecedores.setLabelProvider(new ObservableMapLabelProvider(observeMaps));
 		tvFornecedores.setContentProvider(listContentProvider);
 		//
 		IObservableList servicegetProdutoServicoListaFornecedoresObserveList = PojoObservables.observeList(Realm.getDefault(), service.getProdutoServico(), "listaFornecedores");

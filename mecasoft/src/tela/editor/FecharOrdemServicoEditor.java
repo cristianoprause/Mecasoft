@@ -307,7 +307,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 				calcularTotais();
 			}
 		});
-		txtIss.setOptions(MecasoftText.NUMEROS, 4);
+		txtIss.setOptions(MecasoftText.NUMEROS, 6);
 		txtIss.addChars(FormatterHelper.MECASOFTTXTMOEDA, new Integer[]{-2}, null, null);
 		txtIss.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeConteudo, SWT.NONE);
