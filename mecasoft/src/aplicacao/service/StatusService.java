@@ -2,6 +2,7 @@ package aplicacao.service;
 
 import java.util.List;
 
+import aplicacao.helper.UsuarioHelper;
 import banco.modelo.Status;
 import banco.utils.StatusUtils;
 
@@ -35,7 +36,12 @@ public class StatusService extends MecasoftService<Status>{
 	}
 	
 	public List<Status> findAllAtivos(){
-		return getDAO().findAllByStatusAndFuncao(true, null);
+		List<Status> listaStatus = getDAO().findAllByStatusAndFuncao(true, null);
+		
+		if(UsuarioHelper.getConfiguracaoPadrao() != null)
+			listaStatus.remove(UsuarioHelper.getConfiguracaoPadrao().getStatusFinalizarServico());
+		
+		return listaStatus;
 	}
 	
 	public List<Status> findAllAtivosByFuncao(boolean pausar){

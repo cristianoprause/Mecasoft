@@ -487,8 +487,8 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	private void calcularTotais(){
 		BigDecimal totalServico = service.getServicoPrestado().getTotalServico();
 		BigDecimal totalItens = service.getServicoPrestado().getTotalItens();
-		BigDecimal locomocao = service.getServicoPrestado().getTotalLocomocao();
-		BigDecimal iss = service.getServicoPrestado().getIss();
+		BigDecimal locomocao = service.getServicoPrestado().getTotalLocomocao() == null ? BigDecimal.ZERO : service.getServicoPrestado().getTotalLocomocao();
+		BigDecimal iss = service.getServicoPrestado().getIss() == null ? BigDecimal.ZERO : service.getServicoPrestado().getIss();
 		
 		//calcula o valor total e adiciona a porcentagem de iss
 		service.getServicoPrestado().setValorTotal(totalServico.add(totalItens).add(locomocao));

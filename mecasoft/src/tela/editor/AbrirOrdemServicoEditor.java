@@ -68,6 +68,7 @@ import aplicacao.service.ServicoPrestadoService;
 import aplicacao.service.StatusService;
 import aplicacao.service.StatusServicoService;
 import banco.connection.HibernateConnection;
+import banco.modelo.ForneceProduto;
 import banco.modelo.ItemServico;
 import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
@@ -258,7 +259,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					
 					for(ProdutoServico item : ps.getListaProduto())
 						if(item.getAtivo())
-							adicionarItens(item);
+							adicionarItens(item, null);
 					
 					tvServico.refresh();
 				}
@@ -317,6 +318,22 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnDescricao.setWidth(143);
 		tblclmnDescricao.setText("Descri\u00E7\u00E3o");
 		
+		TableViewerColumn tvcFornecedor = new TableViewerColumn(tvItens, SWT.NONE);
+		tvcFornecedor.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				Pessoa fornecedor = ((ItemServico)element).getFornecedor();
+				
+				if(fornecedor == null)
+					return "";
+				else
+					return fornecedor.getNome();
+			}
+		});
+		TableColumn tblclmnFornecedor = tvcFornecedor.getColumn();
+		tblclmnFornecedor.setWidth(171);
+		tblclmnFornecedor.setText("Fornecedor");
+		
 		TableViewerColumn tvcQuantidade = new TableViewerColumn(tvItens, SWT.NONE);
 		tvcQuantidade.setEditingSupport(new QuantidadeItemServicoEditingSupport(tvItens));
 		tvcQuantidade.setLabelProvider(new ColumnLabelProvider(){
@@ -359,7 +376,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			public void widgetSelected(SelectionEvent e) {
 				ProdutoServico ps = selecionarProduto();
 				if(ps != null){
-					adicionarItens(ps);
+					Pessoa fornecedor = selecionarFornecedor(ps);
+					adicionarItens(ps, fornecedor);
 				}
 			}
 		});
@@ -769,6 +787,20 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		return (Pessoa) sid.getElementoSelecionado();
 	}
 	
+	private Pessoa selecionarFornecedor(ProdutoServico produto){
+		SelecionarItemDialog sid = new SelecionarItemDialog(getActiveShell(), new LabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((ForneceProduto)element).getId().getPessoa().getNome() + " - R$" +
+						FormatterHelper.getDecimalFormat().format(((ForneceProduto)element).getValorUnitario());
+			}
+		});
+		
+		sid.setElements(produto.getListaFornecedores().toArray());
+		
+		return ((ForneceProduto)sid.getElementoSelecionado()).getId().getPessoa();
+	}
+	
 	private Veiculo selecionarVeiculo(){
 		if(service.getServicoPrestado().getCliente() == null){
 			openWarning("Selecione primeiro o cliente para selecionar um veículo.");
@@ -846,9 +878,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		return is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()));
 	}
 	
-	public void adicionarItens(ProdutoServico ps){
+	public void adicionarItens(ProdutoServico ps, Pessoa fornecedor){
 		for(ItemServico item : service.getServicoPrestado().getListaProdutos()){
-			if(item.getItem().equals(ps)){
+			if(item.getItem().equals(ps) && item.getFornecedor() != null && item.getFornecedor().equals(fornecedor)){
 				item.setQuantidade(item.getQuantidade() + 1);
 				item.setTotal(calculaTotal(item));
 				tvItens.refresh();
@@ -862,6 +894,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		is.setQuantidade(1);
 		is.setTotal(ps.getValorUnitario());
 		is.setItem(ps);
+		is.setFornecedor(fornecedor);
 		is.setServicoPrestado(service.getServicoPrestado());
 		service.getServicoPrestado().getListaProdutos().add(is);
 		service.getServicoPrestado().getListaServicos().add(is);

@@ -230,7 +230,7 @@ public class ServicoPrestado implements Serializable{
 		return iss;
 	}
 
-	public void setValorIss(BigDecimal iss) {
+	public void setIss(BigDecimal iss) {
 		this.iss = iss;
 	}
 
