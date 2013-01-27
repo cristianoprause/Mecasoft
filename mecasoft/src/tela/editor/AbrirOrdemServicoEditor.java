@@ -32,12 +32,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -51,6 +54,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import tela.dialog.ConfiguracaoDialog;
 import tela.dialog.SelecionarItemDialog;
 import tela.editingSupport.DataStatusServicoEditingSupport;
+import tela.editingSupport.FornecedorVisivelItemServicoEditingSupport;
 import tela.editingSupport.QuantidadeItemServicoEditingSupport;
 import tela.editingSupport.ValorUnitarioItemServico;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
@@ -76,8 +80,6 @@ import banco.modelo.ServicoPrestado;
 import banco.modelo.Status;
 import banco.modelo.StatusServico;
 import banco.modelo.Veiculo;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 
 public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
@@ -345,7 +347,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		TableColumn tblclmnQuantidade = tvcQuantidade.getColumn();
-		tblclmnQuantidade.setWidth(100);
+		tblclmnQuantidade.setWidth(80);
 		tblclmnQuantidade.setText("Quantidade");
 		
 		TableViewerColumn tvcValorUnitario = new TableViewerColumn(tvItens, SWT.NONE);
@@ -369,8 +371,32 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		});
 		TableColumn tblclmnTotal = tvcTotal.getColumn();
 		tblclmnTotal.setResizable(false);
-		tblclmnTotal.setWidth(100);
+		tblclmnTotal.setWidth(71);
 		tblclmnTotal.setText("Total");
+		
+		TableViewerColumn tvcFornecedorVisivel = new TableViewerColumn(tvItens, SWT.NONE);
+		tvcFornecedorVisivel.setEditingSupport(new FornecedorVisivelItemServicoEditingSupport(tvItens));
+		tvcFornecedorVisivel.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return null;
+			}
+			
+			@Override
+			public Image getImage(Object element) {
+				ItemServico is = (ItemServico)element;
+				
+				if(is.isFornecedorVisivel())
+					return ResourceManager.getPluginImage("mecasoft", "assents/funcoes/checked16.png");
+				else
+					return ResourceManager.getPluginImage("mecasoft", "assents/funcoes/unChecked16.png");
+			}
+			
+		});
+		TableColumn tblclmnFornecedorVisivel = tvcFornecedorVisivel.getColumn();
+		tblclmnFornecedorVisivel.setAlignment(SWT.CENTER);
+		tblclmnFornecedorVisivel.setWidth(100);
+		tblclmnFornecedorVisivel.setText("Fornecedor vis\u00EDvel");
 		
 		btnAdicionarItem = new Button(compositeConteudo, SWT.NONE);
 		btnAdicionarItem.addSelectionListener(new SelectionAdapter() {

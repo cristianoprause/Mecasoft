@@ -32,6 +32,9 @@ public class ItemServico implements Serializable{
 	@Column
 	private String descricao;
 	
+	@Column
+	private boolean fornecedorVisivel;
+	
 	@ManyToOne
 	private ProdutoServico item;
 	
@@ -104,6 +107,14 @@ public class ItemServico implements Serializable{
 
 	public void setFornecedor(Pessoa fornecedor) {
 		this.fornecedor = fornecedor;
+	}
+
+	public boolean isFornecedorVisivel() {
+		return fornecedorVisivel;
+	}
+
+	public void setFornecedorVisivel(boolean fornecedorVisivel) {
+		this.fornecedorVisivel = fornecedorVisivel;
 	}
 
 	@Override
