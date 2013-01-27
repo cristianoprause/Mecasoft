@@ -54,6 +54,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import tela.dialog.ConfiguracaoDialog;
 import tela.dialog.SelecionarItemDialog;
 import tela.editingSupport.DataStatusServicoEditingSupport;
+import tela.editingSupport.FornecedorItemServicoEditingSupport;
 import tela.editingSupport.FornecedorVisivelItemServicoEditingSupport;
 import tela.editingSupport.QuantidadeItemServicoEditingSupport;
 import tela.editingSupport.ValorUnitarioItemServico;
@@ -323,6 +324,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnDescricao.setText("Descri\u00E7\u00E3o");
 		
 		TableViewerColumn tvcFornecedor = new TableViewerColumn(tvItens, SWT.NONE);
+		tvcFornecedor.setEditingSupport(new FornecedorItemServicoEditingSupport(tvItens));
 		tvcFornecedor.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -860,7 +862,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		sid.setElements(produto.getListaFornecedores().toArray());
 		
-		return ((ForneceProduto)sid.getElementoSelecionado()).getId().getPessoa();
+		ForneceProduto fp =  (ForneceProduto)sid.getElementoSelecionado();
+		return fp == null ? null : fp.getId().getPessoa();
 	}
 	
 	private Veiculo selecionarVeiculo(){
@@ -950,11 +953,13 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			}
 		}
 
+		ForneceProduto fp = fornecedor == null ? null : ps.getListaFornecedores().get(ps.getListaFornecedores().indexOf(fornecedor));
+		
 		ItemServico is = new ItemServico();
 		is.setDescricao(ps.getDescricao());
-		is.setValorUnitario(ps.getValorUnitario());
+		is.setValorUnitario(fp == null ? ps.getValorUnitario() : fp.getValorUnitario());
 		is.setQuantidade(1);
-		is.setTotal(ps.getValorUnitario());
+		is.setTotal(fp == null ? ps.getValorUnitario() : fp.getValorUnitario());
 		is.setItem(ps);
 		is.setFornecedor(fornecedor);
 		is.setServicoPrestado(service.getServicoPrestado());

@@ -518,6 +518,11 @@ public class PessoaEditor extends MecasoftEditor {
 	@Override
 	public void salvarRegistro() throws ValidationException{
 		validar(service.getPessoa());
+		
+		for(ForneceProduto fp : service.getPessoa().getListaProduto()){
+			if(fp.getValorUnitario() == null)
+				throw new ValidationException("Não foi informado o valor de um ou mais produtos.");
+		}
 			
 		if(service.getPessoa().getFoneFax().isEmpty() && service.getPessoa().getCelular().isEmpty())
 			throw new ValidationException("Informe ao menos um telefone.");
