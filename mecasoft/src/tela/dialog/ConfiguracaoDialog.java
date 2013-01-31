@@ -1,8 +1,14 @@
 package tela.dialog;
 
+import static aplicacao.helper.LayoutHelper.getActiveShell;
 import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.ValidatorHelper.validar;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -30,6 +36,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -51,23 +58,27 @@ import banco.modelo.Status;
 import banco.modelo.Usuario;
 
 public class ConfiguracaoDialog extends TitleAreaDialog {
-	private Text txtEmpresa;
-	private Text txtSenhaAtual;
-	private Text txtNovaSenha;
-	private Text txtConfirmarSenha;
-	
+
 	private ConfiguracaoService service = new ConfiguracaoService();
 	private UsuarioService usuarioService = new UsuarioService();
 	private StatusService statusService = new StatusService();
 	private List<Status> statusIniciais;
 	private List<Status> statusFinais;
 	private Usuario user;
+	
+	private Text txtEmpresa;
+	private Text txtSenhaAtual;
+	private Text txtNovaSenha;
+	private Text txtConfirmarSenha;
 	private ComboViewer cvStatusInicio;
 	private ComboViewer cvStatusFinal;
 	private Combo cbStatusInicio;
 	private Combo cbStatusFinal;
 	private ComboViewer cvFinalizarServico;
 	private Combo cbFinalizarServico;
+	private Text txtLogoEmpresa;
+	private Label lblStatusLogo;
+	private Label lblIconStatusLogo;
 
 	public ConfiguracaoDialog(Shell parentShell) {
 		super(parentShell);
@@ -114,9 +125,9 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		gd_txtEmpresa.widthHint = 254;
 		txtEmpresa.setLayoutData(gd_txtEmpresa);
 		
-		Button btnSelecionar = new Button(grpEmpresa, SWT.NONE);
-		btnSelecionar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnSelecionar.addSelectionListener(new SelectionAdapter() {
+		Button btnSelecionarEmpresa = new Button(grpEmpresa, SWT.NONE);
+		btnSelecionarEmpresa.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnSelecionarEmpresa.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Pessoa p = selecionarPessoa();
@@ -126,8 +137,53 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		btnSelecionar.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
-		btnSelecionar.setText("Selecionar");
+		btnSelecionarEmpresa.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
+		btnSelecionarEmpresa.setText("Selecionar");
+		
+		Label lblLogoDaEmpresa = new Label(grpEmpresa, SWT.NONE);
+		lblLogoDaEmpresa.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblLogoDaEmpresa.setText("Logo da empresa:");
+		
+		txtLogoEmpresa = new Text(grpEmpresa, SWT.BORDER);
+		txtLogoEmpresa.setEnabled(false);
+		txtLogoEmpresa.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		
+		Button btnSelecionarLogo = new Button(grpEmpresa, SWT.NONE);
+		btnSelecionarLogo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//pega o arquivo
+				FileDialog fd = new FileDialog(getActiveShell(), SWT.SINGLE);
+				fd.setFilterExtensions(new String[]{"*.png", "*.jpg"});
+				String caminho = fd.open();
+				
+				//adiciona o nome do arquivo as configuracoes
+				service.getConfiguracao().setLogoEmpresa(fd.getFileName());
+				initDataBindings();
+				
+				//verifica se o usuário selecionou uma imagem
+				if(caminho == null)
+					return;
+				
+				//se o arquivo existir mesmo, move para a pasta do sistema
+				File file = new File(caminho);
+				if(!file.exists())
+					return;
+				
+				moveLogo(file);
+				verificaLogo();
+			}
+		});
+		btnSelecionarLogo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
+		btnSelecionarLogo.setText("Selecionar");
+		
+		lblIconStatusLogo = new Label(grpEmpresa, SWT.NONE);
+		lblIconStatusLogo.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		
+		lblStatusLogo = new Label(grpEmpresa, SWT.NONE);
+		lblStatusLogo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
+		new Label(grpEmpresa, SWT.NONE);
+		verificaLogo();
 		
 		Group grpStatusParaPeriodos = new Group(grpEmpresa, SWT.NONE);
 		grpStatusParaPeriodos.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 6, 2));
@@ -248,10 +304,51 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		
 		return (Pessoa)sid.getElementoSelecionado();
 	}
+	
+	private void verificaLogo(){
+		if (service.getConfiguracao().getLogoEmpresa() == null || service.getConfiguracao().getLogoEmpresa().isEmpty()){
+			lblIconStatusLogo.setImage(null);
+			lblStatusLogo.setText("");
+			return;
+		}
+
+		File file = new File(Configuracao.caminhoLogo + service.getConfiguracao().getLogoEmpresa());
+
+		if (file.exists()) {
+			lblIconStatusLogo.setImage(ResourceManager.getPluginImage(
+					"mecasoft", "assents/funcoes/ativo16.png"));
+
+			lblStatusLogo.setText("Imagem encontrada");
+			lblStatusLogo.setForeground(ResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+		}else{
+			lblIconStatusLogo.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/inativo16.png"));
+			
+			lblStatusLogo.setText("Imagem não encontrada");
+			lblStatusLogo.setForeground(ResourceManager.getColor(SWT.COLOR_RED));
+		}
+	}
+	
+	private void moveLogo(File file){
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			FileOutputStream fos = new FileOutputStream(new File(Configuracao.caminhoLogo + service.getConfiguracao().getLogoEmpresa()));
+			byte array[] = new byte[10000];
+			
+			while(fis.read(array) > -1)
+				fos.write(array);
+			
+			fis.close();
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(488, 493);
+		return new Point(488, 511);
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
@@ -304,6 +401,10 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		//
 		IObservableValue observeEnabledCbFinalizarServicoObserveWidget = WidgetProperties.enabled().observe(cbFinalizarServico);
 		bindingContext.bindValue(observeEnabledCbFinalizarServicoObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
+		//
+		IObservableValue observeTextTxtLogoEmpresaObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtLogoEmpresa);
+		IObservableValue logoEmpresaServicegetConfiguracaoObserveValue = PojoProperties.value("logoEmpresa").observe(service.getConfiguracao());
+		bindingContext.bindValue(observeTextTxtLogoEmpresaObserveWidget, logoEmpresaServicegetConfiguracaoObserveValue, null, null);
 		//
 		return bindingContext;
 	}

@@ -1,14 +1,12 @@
 package aplicacao.command;
 
 
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import mecasoft.Activator;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -16,13 +14,13 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.postgresql.Driver;
 
 import tela.view.ReportView;
+import aplicacao.helper.FileHelper;
 
 public abstract class ReportCommand extends AbstractHandler{
 
@@ -38,7 +36,7 @@ public abstract class ReportCommand extends AbstractHandler{
 			
 			Connection con = DriverManager.getConnection(urlBanco, "postgres", "admin");
 			
-			return JasperFillManager.fillReport(reportsPath().concat(caminhoRelatorio), getParametros(), con);
+			return JasperFillManager.fillReport(FileHelper.caminhoPasta("reports").concat(caminhoRelatorio), getParametros(), con);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -53,7 +51,7 @@ public abstract class ReportCommand extends AbstractHandler{
 
 		try {
 			JRDataSource jrds = new JRBeanCollectionDataSource(listaObjetos);
-			return JasperFillManager.fillReport(reportsPath().concat(caminhoRelatorio), getParametros(), jrds);
+			return JasperFillManager.fillReport(FileHelper.caminhoPasta("reports").concat(caminhoRelatorio), getParametros(), jrds);
 			
 		} catch (JRException e) {
 			e.printStackTrace();
@@ -79,14 +77,4 @@ public abstract class ReportCommand extends AbstractHandler{
 	
 	public abstract Map<String, Object> getParametros();
 	
-	
-	public String reportsPath() {
-		try {
-			URL confURL = Activator.getDefault().getBundle().getEntry("reports/");
-			return FileLocator.toFileURL(confURL).getFile();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
 }

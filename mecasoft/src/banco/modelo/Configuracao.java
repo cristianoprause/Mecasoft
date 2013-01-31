@@ -2,6 +2,7 @@ package banco.modelo;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,14 +10,20 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import aplicacao.helper.FileHelper;
+
 @Entity
 public class Configuracao implements Serializable{
 
 	private static final long serialVersionUID = 5712072341645546025L;
+	public static String caminhoLogo = FileHelper.caminhoPasta("logo");
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column
+	private String logoEmpresa;
 	
 	@OneToOne
 	private Pessoa representanteEmpresa;
@@ -96,6 +103,14 @@ public class Configuracao implements Serializable{
 
 	public void setStatusFinalizarServico(Status statusFinalizarServico) {
 		this.statusFinalizarServico = statusFinalizarServico;
+	}
+
+	public String getLogoEmpresa() {
+		return logoEmpresa;
+	}
+
+	public void setLogoEmpresa(String logoEmpresa) {
+		this.logoEmpresa = logoEmpresa;
 	}
 
 }
