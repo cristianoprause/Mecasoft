@@ -4,6 +4,7 @@ import static aplicacao.helper.MessageHelper.openInformation;
 import static aplicacao.helper.MessageHelper.openQuestion;
 import static aplicacao.helper.ValidatorHelper.validar;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -160,8 +161,12 @@ public class ProdutoEditor extends MecasoftEditor {
 					ForneceProduto fp = new ForneceProduto();
 					fp.getId().setPessoa(p);
 					fp.getId().setProduto(service.getProdutoServico());
+					
 					service.getProdutoServico().getListaFornecedores().add(fp);
+					calcularMedia();
+					
 					tvFornecedores.refresh();
+					initDataBindings();
 				}
 			}
 		});
@@ -179,9 +184,13 @@ public class ProdutoEditor extends MecasoftEditor {
 					return;
 				
 				if(openQuestion("Deseja realmente remover este fornecedor da lista?")){
-					service.getProdutoServico().getListaFornecedores().remove((ForneceProduto)selecao.getFirstElement());					
+					ForneceProduto fp = (ForneceProduto)selecao.getFirstElement();
+					
+					fp.getId().getPessoa().getListaProduto().remove(fp);
+					service.getProdutoServico().getListaFornecedores().remove(fp);
+					calcularMedia();
+					
 					tvFornecedores.refresh();
-//					calcularValores();
 					initDataBindings();
 				}
 			}
@@ -231,6 +240,19 @@ public class ProdutoEditor extends MecasoftEditor {
 		sid.setElements(fornecedores.toArray());
 		
 		return (Pessoa) sid.getElementoSelecionado();
+	}
+	
+	private void calcularMedia(){
+		BigDecimal media = BigDecimal.ZERO;
+		
+		for(ForneceProduto fp : service.getProdutoServico().getListaFornecedores()){
+			media = media.add(fp.getValorUnitario() == null ? BigDecimal.ZERO : fp.getValorUnitario());
+		}
+		
+		if(service.getProdutoServico().getListaFornecedores().size() > 0)
+			media = media.divide(new BigDecimal(service.getProdutoServico().getListaFornecedores().size()));
+		
+		service.getProdutoServico().setValorUnitario(media);
 	}
 	
 	@Override
