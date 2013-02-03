@@ -85,6 +85,18 @@ import banco.modelo.Veiculo;
 public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.AbrirOrdemServicoEditor"; //$NON-NLS-1$
+	
+	private ServicoPrestadoProdutoFilter produtoFilter = new ServicoPrestadoProdutoFilter();
+	private ServicoPrestadoServicoFilter servicoFilter = new ServicoPrestadoServicoFilter();
+	private ServicoPrestadoService service = new ServicoPrestadoService();
+	private ProdutoServicoService prodServService = new ProdutoServicoService();
+	private StatusService statusService = new StatusService();
+	private PessoaService pessoaService = new PessoaService();
+	private StatusServicoService statusServicoService = new StatusServicoService();
+	private List<Status> listaStatus;
+	private Pessoa funcionario;
+	private FecharOrdemServicoEditorInput fosei;
+	
 	private Text txtCliente;
 	private Text txtVeiculo;
 	private Table tableServicos;
@@ -108,17 +120,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private Button btnCancelarOrdem;
 	private Button btnFecharOrdem;
 	private Button btnRemoverStatus;
-	
-	private ServicoPrestadoProdutoFilter produtoFilter = new ServicoPrestadoProdutoFilter();
-	private ServicoPrestadoServicoFilter servicoFilter = new ServicoPrestadoServicoFilter();
-	private ServicoPrestadoService service = new ServicoPrestadoService();
-	private ProdutoServicoService prodServService = new ProdutoServicoService();
-	private StatusService statusService = new StatusService();
-	private PessoaService pessoaService = new PessoaService();
-	private StatusServicoService statusServicoService = new StatusServicoService();
-	private List<Status> listaStatus;
-	private Pessoa funcionario;
-	private FecharOrdemServicoEditorInput fosei;
 
 	public AbrirOrdemServicoEditor() {
 		listaStatus = statusService.findAllAtivos();
@@ -225,8 +226,25 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		TableColumn tblclmnServico = tvcServico.getColumn();
-		tblclmnServico.setWidth(283);
+		tblclmnServico.setWidth(174);
 		tblclmnServico.setText("Servi\u00E7o");
+		
+		TableViewerColumn tvcPrestador = new TableViewerColumn(tvServico, SWT.NONE);
+		tvcPrestador.setEditingSupport(new FornecedorItemServicoEditingSupport(tvServico));
+		tvcPrestador.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				ItemServico is = (ItemServico)element;
+				
+				if(is.getFornecedor() != null)
+					return is.getFornecedor().getNome();
+				
+				return "";
+			}
+		});
+		TableColumn tblclmnPrestador = tvcPrestador.getColumn();
+		tblclmnPrestador.setWidth(255);
+		tblclmnPrestador.setText("Prestador");
 		
 		TableViewerColumn tvcValorServico = new TableViewerColumn(tvServico, SWT.NONE);
 		tvcValorServico.setEditingSupport(new ValorUnitarioItemServico(tvServico));
@@ -246,9 +264,17 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			public void widgetSelected(SelectionEvent e) {
 				ProdutoServico ps = selecionarServico();
 				if(ps != null){
+					Pessoa prestador = UsuarioHelper.getConfiguracaoPadrao().getRepresentanteEmpresa();
 					
+					//verifica se o servico possui algum prestador, caso nao possua,
+					//a empresa é a prestadora, caso possua, o usuario seleciona a empresa
+					if(ps.getListaFornecedores().size() > 0)
+						prestador = selecionarFornecedor(ps);
+						
+					
+					//verifica se o serviço ja nao foi adicionado com mesmo prestador
 					for(ItemServico is : service.getServicoPrestado().getListaServicos())
-						if(is.getItem().equals(ps) || !is.getItem().getAtivo())
+						if((is.getItem().equals(ps) && is.getFornecedor().equals(prestador)) || !is.getItem().getAtivo())
 							return;
 						
 					ItemServico is = new ItemServico();
@@ -256,6 +282,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					is.setTotal(ps.getValorUnitario());
 					is.setQuantidade(1);
 					is.setItem(ps);
+					is.setFornecedor(prestador);
 					is.setServicoPrestado(service.getServicoPrestado());
 					is.setValorUnitario(ps.getValorUnitario());
 					service.getServicoPrestado().getListaServicos().add(is);
@@ -376,9 +403,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		tblclmnTotal.setWidth(71);
 		tblclmnTotal.setText("Total");
 		
-		TableViewerColumn tvcFornecedorVisivel = new TableViewerColumn(tvItens, SWT.NONE);
-		tvcFornecedorVisivel.setEditingSupport(new FornecedorVisivelItemServicoEditingSupport(tvItens));
-		tvcFornecedorVisivel.setLabelProvider(new ColumnLabelProvider(){
+		TableViewerColumn tvcVisivel = new TableViewerColumn(tvItens, SWT.NONE);
+		tvcVisivel.setEditingSupport(new FornecedorVisivelItemServicoEditingSupport(tvItens));
+		tvcVisivel.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
 				return null;
@@ -395,10 +422,10 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			}
 			
 		});
-		TableColumn tblclmnFornecedorVisivel = tvcFornecedorVisivel.getColumn();
-		tblclmnFornecedorVisivel.setAlignment(SWT.CENTER);
-		tblclmnFornecedorVisivel.setWidth(100);
-		tblclmnFornecedorVisivel.setText("Fornecedor vis\u00EDvel");
+		TableColumn tblclmnVisivel = tvcVisivel.getColumn();
+		tblclmnVisivel.setAlignment(SWT.CENTER);
+		tblclmnVisivel.setWidth(100);
+		tblclmnVisivel.setText("Visível");
 		
 		btnAdicionarItem = new Button(compositeConteudo, SWT.NONE);
 		btnAdicionarItem.addSelectionListener(new SelectionAdapter() {
@@ -953,7 +980,15 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			}
 		}
 
-		ForneceProduto fp = fornecedor == null ? null : ps.getListaFornecedores().get(ps.getListaFornecedores().indexOf(fornecedor));
+		//pega o forneceproduto selecionado
+		ForneceProduto fp = null;
+		if(fornecedor != null){
+			for(int c = 0; c < fornecedor.getListaProduto().size() && fp == null; c++){
+				ForneceProduto fpFornecedor = fornecedor.getListaProduto().get(c);
+				if(fpFornecedor.getId().getProduto().getId().compareTo(ps.getId()) == 0)
+					fp = fpFornecedor;
+			}
+		}
 		
 		ItemServico is = new ItemServico();
 		is.setDescricao(ps.getDescricao());
