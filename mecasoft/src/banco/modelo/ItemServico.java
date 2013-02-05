@@ -44,6 +44,10 @@ public class ItemServico implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="servicoPrestado_id")
 	private ServicoPrestado servicoPrestado;
+	
+	//para saber a qual servico o produto pertence
+	@ManyToOne
+	private ServicoPrestado servicoCorrespondente;
 
 	public Long getId() {
 		return id;
@@ -115,6 +119,14 @@ public class ItemServico implements Serializable{
 
 	public void setFornecedorVisivel(boolean fornecedorVisivel) {
 		this.fornecedorVisivel = fornecedorVisivel;
+	}
+
+	public ServicoPrestado getServicoCorrespondente() {
+		return servicoCorrespondente;
+	}
+
+	public void setServicoCorrespondente(ServicoPrestado servicoCorrespondente) {
+		this.servicoCorrespondente = servicoCorrespondente;
 	}
 
 	@Override
