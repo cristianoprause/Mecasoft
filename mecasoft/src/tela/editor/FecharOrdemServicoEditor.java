@@ -126,7 +126,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		
 		//fera movimentação no caixa para o pagamento dos produtos
 		BigDecimal valorCaixa = movimentacaoService.getTotalCaixa(UsuarioHelper.getCaixa());
-		for(ItemServico item : service.getServicoPrestado().getListaProdutos()){
+		for(ItemServico item : service.getServicoPrestado().getListaServicos()){
 			if(item.getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO)){
 				//caso o caixa não possua dinheiro suficiente, gera um suprimento
 				if(valorCaixa.compareTo(item.getTotal()) < 0){
@@ -205,7 +205,6 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		
 		for(ItemServico item : listaItens){
 			if(item.getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO) && item.getQuantidade().compareTo(0) == 0){
-				service.getServicoPrestado().getListaProdutos().remove(item);
 				service.getServicoPrestado().getListaServicos().remove(item);
 			}
 		}

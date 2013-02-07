@@ -3,18 +3,18 @@ package tela.editingSupport;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 
 import banco.modelo.ItemServico;
 
-public class FornecedorVisivelItemServicoEditingSupport extends EditingSupport{
+public class ItemVisivelItemServicoEditingSupport extends EditingSupport{
 
-	private TableViewer viewer;
+	private TreeViewer viewer;
 
-	public FornecedorVisivelItemServicoEditingSupport(TableViewer viewer) {
-		super(viewer);
-		this.viewer = viewer;
+	public ItemVisivelItemServicoEditingSupport(TreeViewer tvServicoProduto) {
+		super(tvServicoProduto);
+		this.viewer = tvServicoProduto;
 	}
 	
 	@Override

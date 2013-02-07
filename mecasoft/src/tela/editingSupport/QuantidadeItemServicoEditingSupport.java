@@ -4,29 +4,30 @@ import java.math.BigDecimal;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreeViewer;
 
 import banco.modelo.ItemServico;
+import banco.modelo.ProdutoServico;
 
 public class QuantidadeItemServicoEditingSupport extends EditingSupport{
 
-	private TableViewer viewer;
+	private TreeViewer viewer;
 	
-	public QuantidadeItemServicoEditingSupport(TableViewer viewer) {
-		super(viewer);
-		this.viewer = viewer;
+	public QuantidadeItemServicoEditingSupport(TreeViewer tvServicoProduto) {
+		super(tvServicoProduto);
+		this.viewer = tvServicoProduto;
 	}
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		TextCellEditor tce = new TextCellEditor(viewer.getTable());
+		TextCellEditor tce = new TextCellEditor(viewer.getTree());
 		return tce;
 	}
 
 	@Override
 	protected boolean canEdit(Object element) {
-		return true;
+		return ((ItemServico)element).getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO);
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package banco.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +11,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
 public class ItemServico implements Serializable{
@@ -45,10 +52,21 @@ public class ItemServico implements Serializable{
 	@JoinColumn(name="servicoPrestado_id")
 	private ServicoPrestado servicoPrestado;
 	
-	//para saber a qual servico o produto pertence
+	@ManyToMany
+	@Cascade(value={CascadeType.ALL})
+	@JoinTable(name="itensdoservico",
+		joinColumns={
+			@JoinColumn(name="servico_id", referencedColumnName = "id")
+		},
+		inverseJoinColumns={
+			@JoinColumn(name="item_id", referencedColumnName = "id")
+		}
+	)
+	private List<ItemServico> listaItem = new ArrayList<ItemServico>();
+	
 	@ManyToOne
-	private ServicoPrestado servicoCorrespondente;
-
+	private ItemServico servico;
+	
 	public Long getId() {
 		return id;
 	}
@@ -121,12 +139,20 @@ public class ItemServico implements Serializable{
 		this.fornecedorVisivel = fornecedorVisivel;
 	}
 
-	public ServicoPrestado getServicoCorrespondente() {
-		return servicoCorrespondente;
+	public List<ItemServico> getListaItem() {
+		return listaItem;
 	}
 
-	public void setServicoCorrespondente(ServicoPrestado servicoCorrespondente) {
-		this.servicoCorrespondente = servicoCorrespondente;
+	public void setListaItem(List<ItemServico> listaItem) {
+		this.listaItem = listaItem;
+	}
+
+	public ItemServico getServico() {
+		return servico;
+	}
+
+	public void setServico(ItemServico servico) {
+		this.servico = servico;
 	}
 
 	@Override

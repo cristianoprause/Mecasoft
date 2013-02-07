@@ -5,25 +5,25 @@ import java.text.ParseException;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreeViewer;
 
 import aplicacao.helper.FormatterHelper;
 import banco.modelo.ItemServico;
 
 public class ValorUnitarioItemServico extends EditingSupport{
 
-	private TableViewer viewer;
+	private TreeViewer viewer;
 
-	public ValorUnitarioItemServico(TableViewer viewer) {
-		super(viewer);
-		this.viewer = viewer;
+	public ValorUnitarioItemServico(TreeViewer tvServicoProduto) {
+		super(tvServicoProduto);
+		this.viewer = tvServicoProduto;
 	}
 
 	
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		TextCellEditor tce = new TextCellEditor(viewer.getTable());
+		TextCellEditor tce = new TextCellEditor(viewer.getTree());
 		return tce;
 	}
 

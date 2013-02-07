@@ -6,18 +6,18 @@ import java.util.List;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 
 import banco.modelo.ForneceProduto;
 import banco.modelo.ItemServico;
 
 public class FornecedorItemServicoEditingSupport extends EditingSupport{
 
-	private TableViewer viewer;
+	private TreeViewer viewer;
 	
-	public FornecedorItemServicoEditingSupport(TableViewer viewer) {
-		super(viewer);
-		this.viewer = viewer;
+	public FornecedorItemServicoEditingSupport(TreeViewer tvServicoProduto) {
+		super(tvServicoProduto);
+		this.viewer = tvServicoProduto;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class FornecedorItemServicoEditingSupport extends EditingSupport{
 			arrayNomes[c] = listaFornecedor.get(c).getId().getPessoa().getNome();
 		}
 		
-		return new ComboBoxCellEditor(viewer.getTable(), arrayNomes);
+		return new ComboBoxCellEditor(viewer.getTree(), arrayNomes);
 	}
 
 	@Override

@@ -75,10 +75,6 @@ public class ServicoPrestado implements Serializable{
 	@Cascade(value={CascadeType.ALL})
 	private List<ItemServico> listaServicos = new ArrayList<ItemServico>();
 	
-	@OneToMany(mappedBy="servicoPrestado")
-	@Cascade(value={CascadeType.ALL})
-	private List<ItemServico> listaProdutos = new ArrayList<ItemServico>();
-	
 	@OneToMany(mappedBy="servicoPrestado", orphanRemoval=true)
 	@Cascade(value={CascadeType.ALL})
 	private List<StatusServico> listaStatus = new ArrayList<StatusServico>();
@@ -200,14 +196,6 @@ public class ServicoPrestado implements Serializable{
 
 	public void setListaServicos(List<ItemServico> listaServicos) {
 		this.listaServicos = listaServicos;
-	}
-
-	public List<ItemServico> getListaProdutos() {
-		return listaProdutos;
-	}
-
-	public void setListaProdutos(List<ItemServico> listaProdutos) {
-		this.listaProdutos = listaProdutos;
 	}
 
 	public List<StatusServico> getListaStatus() {
