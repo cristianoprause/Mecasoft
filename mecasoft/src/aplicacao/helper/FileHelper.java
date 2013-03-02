@@ -18,4 +18,10 @@ public class FileHelper {
 		}
 	}
 	
+	public static String caminhoLogoEmpresa(){
+		String imagem = UsuarioHelper.getConfiguracaoPadrao() == null ? null : UsuarioHelper.getConfiguracaoPadrao().getLogoEmpresa();
+		
+		return imagem == null || imagem.isEmpty() ? "" : caminhoPasta("logo") + imagem;
+	}
+	
 }

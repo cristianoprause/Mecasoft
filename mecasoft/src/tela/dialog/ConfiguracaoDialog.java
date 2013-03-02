@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 
 import aplicacao.exception.ValidationException;
+import aplicacao.helper.FileHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ConfiguracaoService;
@@ -162,8 +163,10 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 				initDataBindings();
 				
 				//verifica se o usuário selecionou uma imagem
-				if(caminho == null)
+				if(caminho == null){
+					verificaLogo();
 					return;
+				}
 				
 				//se o arquivo existir mesmo, move para a pasta do sistema
 				File file = new File(caminho);
@@ -312,7 +315,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			return;
 		}
 
-		File file = new File(Configuracao.caminhoLogo + service.getConfiguracao().getLogoEmpresa());
+		File file = new File(FileHelper.caminhoLogoEmpresa());
 
 		if (file.exists()) {
 			lblIconStatusLogo.setImage(ResourceManager.getPluginImage(
@@ -331,7 +334,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 	private void moveLogo(File file){
 		try {
 			FileInputStream fis = new FileInputStream(file);
-			FileOutputStream fos = new FileOutputStream(new File(Configuracao.caminhoLogo + service.getConfiguracao().getLogoEmpresa()));
+			FileOutputStream fos = new FileOutputStream(new File(Configuracao.pastaLogo + service.getConfiguracao().getLogoEmpresa()));
 			byte array[] = new byte[10000];
 			
 			while(fis.read(array) > -1)

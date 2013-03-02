@@ -456,6 +456,11 @@
                   label="Livro de caixa"
                   style="push">
             </command>
+            <command
+                  commandId="mecasoft.showServicoAnaliticoClienteCommand"
+                  label="Serviço analítico (Cliente)"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -535,6 +540,11 @@
             defaultHandler="aplicacao.command.PontoCommand"
             id="mecasoft.pontoCommand"
             name="Sistema de ponto">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.reports.ShowServicoPrestadoAnaliticoClienteCommand"
+            id="mecasoft.showServicoAnaliticoClienteCommand"
+            name="Relatório de serviços analítico (Cliente)">
       </command>
    </extension>
    <extension

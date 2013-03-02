@@ -4,9 +4,7 @@ import static aplicacao.helper.LayoutHelper.getActiveShell;
 import static aplicacao.helper.MessageHelper.openError;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
@@ -52,11 +50,6 @@ public class ShowFluxoTrabalhoCommand extends ReportCommand{
 		return null;
 	}
 
-	@Override
-	public Map<String, Object> getParametros() {
-		return new HashMap<String, Object>();
-	}
-	
 	private List<FluxoTrabalho> getLinesReport(){
 		listaFluxo = new ArrayList<FluxoTrabalho>();
 		

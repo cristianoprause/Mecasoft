@@ -4,6 +4,7 @@ package aplicacao.command;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +76,8 @@ public abstract class ReportCommand extends AbstractHandler{
 		return null;
 	}
 	
-	public abstract Map<String, Object> getParametros();
+	public Map<String, Object> getParametros() {
+		return new HashMap<String, Object>();
+	}
 	
 }
