@@ -71,6 +71,7 @@ import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
+import aplicacao.service.ItemServicoService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.ServicoPrestadoService;
@@ -95,7 +96,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private StatusService statusService = new StatusService();
 	private PessoaService pessoaService = new PessoaService();
 	private StatusServicoService statusServicoService = new StatusServicoService();
+	private ItemServicoService itemService = new ItemServicoService();
 	private List<Status> listaStatus;
+	private List<ItemServico> listaProdutoRemovido;
 	private Pessoa funcionario;
 	private FecharOrdemServicoEditorInput fosei;
 	
@@ -135,12 +138,19 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
 	public AbrirOrdemServicoEditor() {
 		listaStatus = statusService.findAllAtivos();
+		listaProdutoRemovido = new ArrayList<ItemServico>();
 	}
 
 	@Override
 	public void salvarRegistro() throws ValidationException {
 		validar(service.getServicoPrestado());
-			
+		
+		//GAMBIARRA
+		for(ItemServico item : listaProdutoRemovido){
+			itemService.setModelo(item);
+			itemService.delete();
+		}
+		
 		calcularTotais();
 			
 		service.saveOrUpdate();
@@ -370,6 +380,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				}
 				
 				if(openQuestion("Deseja realmente remover este serviço da lista?")){
+					//GAMBIARRA
+					listaProdutoRemovido.addAll(is.getListaItem());
+					
 					service.getServicoPrestado().getListaServicos().remove(is);
 					setEnableButtonCancelFechar();
 					tvServicoProduto.refresh();
@@ -427,6 +440,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 				}
 				
 				if(openQuestion("Deseja realmente remover este item da lista?")){
+					//GAMBIARRA
+					listaProdutoRemovido.add(is);
 					is.getServico().getListaItem().remove(is);
 					setEnableButtonCancelFechar();
 					tvServicoProduto.refresh();
