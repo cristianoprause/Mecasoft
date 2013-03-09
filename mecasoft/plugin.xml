@@ -99,6 +99,11 @@
             id="tela.editor.StatusFuncionarioEditor"
             name="Status geral do funcionário">
       </editor>
+      <editor
+            class="tela.editor.OrcamentoEditor"
+            id="tela.editor.OrcamentoEditor"
+            name="New EditorPart">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -197,6 +202,11 @@
             icon="assents/caixa/movimentacaoCaixa16.png"
             id="tela.view.MovimentacaoCaixaView"
             name="Movimentações no caixa">
+      </view>
+      <view
+            class="tela.view.OrcamentoView"
+            id="tela.view.OrcamentoView"
+            name="Orcamento">
       </view>
    </extension>
    <extension
@@ -336,31 +346,41 @@
             </command>
          </menu>
          <menu
-               label="Financeiro">
-            <menu
+               id="mecasoft.menuServicoPrestado"
+               label="Serviço">
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  icon="assents/servicoPrestado/servicoPrestado16.png"
+                  id="mecasoft.menuOrcamento"
+                  label="Orçamento">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.OrcamentoView">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  icon="assents/servicoPrestado/servicoPrestado16.png"
                   id="mecasoft.menuServicoPrestado"
-                  label="Serviço">
-               <command
-                     commandId="org.eclipse.ui.views.showView"
-                     icon="assents/servicoPrestado/servicoPrestado16.png"
-                     id="mecasoft.menuServicoPrestado"
-                     label="Serviços">
-                  <parameter
-                        name="org.eclipse.ui.views.showView.viewId"
-                        value="tela.view.ServicoPrestadoView">
-                  </parameter>
-               </command>
-               <command
-                     commandId="org.eclipse.ui.views.showView"
-                     icon="assents/statusFuncionario/statusFuncionario16.png"
-                     id="mecasoft.menuStatusFuncionario"
-                     label="Status dos funcionários">
-                  <parameter
-                        name="org.eclipse.ui.views.showView.viewId"
-                        value="tela.view.StatusFuncionarioView">
-                  </parameter>
-               </command>
-            </menu>
+                  label="Ordem de seriço">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.ServicoPrestadoView">
+               </parameter>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  icon="assents/statusFuncionario/statusFuncionario16.png"
+                  id="mecasoft.menuStatusFuncionario"
+                  label="Status dos funcionários">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="tela.view.StatusFuncionarioView">
+               </parameter>
+            </command>
+         </menu>
+         <menu
+               label="Financeiro">
             <menu
                   id="mecasoft.menuGerarDuplicata"
                   label="Duplicatas">

@@ -49,6 +49,10 @@ public class ItemServico implements Serializable{
 	private Pessoa fornecedor;
 	
 	@ManyToOne
+	@JoinColumn(name="orcamento_id")
+	private Orcamento orcamento;
+	
+	@ManyToOne
 	@JoinColumn(name="servicoPrestado_id")
 	private ServicoPrestado servicoPrestado;
 	
@@ -153,6 +157,14 @@ public class ItemServico implements Serializable{
 
 	public void setServico(ItemServico servico) {
 		this.servico = servico;
+	}
+
+	public Orcamento getOrcamento() {
+		return orcamento;
+	}
+
+	public void setOrcamento(Orcamento orcamento) {
+		this.orcamento = orcamento;
 	}
 
 	@Override

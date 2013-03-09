@@ -1,8 +1,10 @@
 package aplicacao.helper;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,13 +31,11 @@ public class FormatterHelper {
 		decimalFormat.setMinimumFractionDigits(2);
 		return decimalFormat;
 	}
-
+	
 	public static SimpleDateFormat getDateFormatData() {
-		dateFormatData = new SimpleDateFormat("dd/MM/yyyy");
-		dateFormatData.setLenient(false);
-		return dateFormatData;
+		return getDateFormatData("dd/MM/yyyy");
 	}
-
+	
 	public static SimpleDateFormat getDateFormatData(String pattern) {
 		dateFormatData = new SimpleDateFormat(pattern);
 		dateFormatData.setLenient(false);
@@ -153,6 +153,20 @@ public class FormatterHelper {
 		}
 
 		return tempoTotal;
+	}
+	
+	//moeda
+	public static String formatMoedaDuasCasas(BigDecimal valor){
+		return getDecimalFormat().format(valor);
+	}
+	
+	//tempo
+	public static String formatDataInvertida(Date data){
+		return getDateFormatData("yyyyMMdd").format(data);
+	}
+	
+	public static String formatarData(Date data){
+		return getDateFormatData().format(data);
 	}
 
 }

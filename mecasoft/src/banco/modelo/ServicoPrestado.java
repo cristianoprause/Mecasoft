@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
@@ -70,6 +71,9 @@ public class ServicoPrestado implements Serializable{
 	@ManyToOne
 	@NotNull(message="Selecione o veículo")
 	private Veiculo veiculo;
+	
+	@OneToOne
+	private Orcamento orcamento;
 	
 	@OneToMany(mappedBy="servicoPrestado", orphanRemoval=true)
 	@Cascade(value={CascadeType.ALL})
@@ -261,6 +265,14 @@ public class ServicoPrestado implements Serializable{
 
 	public void setEmExecucao(boolean emExecucao) {
 		this.emExecucao = emExecucao;
+	}
+
+	public Orcamento getOrcamento() {
+		return orcamento;
+	}
+
+	public void setOrcamento(Orcamento orcamento) {
+		this.orcamento = orcamento;
 	}
 
 }

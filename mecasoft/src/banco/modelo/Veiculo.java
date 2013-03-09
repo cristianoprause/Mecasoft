@@ -160,4 +160,8 @@ public class Veiculo implements Serializable{
 		return true;
 	}
 	
+	public String getNome(){
+		return marca + " " + modelo;
+	}
+	
 }

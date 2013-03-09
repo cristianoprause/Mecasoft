@@ -170,8 +170,14 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 		return CANCEL;
 	}
 	
+	public Button createNewButton(String text){
+		Button btn =  new Button(compositeBotoes, SWT.NONE);
+		btn.setText(text);
+		return btn;
+	}
+	
 	public Button createNewButton(){
-		return new Button(compositeBotoes, SWT.NONE);
+		return createNewButton("");
 	}
 	
 	public void showComponentes(Boolean possuiId){}

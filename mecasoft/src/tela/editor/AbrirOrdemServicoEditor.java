@@ -72,6 +72,7 @@ import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ItemServicoService;
+import aplicacao.service.OrcamentoService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.ServicoPrestadoService;
@@ -80,12 +81,14 @@ import aplicacao.service.StatusServicoService;
 import banco.connection.HibernateConnection;
 import banco.modelo.ForneceProduto;
 import banco.modelo.ItemServico;
+import banco.modelo.Orcamento;
 import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
 import banco.modelo.ServicoPrestado;
 import banco.modelo.Status;
 import banco.modelo.StatusServico;
 import banco.modelo.Veiculo;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 
 public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
@@ -93,6 +96,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	
 	private ServicoPrestadoService service = new ServicoPrestadoService();
 	private ProdutoServicoService prodServService = new ProdutoServicoService();
+	private OrcamentoService orcamentoService = new OrcamentoService();
 	private StatusService statusService = new StatusService();
 	private PessoaService pessoaService = new PessoaService();
 	private StatusServicoService statusServicoService = new StatusServicoService();
@@ -135,6 +139,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private TreeViewerColumn tvcTotal;
 	private TreeColumn trclmnVisivel;
 	private TreeViewerColumn tvcVisivel;
+	private Label lblOrcamentoN;
+	private Text txtOrcamento;
+	private Button btnSelecionarOrcamento;
 
 	public AbrirOrdemServicoEditor() {
 		listaStatus = statusService.findAllAtivos();
@@ -144,6 +151,14 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	@Override
 	public void salvarRegistro() throws ValidationException {
 		validar(service.getServicoPrestado());
+		
+		//verifica se o orcamento ja esta salvo e se ainda esta pendente, caso esteja, salva...
+		Orcamento orcamento = service.getServicoPrestado().getOrcamento();
+		if(orcamento != null && (orcamento.getId() == null || orcamento.isPendente())){
+			orcamento.setPendente(false);
+			orcamentoService.setModelo(orcamento);
+			orcamentoService.saveOrUpdate();
+		}
 		
 		//GAMBIARRA
 		for(ItemServico item : listaProdutoRemovido){
@@ -163,6 +178,29 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	@Override
 	public void addComponentes(Composite compositeConteudo) {
 		compositeConteudo.setLayout(new GridLayout(5, false));
+		
+		lblOrcamentoN = new Label(compositeConteudo, SWT.NONE);
+		lblOrcamentoN.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblOrcamentoN.setText("Or\u00E7amento N\u00BA");
+		
+		txtOrcamento = new Text(compositeConteudo, SWT.BORDER);
+		txtOrcamento.setEnabled(false);
+		txtOrcamento.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		
+		btnSelecionarOrcamento = new Button(compositeConteudo, SWT.NONE);
+		btnSelecionarOrcamento.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				service.getServicoPrestado().setOrcamento(selecionarOrcamento());
+				if(service.getServicoPrestado().getOrcamento() != null)
+					atualizarServicoComOrcamento();
+				
+				initDataBindings();
+				btnSelecionarOrcamento.setEnabled(service.getServicoPrestado().getOrcamento() == null);
+			}
+		});
+		btnSelecionarOrcamento.setText("Selecionar");
+		btnSelecionarOrcamento.setEnabled(service.getServicoPrestado().getOrcamento() == null);
 		
 		Label lblCliente = new Label(compositeConteudo, SWT.NONE);
 		lblCliente.setText("Cliente:");
@@ -837,8 +875,12 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		if(aosei.getServicoPrestado().getId() != null)
 			service.setServicoPrestado(service.find(aosei.getServicoPrestado().getId()));
-		else
+		else{
 			service.setServicoPrestado(aosei.getServicoPrestado());
+			
+			if(service.getServicoPrestado().getOrcamento() != null)
+				atualizarServicoComOrcamento();
+		}
 		
 		setShowExcluir(false);
 		setShowSalvar(service.getServicoPrestado().isEmExecucao());
@@ -949,6 +991,18 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		return (Pessoa) sid.getElementoSelecionado();
 	}
 	
+	private Orcamento selecionarOrcamento(){
+		SelecionarItemDialog sid = new SelecionarItemDialog(getActiveShell(), new LabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((Orcamento)element).getNumero() + " - " + ((Orcamento)element).getCliente().getNome();
+			}
+		});
+		sid.setElements(orcamentoService.findAllPendente().toArray());
+		
+		return (Orcamento)sid.getElementoSelecionado();
+	}
+	
 	public BigDecimal calculaTotal(ItemServico is){
 		return is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()));
 	}
@@ -1029,13 +1083,13 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		BigDecimal totalItens = BigDecimal.ZERO;
 		BigDecimal total;
 		
-		for(ItemServico item : service.getServicoPrestado().getListaServicos()){
-			if(item.getItem().getTipo().equals(ProdutoServico.TIPOSERVICO))
-				totalServicos = totalServicos.add(item.getTotal());
-			else if(item.getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO))
-				totalItens = totalItens.add(item.getTotal());
+		for(ItemServico servico : service.getServicoPrestado().getListaServicos()){
+			totalServicos = totalServicos.add(servico.getTotal());
+			
+			for(ItemServico produto : servico.getListaItem())
+				totalItens = totalItens.add(produto.getTotal());
+			
 		}
-		
 		
 		total = totalServicos.add(totalItens);
 		
@@ -1055,6 +1109,24 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		}
 		
 		return iepResult;
+	}
+	
+	private void atualizarServicoComOrcamento(){
+		ServicoPrestado servicoPrestado = service.getServicoPrestado();
+		Orcamento orcamento = service.getServicoPrestado().getOrcamento();
+		
+		orcamento.setServico(servicoPrestado);
+		
+		servicoPrestado.setCliente(orcamento.getCliente());
+		servicoPrestado.setVeiculo(orcamento.getVeiculo());
+		
+		for(ItemServico servico : orcamento.getListaServico()){
+			servicoPrestado.getListaServicos().add(servico);
+			servico.setServicoPrestado(servicoPrestado);
+		}
+		
+		calcularTotais();
+		
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
@@ -1076,8 +1148,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		cvNovoStatus.setInput(writableList);
 		//
 		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
-//		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
+		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
+		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
 		tvStatus.setContentProvider(listContentProvider_3);
 		//
 		IObservableList servicegetServicoPrestadoListaStatusObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaStatus");
@@ -1110,6 +1182,10 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		//
 		IObservableValue btnRemoverStatusObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnRemoverStatus);
 		bindingContext.bindValue(btnRemoverStatusObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
+		//
+		IObservableValue observeTextTxtOrcamentoObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtOrcamento);
+		IObservableValue orcamentonumeroServicegetServicoPrestadoObserveValue = PojoProperties.value("orcamento.numero").observe(service.getServicoPrestado());
+		bindingContext.bindValue(observeTextTxtOrcamentoObserveWidget, orcamentonumeroServicegetServicoPrestadoObserveValue, null, null);
 		//
 		IObservableList listaServicosServicegetServicoPrestadoObserveList = PojoProperties.list("listaServicos").observe(service.getServicoPrestado());
 		tvServicoProduto.setInput(listaServicosServicegetServicoPrestadoObserveList);

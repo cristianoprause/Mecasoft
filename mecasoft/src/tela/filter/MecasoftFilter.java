@@ -7,7 +7,7 @@ public abstract class MecasoftFilter extends ViewerFilter{
 	protected String search;
 
 	public void setSearch(String search){
-		this.search = ".*"+search+".*";
+		this.search = ".*"+search.toLowerCase()+".*";
 	}
 	
 	public Boolean searchNull(){
