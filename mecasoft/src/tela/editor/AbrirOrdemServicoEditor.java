@@ -180,14 +180,14 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		compositeConteudo.setLayout(new GridLayout(5, false));
 		
 		lblOrcamentoN = new Label(compositeConteudo, SWT.NONE);
-		lblOrcamentoN.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblOrcamentoN.setText("Or\u00E7amento N\u00BA");
+		lblOrcamentoN.setText("Or\u00E7amento N\u00BA:");
 		
 		txtOrcamento = new Text(compositeConteudo, SWT.BORDER);
 		txtOrcamento.setEnabled(false);
 		txtOrcamento.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		btnSelecionarOrcamento = new Button(compositeConteudo, SWT.NONE);
+		btnSelecionarOrcamento.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
 		btnSelecionarOrcamento.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -636,6 +636,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		btnAlterarStatus.setText("Alterar Status");
 		
 		btnRemoverStatus = new Button(compositeConteudo, SWT.NONE);
+		btnRemoverStatus.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/remove16.png"));
 		btnRemoverStatus.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -1148,8 +1149,8 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		cvNovoStatus.setInput(writableList);
 		//
 		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
-		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
-		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
+//		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
+//		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
 		tvStatus.setContentProvider(listContentProvider_3);
 		//
 		IObservableList servicegetServicoPrestadoListaStatusObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaStatus");
@@ -1186,6 +1187,12 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		IObservableValue observeTextTxtOrcamentoObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtOrcamento);
 		IObservableValue orcamentonumeroServicegetServicoPrestadoObserveValue = PojoProperties.value("orcamento.numero").observe(service.getServicoPrestado());
 		bindingContext.bindValue(observeTextTxtOrcamentoObserveWidget, orcamentonumeroServicegetServicoPrestadoObserveValue, null, null);
+		//
+		IObservableValue observeEnabledTreeObserveWidget = WidgetProperties.enabled().observe(tree);
+		bindingContext.bindValue(observeEnabledTreeObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
+		//
+		IObservableValue observeEnabledBtnSelecionarOrcamentoObserveWidget = WidgetProperties.enabled().observe(btnSelecionarOrcamento);
+		bindingContext.bindValue(observeEnabledBtnSelecionarOrcamentoObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
 		//
 		IObservableList listaServicosServicegetServicoPrestadoObserveList = PojoProperties.list("listaServicos").observe(service.getServicoPrestado());
 		tvServicoProduto.setInput(listaServicosServicegetServicoPrestadoObserveList);

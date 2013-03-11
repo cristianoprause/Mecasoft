@@ -334,7 +334,12 @@ public class PessoaEditor extends MecasoftEditor {
 		tvcPlaca.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return ((Veiculo)element).getPlaca();
+				String placa = ((Veiculo)element).getPlaca();
+				
+				if(placa == null)
+					return "";
+				
+				return placa;
 			}
 		});
 		TableColumn tblclmnPlaca = tvcPlaca.getColumn();
@@ -526,21 +531,6 @@ public class PessoaEditor extends MecasoftEditor {
 			
 		if(service.getPessoa().getFoneFax().isEmpty() && service.getPessoa().getCelular().isEmpty())
 			throw new ValidationException("Informe ao menos um telefone.");
-			
-		if(service.getPessoa().getTipoFuncionario()){
-				
-			if(service.getPessoa().getCarteiraNum().isEmpty())
-				throw new ValidationException("Informe o número da carteira de trabalho.");
-			
-			if(service.getPessoa().getSerie().isEmpty())
-				throw new ValidationException("informe a série.");
-				
-			if(service.getPessoa().getSalario() == null)
-				throw new ValidationException("Informe o salário.");
-			
-			if(service.getPessoa().getTipo() == null)
-				throw new ValidationException("Selecione o cargo.");
-		}
 			
 		service.saveOrUpdate();
 			

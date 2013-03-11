@@ -105,7 +105,7 @@ public class VeiculoEditor extends MecasoftEditor {
 		lblPlaca.setText("Placa:");
 		
 		txtPlaca = new MecasoftText(compositeConteudo, SWT.NONE);
-		txtPlaca.setEnabled(false);
+		txtPlaca.setEditable(true);
 		txtPlaca.setOptions(MecasoftText.AMBOS, 8);
 		txtPlaca.addChars("-", new Integer[]{3}, null, null);
 		txtPlaca.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -169,9 +169,6 @@ public class VeiculoEditor extends MecasoftEditor {
 		if(service.getVeiculo().getTipo() != null){
 				
 			if(service.getVeiculo().getTipo().getHodometro()){
-				if(service.getVeiculo().getPlaca() == null)
-					throw new ValidationException("Informe a placa.");
-					
 				if(service.getVeiculo().getHodometro() == null)
 					throw new ValidationException("Informe o hodômetro.");
 				
@@ -287,11 +284,8 @@ public class VeiculoEditor extends MecasoftEditor {
 		IObservableValue servicegetVeiculoHorimetroObserveValue = PojoObservables.observeValue(service.getVeiculo(), "horimetro");
 		bindingContext.bindValue(mecasoftTexttextObserveTextObserveWidget, servicegetVeiculoHorimetroObserveValue, null, null);
 		//
-		IObservableValue txtPlacaObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtPlaca);
-		IObservableValue servicegetVeiculoTipohodometroObserveValue = PojoObservables.observeValue(service.getVeiculo(), "tipo.hodometro");
-		bindingContext.bindValue(txtPlacaObserveEnabledObserveWidget, servicegetVeiculoTipohodometroObserveValue, null, null);
-		//
 		IObservableValue txtHodometroObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtHodometro);
+		IObservableValue servicegetVeiculoTipohodometroObserveValue = PojoObservables.observeValue(service.getVeiculo(), "tipo.hodometro");
 		bindingContext.bindValue(txtHodometroObserveEnabledObserveWidget, servicegetVeiculoTipohodometroObserveValue, null, null);
 		//
 		IObservableValue txtHorimetroObserveEnabledObserveWidget = SWTObservables.observeEnabled(txtHorimetro);

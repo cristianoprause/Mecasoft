@@ -26,6 +26,7 @@ public class Configuracao implements Serializable{
 	private String logoEmpresa;
 	
 	@OneToOne
+	@NotNull(message="Selecione o representante da empresa")
 	private Pessoa representanteEmpresa;
 	
 	@OneToOne

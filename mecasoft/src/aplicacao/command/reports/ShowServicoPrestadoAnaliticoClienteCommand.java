@@ -4,6 +4,7 @@ import static aplicacao.helper.LayoutHelper.getActiveShell;
 import static aplicacao.helper.MessageHelper.openError;
 import static aplicacao.helper.MessageHelper.openWarning;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import tela.dialog.ParametroRelatorioServicoAnaliticoClienteDialog;
 import aplicacao.command.ReportCommand;
 import aplicacao.helper.FileHelper;
 import aplicacao.helper.ReportHelper;
+import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.ItemServico;
 import banco.modelo.ServicoPrestado;
@@ -94,7 +96,15 @@ public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 	@Override
 	public Map<String, Object> getParametros() {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("CAMINHO_IMAGEM", FileHelper.caminhoLogoEmpresa().isEmpty() ? null : StringUtils.removeStart(FileHelper.caminhoLogoEmpresa(), "/"));
+		
+		String caminho = null;
+		if(UsuarioHelper.getConfiguracaoPadrao() != null && !UsuarioHelper.getConfiguracaoPadrao().getLogoEmpresa().isEmpty()){
+			File file = new File(StringUtils.removeStart(FileHelper.caminhoLogoEmpresa(), "/"));
+			if(file.exists())
+				caminho = file.getPath();
+		}
+		
+		param.put("CAMINHO_IMAGEM", caminho);
 		return param;
 	}
 

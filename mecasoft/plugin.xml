@@ -101,8 +101,9 @@
       </editor>
       <editor
             class="tela.editor.OrcamentoEditor"
+            icon="assents/servicoPrestado/servicoPrestado16.png"
             id="tela.editor.OrcamentoEditor"
-            name="New EditorPart">
+            name="Orçamento">
       </editor>
    </extension>
    <extension
@@ -205,6 +206,7 @@
       </view>
       <view
             class="tela.view.OrcamentoView"
+            icon="assents/servicoPrestado/servicoPrestado16.png"
             id="tela.view.OrcamentoView"
             name="Orcamento">
       </view>

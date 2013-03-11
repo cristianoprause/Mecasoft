@@ -142,6 +142,10 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	
 	public void closeThisEditor(){
 		HibernateConnection.commit();
+		close();
+	}
+	
+	public void close(){
 		getEditorSite().getPart().getSite().getWorkbenchWindow().getActivePage().closeEditor(this, false);
 	}
 	

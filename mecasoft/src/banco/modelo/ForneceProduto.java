@@ -21,7 +21,7 @@ public class ForneceProduto implements Serializable{
 	
 	@Column(precision=14, scale=2)
 	@NotNull(message="Não foi informado o valor de um mais fornecedores do produto.")
-	private BigDecimal valorUnitario;
+	private BigDecimal valorUnitario = BigDecimal.ZERO;
 
 	public ForneceProdutoId getId() {
 		return id;

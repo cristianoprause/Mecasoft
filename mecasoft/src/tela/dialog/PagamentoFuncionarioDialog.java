@@ -73,7 +73,11 @@ public class PagamentoFuncionarioDialog extends TitleAreaDialog {
 					txtNome.setText("");
 				else{
 					txtNome.setText(service.getPessoa().getNome());
-					txtSalario.setText(FormatterHelper.getDecimalFormat().format(service.getPessoa().getSalario()));
+					
+					BigDecimal salario = service.getPessoa().getSalario();
+					
+					if(salario != null)
+						txtSalario.setText(FormatterHelper.getDecimalFormat().format(service.getPessoa().getSalario()));
 				}
 				
 				calcularTotais();

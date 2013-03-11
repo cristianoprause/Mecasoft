@@ -56,6 +56,7 @@ public class OrcamentoView extends ViewPart {
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Form frmOrcamento = formToolkit.createForm(container);
+		frmOrcamento.setImage(ResourceManager.getPluginImage("mecasoft", "assents/servicoPrestado/servicoPrestado32.png"));
 		formToolkit.paintBordersFor(frmOrcamento);
 		frmOrcamento.setText("Or\u00E7amento");
 		frmOrcamento.getBody().setLayout(new GridLayout(2, false));
