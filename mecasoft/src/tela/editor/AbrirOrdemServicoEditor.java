@@ -200,7 +200,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 			}
 		});
 		btnSelecionarOrcamento.setText("Selecionar");
-		btnSelecionarOrcamento.setEnabled(service.getServicoPrestado().getOrcamento() == null);
 		
 		Label lblCliente = new Label(compositeConteudo, SWT.NONE);
 		lblCliente.setText("Cliente:");
@@ -387,7 +386,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					is.setValorUnitario(ps.getValorUnitario());
 					service.getServicoPrestado().getListaServicos().add(is);
 					
-					setEnableButtonCancelFechar();
+					setEnableButtons();
 					
 					for(ProdutoServico item : ps.getListaProduto())
 						if(item.getAtivo())
@@ -422,7 +421,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					listaProdutoRemovido.addAll(is.getListaItem());
 					
 					service.getServicoPrestado().getListaServicos().remove(is);
-					setEnableButtonCancelFechar();
+					setEnableButtons();
 					tvServicoProduto.refresh();
 				}
 			}
@@ -481,7 +480,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					//GAMBIARRA
 					listaProdutoRemovido.add(is);
 					is.getServico().getListaItem().remove(is);
-					setEnableButtonCancelFechar();
+					setEnableButtons();
 					tvServicoProduto.refresh();
 				}
 			}
@@ -863,9 +862,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		btnFecharOrdem.setImage(ResourceManager.getPluginImage("mecasoft", "assents/servicoPrestado/closeService32.png"));
 		btnFecharOrdem.setText("Fechar Ordem");
 		
-		setEnableButtonCancelFechar();
-		
+		setEnableButtons();
 		initDataBindings();
+		
 		
 	}
 
@@ -1045,7 +1044,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		//adiciona o produto ao servico
 		servicoPertence.getListaItem().add(is);
 		
-		setEnableButtonCancelFechar();
+		setEnableButtons();
 		tvServicoProduto.refresh();
 	}
 	
@@ -1065,18 +1064,20 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		if(!service.getServicoPrestado().isEmExecucao())
 			disposeSalvar();
 		
-		setEnableButtonCancelFechar();
+		setEnableButtons();
 		btnSelecionarCliente.setEnabled(service.getServicoPrestado().getId() == null);
 		btnSelecionarVeiculo.setEnabled(service.getServicoPrestado().getId() == null);
 	}
 	
-	public void setEnableButtonCancelFechar(){
+	public void setEnableButtons(){
 		btnCancelarOrdem.setEnabled(service.getServicoPrestado().isAtivo()
 				&& service.getServicoPrestado().isEmExecucao()
 				&& service.getServicoPrestado().getId() != null
 				&& service.getServicoPrestado().getListaServicos().size() == 0);
 		
 		btnFecharOrdem.setEnabled(service.getServicoPrestado().isEmExecucao());
+		
+		btnSelecionarOrcamento.setEnabled(service.getServicoPrestado().getOrcamento() == null && service.getServicoPrestado().isEmExecucao());
 	}
 	
 	private void calcularTotais(){
@@ -1190,9 +1191,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		//
 		IObservableValue observeEnabledTreeObserveWidget = WidgetProperties.enabled().observe(tree);
 		bindingContext.bindValue(observeEnabledTreeObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
-		IObservableValue observeEnabledBtnSelecionarOrcamentoObserveWidget = WidgetProperties.enabled().observe(btnSelecionarOrcamento);
-		bindingContext.bindValue(observeEnabledBtnSelecionarOrcamentoObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
 		//
 		IObservableList listaServicosServicegetServicoPrestadoObserveList = PojoProperties.list("listaServicos").observe(service.getServicoPrestado());
 		tvServicoProduto.setInput(listaServicosServicegetServicoPrestadoObserveList);

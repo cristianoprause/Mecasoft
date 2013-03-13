@@ -18,6 +18,7 @@ public class ServicoPrestadoAnaliticoCliente {
 	private Date dataFechamento;
 	private String status;
 	private String descricao;
+	private String numeroOrcamento = "";
 	private BigDecimal valorTotal = BigDecimal.ZERO;
 	private BigDecimal iss = BigDecimal.ZERO;
 	
@@ -71,6 +72,12 @@ public class ServicoPrestadoAnaliticoCliente {
 	}
 	public void setIss(BigDecimal iss) {
 		this.iss = iss;
+	}
+	public String getNumeroOrcamento() {
+		return numeroOrcamento;
+	}
+	public void setNumeroOrcamento(String numeroOrcamento) {
+		this.numeroOrcamento = numeroOrcamento;
 	}
 	
 }

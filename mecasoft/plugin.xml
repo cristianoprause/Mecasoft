@@ -364,7 +364,7 @@
                   commandId="org.eclipse.ui.views.showView"
                   icon="assents/servicoPrestado/servicoPrestado16.png"
                   id="mecasoft.menuServicoPrestado"
-                  label="Ordem de seriço">
+                  label="Ordem de serviço">
                <parameter
                      name="org.eclipse.ui.views.showView.viewId"
                      value="tela.view.ServicoPrestadoView">

@@ -70,6 +70,9 @@ public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 			linhaServico.setVeiculo(servicoPrestado.getVeiculo());
 			listaLinha.add(linhaServico);
 			
+			if(servico.getServicoPrestado().getOrcamento() != null)
+				linhaServico.setNumeroOrcamento(servico.getServicoPrestado().getOrcamento().getNumero());
+			
 			//produtos do servico
 			for(ItemServico produto : servico.getListaItem()){
 				
@@ -83,6 +86,7 @@ public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 					linhaProduto.setDataFechamento(servicoPrestado.getDataFechamento());
 					linhaProduto.setServicoExecutado(!servicoPrestado.isEmExecucao());
 					linhaProduto.setVeiculo(servicoPrestado.getVeiculo());
+					linhaProduto.setNumeroOrcamento(linhaServico.getNumeroOrcamento());
 					
 					listaLinha.add(linhaProduto);
 				}

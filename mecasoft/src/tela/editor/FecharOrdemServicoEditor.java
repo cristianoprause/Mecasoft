@@ -62,12 +62,14 @@ import aplicacao.helper.ReportHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataService;
 import aplicacao.service.MovimentacaoCaixaService;
+import aplicacao.service.OrcamentoService;
 import aplicacao.service.ServicoPrestadoService;
 import banco.connection.HibernateConnection;
 import banco.modelo.Duplicata;
 import banco.modelo.FormaPagtoUtilizada;
 import banco.modelo.ItemServico;
 import banco.modelo.MovimentacaoCaixa;
+import banco.modelo.Orcamento;
 import banco.modelo.ProdutoServico;
 import banco.modelo.StatusServico;
 
@@ -88,6 +90,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	private ServicoPrestadoService service = new ServicoPrestadoService();
 	private DuplicataService duplicataService = new DuplicataService();
 	private MovimentacaoCaixaService movimentacaoService = new MovimentacaoCaixaService();
+	private OrcamentoService orcamentoService = new OrcamentoService();
 	private BigDecimal totalPago = BigDecimal.ZERO;
 	private List<Duplicata> listaDuplicatas = new ArrayList<Duplicata>();
 	private BigDecimal troco;
@@ -124,37 +127,16 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 			}
 		}
 		
-		//fera movimentação no caixa para o pagamento dos produtos
-		BigDecimal valorCaixa = movimentacaoService.getTotalCaixa(UsuarioHelper.getCaixa());
-		for(ItemServico item : service.getServicoPrestado().getListaServicos()){
-			if(item.getItem().getTipo().equals(ProdutoServico.TIPOPRODUTO)){
-				//caso o caixa não possua dinheiro suficiente, gera um suprimento
-				if(valorCaixa.compareTo(item.getTotal()) < 0){
-					MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
-					movimentacao.setMotivo("Suprimento para pagamento de peças");
-					movimentacao.setServicoPrestado(service.getServicoPrestado());
-					movimentacao.setStatus(MovimentacaoCaixa.STATUSSUPRIMENTO);
-					movimentacao.setTipo(MovimentacaoCaixa.TIPOENTRADA);
-					movimentacao.setValor(item.getTotal());
-					
-					movimentacaoService.setMovimentacao(movimentacao);
-					movimentacaoService.saveOrUpdate();
-				}
-				
-				//sangria para o pagamento da peça
-				MovimentacaoCaixa movimentacao = new MovimentacaoCaixa();
-				movimentacao.setMotivo("Sangria para pagamento de peças");
-				movimentacao.setServicoPrestado(service.getServicoPrestado());
-				movimentacao.setStatus(MovimentacaoCaixa.STATUSSANGRIA);
-				movimentacao.setTipo(MovimentacaoCaixa.TIPOSAIDA);
-				movimentacao.setValor(item.getTotal());
-				
-				movimentacaoService.setMovimentacao(movimentacao);
-				movimentacaoService.saveOrUpdate();
-			}
+		//verifica se o orcamento ja esta salvo e se ainda esta pendente, caso esteja, salva...
+		Orcamento orcamento = service.getServicoPrestado().getOrcamento();
+		if(orcamento != null && (orcamento.getId() == null || orcamento.isPendente())){
+			orcamento.setPendente(false);
+			orcamentoService.setModelo(orcamento);
+			orcamentoService.saveOrUpdate();
 		}
 		
 		//gera a movimentação no caixa
+		BigDecimal valorCaixa = movimentacaoService.getTotalCaixa(UsuarioHelper.getCaixa());
 		if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraPagVista()){
 		
 			if(troco.compareTo(valorCaixa) > 0)

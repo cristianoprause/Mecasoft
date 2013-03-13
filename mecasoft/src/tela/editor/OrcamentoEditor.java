@@ -447,7 +447,6 @@ public class OrcamentoEditor extends MecasoftEditor {
 				if(openQuestion("Deseja realmente aprovar este orçamento?\nCaso aprovado, não poderá ser usado em outro serviço")){
 					try {
 						ValidatorHelper.validar(service.getModelo());
-						service.getModelo().setPendente(false);
 						calcularTotais();
 						closeThisEditor();
 						
