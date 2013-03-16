@@ -134,7 +134,7 @@ public class VeiculoView extends ViewPart {
 		tvcTipo.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return ((Veiculo)element).getTipo().getNome();
+				return ((Veiculo)element).getTipo();
 			}
 		});
 		TableColumn tblclmnTipo = tvcTipo.getColumn();

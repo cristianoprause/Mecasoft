@@ -46,12 +46,6 @@
             name="Veículo">
       </editor>
       <editor
-            class="tela.editor.TipoVeiculoEditor"
-            icon="assents/veiculo/tipoVeiculo16.png"
-            id="tela.editor.TipoVeiculoEditor"
-            name="Tipo de Veículo">
-      </editor>
-      <editor
             class="tela.editor.TipoFuncionarioEditor"
             icon="assents/tipoFuncionario/tipoFuncionario16.png"
             id="tela.editor.TipoFuncionarioEditor"
@@ -131,12 +125,6 @@
             icon="assents/pessoa/pessoa16.png"
             id="tela.view.PessoaView"
             name="Lista de pessoas">
-      </view>
-      <view
-            class="tela.view.TipoVeiculoView"
-            icon="assents/veiculo/tipoVeiculo16.png"
-            id="tela.view.TipoVeiculoView"
-            name="Lista de tipos de veículos">
       </view>
       <view
             class="tela.view.TipoFuncionarioView"
@@ -294,16 +282,6 @@
                <parameter
                      name="org.eclipse.ui.views.showView.viewId"
                      value="tela.view.VeiculoView">
-               </parameter>
-            </command>
-            <command
-                  commandId="org.eclipse.ui.views.showView"
-                  icon="assents/veiculo/tipoVeiculo16.png"
-                  id="mecasoft.menuTipoVeiculo"
-                  label="Tipo de veículo">
-               <parameter
-                     name="org.eclipse.ui.views.showView.viewId"
-                     value="tela.view.TipoVeiculoView">
                </parameter>
             </command>
             <command

@@ -8,7 +8,6 @@
 		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/mecasoft</property>
 		<property name="hibernate.connection.username">postgres</property>
 		<property name="hibernate.connection.password">admin</property>
-		<mapping class="banco.modelo.TipoVeiculo"/>
 		<mapping class="banco.modelo.Veiculo"/>
 		<mapping class="banco.modelo.ProdutoServico"/>
 		<mapping class="banco.modelo.ForneceProduto"/>

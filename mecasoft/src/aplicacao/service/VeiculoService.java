@@ -2,7 +2,6 @@ package aplicacao.service;
 
 import java.util.List;
 
-import banco.modelo.TipoVeiculo;
 import banco.modelo.Veiculo;
 import banco.utils.VeiculoUtils;
 
@@ -32,10 +31,6 @@ public class VeiculoService extends MecasoftService<Veiculo>{
 		return getDAO().findAll();
 	}
 	
-	public List<Veiculo> findAllByTipo(TipoVeiculo tipo){
-		return getDAO().findAllByTipo(tipo);
-	}
-
 	public Veiculo getVeiculo() {
 		return veiculo;
 	}

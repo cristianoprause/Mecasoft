@@ -19,11 +19,10 @@ import aplicacao.helper.PadraoHelper;
 @Entity
 public class Veiculo implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7458004935003004021L;
-
+	public static String HODOMETRO = "Hodômetro";
+	public static String HORIMETRO = "Horímetro";
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -39,6 +38,13 @@ public class Veiculo implements Serializable{
 	private String modelo;
 	
 	@Column
+	private boolean possuiHodometro = true;
+	
+	@Column
+	private boolean possuiHorimetro;
+	
+	@Column
+	@NotEmpty(message="Informe a placa.")
 	private String placa;
 	
 	@Column
@@ -51,10 +57,6 @@ public class Veiculo implements Serializable{
 	@NotNull(message="Selecione o cliente.")
 	@JoinColumn(name="cliente_id", nullable=false)
 	private Pessoa cliente;
-	
-	@ManyToOne
-	@NotNull(message="Selecione o tipo de veículo.")
-	private TipoVeiculo tipo;
 	
 	public String getStatus(){
 		if(ativo)
@@ -127,12 +129,24 @@ public class Veiculo implements Serializable{
 		this.cliente = cliente;
 	}
 
-	public TipoVeiculo getTipo() {
-		return tipo;
+	public boolean isPossuiHodometro() {
+		return possuiHodometro;
 	}
 
-	public void setTipo(TipoVeiculo tipo) {
-		this.tipo = tipo;
+	public void setPossuiHodometro(boolean possuiHodometro) {
+		this.possuiHodometro = possuiHodometro;
+	}
+
+	public boolean isPossuiHorimetro() {
+		return possuiHorimetro;
+	}
+
+	public void setPossuiHorimetro(boolean possuiHorimetro) {
+		this.possuiHorimetro = possuiHorimetro;
+	}
+	
+	public String getTipo(){
+		return possuiHodometro ? HODOMETRO : HORIMETRO;
 	}
 
 	@Override

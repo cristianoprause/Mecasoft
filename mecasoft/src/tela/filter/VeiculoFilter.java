@@ -19,9 +19,6 @@ public class VeiculoFilter extends MecasoftFilter{
 		if(v.getMarca().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(v.getTipo().getNome().toLowerCase().matches(search.toLowerCase()))
-			return true;
-		
 		if(v.getStatus().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		

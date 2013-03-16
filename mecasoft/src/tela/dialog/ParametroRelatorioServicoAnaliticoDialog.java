@@ -202,7 +202,7 @@ public class ParametroRelatorioServicoAnaliticoDialog extends TitleAreaDialog {
 		SelecionarItemDialog sid = new SelecionarItemDialog(getActiveShell(), new LabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return ((Veiculo)element).getModelo().concat(" - ").concat(((Veiculo)element).getTipo().getNome());
+				return ((Veiculo)element).getModelo().concat(" - ");
 			}
 		});
 		sid.setElements(veiculoService.findAll().toArray());
