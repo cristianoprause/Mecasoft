@@ -44,7 +44,6 @@ public class Veiculo implements Serializable{
 	private boolean possuiHorimetro;
 	
 	@Column
-	@NotEmpty(message="Informe a placa.")
 	private String placa;
 	
 	@Column

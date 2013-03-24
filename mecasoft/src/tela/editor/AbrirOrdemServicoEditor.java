@@ -1077,7 +1077,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		btnFecharOrdem.setEnabled(service.getServicoPrestado().isEmExecucao());
 		
-		btnSelecionarOrcamento.setEnabled(service.getServicoPrestado().getOrcamento() == null && service.getServicoPrestado().isEmExecucao());
+		btnSelecionarOrcamento.setEnabled(service.getServicoPrestado().getOrcamento() == null && service.getServicoPrestado().getId() == null);
 	}
 	
 	private void calcularTotais(){
