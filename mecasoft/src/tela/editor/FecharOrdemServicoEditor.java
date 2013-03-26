@@ -9,11 +9,7 @@ import static aplicacao.helper.ValidatorHelper.validar;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import net.sf.jasperreports.engine.JasperPrint;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -54,11 +50,10 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import tela.componentes.MecasoftText;
 import tela.dialog.AdicionarFormaPagamentoDialog;
 import tela.editor.editorInput.FecharOrdemServicoEditorInput;
-import aplicacao.command.ReportCommand;
+import aplicacao.command.reports.ShowServicoPrestadoAnaliticoClienteCommand;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
-import aplicacao.helper.ReportHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataService;
 import aplicacao.service.MovimentacaoCaixaService;
@@ -194,43 +189,13 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		service.saveOrUpdate();
 		openInformation("Ordem de serviço fechada com sucesso!");
 		
-		//caso gere duplicatas, verifica se o usuário deseja imprimir o comprovante das duplicatas
-		if(service.getServicoPrestado().getListaFormaPagto().get(0).getFormaPagamento().isGeraDuplicata()){
-			if(openQuestion("Deseja imprimir o comprovante das duplicatas?")){
-				try {
-					ReportCommand report = new ReportCommand() {
-						
-						@Override
-						public Object execute(ExecutionEvent event) throws ExecutionException {
-							JasperPrint jPrint = getReport(ReportHelper.DUPLICATA);
-							
-							if(!jPrint.getPages().isEmpty())
-								getView().setReport(jPrint, "Comprovante de duplicatas");
-							return null;
-						}
-						
-						@Override
-						public Map<String, Object> getParametros() {
-							Map<String, Object> param = new HashMap<String, Object>();
-							
-							param.put("DATA_INICIAL", null);
-							param.put("DATA_FINAL", null);
-							param.put("CLIENTE_ID", null);
-							param.put("FUNCIONARIO_ID", null);
-							param.put("SERVICO_ID", service.getServicoPrestado().getId());
-							param.put("PAGO", false);
-							param.put("ASSINATURA", true);
-							
-							return param;
-						}
-					};
-					
-					HibernateConnection.commit();
-					report.execute(new ExecutionEvent());
-				} catch (ExecutionException e) {
-					setErroMessage(e.getMessage());
-					e.printStackTrace();
-				}
+		//relatorio da ordem de serviço para clientes
+		if(openQuestion("Deseja imprimir a ordem de serviço?")){
+			try {
+				new ShowServicoPrestadoAnaliticoClienteCommand(false, service.getServicoPrestado()).execute(new ExecutionEvent());
+			} catch (ExecutionException e) {
+				setErroMessage(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		

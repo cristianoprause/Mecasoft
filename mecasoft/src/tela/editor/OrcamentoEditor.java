@@ -459,6 +459,7 @@ public class OrcamentoEditor extends MecasoftEditor {
 				}
 			}
 		});
+		btnAprovarOrcamento.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/confirm32.png"));
 		if(!service.getModelo().isPendente())
 			btnAprovarOrcamento.dispose();
 		

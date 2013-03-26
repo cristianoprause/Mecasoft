@@ -22,36 +22,50 @@ import aplicacao.command.ReportCommand;
 import aplicacao.helper.FileHelper;
 import aplicacao.helper.ReportHelper;
 import aplicacao.helper.UsuarioHelper;
-import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.ItemServico;
 import banco.modelo.ServicoPrestado;
 import banco.modelo.report.ServicoPrestadoAnaliticoCliente;
 
 public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 
+	private boolean openConfirmation;
+	private ServicoPrestado servico;
 	private ParametroRelatorioServicoAnaliticoClienteDialog prsacd;
-	private ServicoPrestadoService service = new ServicoPrestadoService();
 
+	public ShowServicoPrestadoAnaliticoClienteCommand(boolean openConfirmation, ServicoPrestado servico) {
+		this.openConfirmation = openConfirmation;
+		this.servico = servico;
+	}
+	
+	public ShowServicoPrestadoAnaliticoClienteCommand() {
+		this.openConfirmation = true;
+		servico = null;
+	}
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		prsacd = new ParametroRelatorioServicoAnaliticoClienteDialog(getActiveShell());
-		if(prsacd.open() == IDialogConstants.OK_ID){
-			ServicoPrestado servico = service.find(prsacd.getNumero());
-			
-			if(servico == null || servico.getListaServicos().isEmpty()){
-				openWarning("Não há informações para mostrar no relatório.");
+		
+		if(openConfirmation)
+			if(prsacd.open() != IDialogConstants.OK_ID)
 				return null;
-			}
-			
-			List<ServicoPrestadoAnaliticoCliente> listaLinha = gerarLinhaRelatorio(servico);
-			JasperPrint jPrint = getReport(ReportHelper.SERVICO_ANALITICO_CLIENTE, listaLinha);
-			
-			if(!jPrint.getPages().isEmpty())
-				getView().setReport(jPrint, "Relatório de serviços (Analitico)");
-			else
-				openError("Não há informações suficientes para gerar o relatório.");	
-			
+		
+		servico = openConfirmation ? prsacd.getServico() : servico;
+
+		if (servico == null || servico.getListaServicos().isEmpty()) {
+			openWarning("Não há informações para mostrar no relatório.");
+			return null;
 		}
+
+		List<ServicoPrestadoAnaliticoCliente> listaLinha = gerarLinhaRelatorio(servico);
+		JasperPrint jPrint = getReport(ReportHelper.SERVICO_ANALITICO_CLIENTE,
+				listaLinha);
+
+		if (!jPrint.getPages().isEmpty())
+			getView().setReport(jPrint, "Relatório de serviços (Analitico)");
+		else
+			openError("Não há informações suficientes para gerar o relatório.");	
+			
 		
 		return null;
 	}

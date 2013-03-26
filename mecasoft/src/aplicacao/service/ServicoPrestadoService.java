@@ -43,6 +43,10 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 		return getDAO().findAllByPeriodoAndStatusAndConclusao(dataInicial, dataFinal, true, null);
 	}
 	
+	public List<ServicoPrestado> findAllNaoCancelado(){
+		return getDAO().findAllByStatusAndConclusao(true, null);
+	}
+	
 	public List<ServicoPrestado> findAllNaoConcluidos(){
 		return getDAO().findAllByStatusAndConclusao(true, true);
 	}
