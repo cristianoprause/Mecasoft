@@ -96,7 +96,9 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	@Override
 	public void salvarRegistro() throws ValidationException {
 		validar(service.getServicoPrestado());
-			
+		
+		calcularTotais();
+		
 		if(service.getServicoPrestado().getListaFormaPagto() == null 
 				|| service.getServicoPrestado().getListaFormaPagto().isEmpty())
 			throw new ValidationException("Adicione ao menos uma forma de pagamento");
@@ -406,9 +408,10 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 				}
 			}
 		});
-		btnFecharOrdem.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		btnFecharOrdem.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnFecharOrdem.setImage(ResourceManager.getPluginImage("mecasoft", "assents/servicoPrestado/closeService32.png"));
 		btnFecharOrdem.setText("Fechar Ordem");
+		btnFecharOrdem.setEnabled(service.getServicoPrestado().isEmExecucao());
 		
 		initDataBindings();
 	}
@@ -417,7 +420,6 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		setShowExcluir(false);
-		setShowSalvar(false);
 		
 		FecharOrdemServicoEditorInput fosei = (FecharOrdemServicoEditorInput)input;
 		

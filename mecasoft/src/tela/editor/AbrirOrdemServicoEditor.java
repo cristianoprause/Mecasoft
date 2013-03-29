@@ -883,12 +883,16 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		}
 		
 		setShowExcluir(false);
-		setShowSalvar(service.getServicoPrestado().isEmExecucao());
 		
 		fosei = new FecharOrdemServicoEditorInput(service.getServicoPrestado());
 		
+		//abre os 2 editors de abrir e fechar ordens de serviço para mostrar a ordem completa
+		if(!service.getServicoPrestado().isEmExecucao())
+			site.getPage().openEditor(fosei, FecharOrdemServicoEditor.ID);
+		
 		setSite(site);
 		setInput(input);
+		
 	}
 	
 	private Pessoa selecionarCliente(){
@@ -1157,40 +1161,9 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		IObservableList servicegetServicoPrestadoListaStatusObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaStatus");
 		tvStatus.setInput(servicegetServicoPrestadoListaStatusObserveList);
 		//
-		IObservableValue btnAdicionarServioObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnAdicionarServio);
-		IObservableValue servicegetServicoPrestadoConcluidoObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "emExecucao");
-		bindingContext.bindValue(btnAdicionarServioObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
-		IObservableValue btnRemoverServioObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnRemoverServio);
-		bindingContext.bindValue(btnRemoverServioObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
-		IObservableValue btnAdicionarItemObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnAdicionarItem);
-		bindingContext.bindValue(btnAdicionarItemObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
-		IObservableValue btnRemoverItemObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnRemoverItem);
-		bindingContext.bindValue(btnRemoverItemObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
-		IObservableValue btnSelecionarObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnSelecionar);
-		bindingContext.bindValue(btnSelecionarObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
-		IObservableValue cbNovoStatusObserveEnabledObserveWidget = SWTObservables.observeEnabled(cbNovoStatus);
-		bindingContext.bindValue(cbNovoStatusObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
-		IObservableValue btnAlterarStatusObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnAlterarStatus);
-		bindingContext.bindValue(btnAlterarStatusObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
-		IObservableValue tableStatusObserveEnabledObserveWidget = SWTObservables.observeEnabled(tableStatus);
-		bindingContext.bindValue(tableStatusObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
-		IObservableValue btnRemoverStatusObserveEnabledObserveWidget = SWTObservables.observeEnabled(btnRemoverStatus);
-		bindingContext.bindValue(btnRemoverStatusObserveEnabledObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
-		//
 		IObservableValue observeTextTxtOrcamentoObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtOrcamento);
 		IObservableValue orcamentonumeroServicegetServicoPrestadoObserveValue = PojoProperties.value("orcamento.numero").observe(service.getServicoPrestado());
 		bindingContext.bindValue(observeTextTxtOrcamentoObserveWidget, orcamentonumeroServicegetServicoPrestadoObserveValue, null, null);
-		//
-		IObservableValue observeEnabledTreeObserveWidget = WidgetProperties.enabled().observe(tree);
-		bindingContext.bindValue(observeEnabledTreeObserveWidget, servicegetServicoPrestadoConcluidoObserveValue, null, null);
 		//
 		IObservableList listaServicosServicegetServicoPrestadoObserveList = PojoProperties.list("listaServicos").observe(service.getServicoPrestado());
 		tvServicoProduto.setInput(listaServicosServicegetServicoPrestadoObserveList);
