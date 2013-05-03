@@ -198,7 +198,7 @@ public class PagamentoFuncionarioDialog extends TitleAreaDialog {
 		service.saveOrUpdate();
 		
 		//commita
-		HibernateConnection.commitSemClear();
+		HibernateConnection.commit(service.getPessoa());
 		
 		openInformation("Funcionário pago com sucesso!");
 		

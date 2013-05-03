@@ -26,7 +26,7 @@ public class MovimentacaoCaixaDAO extends HibernateConnection implements Movimen
 
 	@Override
 	public MovimentacaoCaixa find(Long id) {
-		Query q = getSession().createQuery("select m from MovimentacaoCaixa m where m.id = :id");
+		Query q = createQuery("select m from MovimentacaoCaixa m where m.id = :id");
 		q.setParameter("id", id);
 		return (MovimentacaoCaixa)q.uniqueResult();
 	}
@@ -34,14 +34,14 @@ public class MovimentacaoCaixaDAO extends HibernateConnection implements Movimen
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<MovimentacaoCaixa> findAll() {
-		Query q = getSession().createQuery("select m from MovimentacaoCaixa m");
+		Query q = createQuery("select m from MovimentacaoCaixa m");
 		return q.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<MovimentacaoCaixa> findAllByCaixaAndTipo(Caixa caixa, Character tipo) {
-		Query q = getSession().createQuery("select m from MovimentacaoCaixa m where m.caixa = :caixa " +
+		Query q = createQuery("select m from MovimentacaoCaixa m where m.caixa = :caixa " +
 																			"and (m.tipo = :tipo or :tipo is null)");
 		q.setParameter("caixa", caixa)
 		.setParameter("tipo", tipo);

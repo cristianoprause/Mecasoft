@@ -7,8 +7,6 @@ import banco.utils.ConfiguracaoUtils;
 
 public class ConfiguracaoService extends MecasoftService<Configuracao>{
 
-	private Configuracao configuracao;
-	
 	@Override
 	public ConfiguracaoUtils getDAO() {
 		return getInjector().getInstance(ConfiguracaoUtils.class);
@@ -16,12 +14,12 @@ public class ConfiguracaoService extends MecasoftService<Configuracao>{
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(configuracao);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(configuracao);
+		getDAO().delete(modelo);
 	}
 
 	@Override
@@ -35,11 +33,11 @@ public class ConfiguracaoService extends MecasoftService<Configuracao>{
 	}
 
 	public Configuracao getConfiguracao() {
-		return configuracao;
+		return getModelo();
 	}
 
 	public void setConfiguracao(Configuracao configuracao) {
-		this.configuracao = configuracao;
+		setModelo(configuracao);
 	}
 
 }

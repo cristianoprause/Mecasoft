@@ -25,7 +25,7 @@ public class PapelDAO extends HibernateConnection implements PapelUtils{
 
 	@Override
 	public Papel find(Long id) {
-		Query q = getSession().createQuery("select p from Papel p where p.id = :id");
+		Query q = createQuery("select p from Papel p where p.id = :id");
 		q.setParameter("id", id);
 		return (Papel)q.uniqueResult();
 	}
@@ -33,7 +33,7 @@ public class PapelDAO extends HibernateConnection implements PapelUtils{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Papel> findAll() {
-		Query q = getSession().createQuery("select p from Papel p");
+		Query q = createQuery("select p from Papel p");
 		List<Papel> lista = q.list();
 		return lista;
 	}

@@ -2,32 +2,30 @@ package tela.editor;
 
 import static aplicacao.helper.MessageHelper.openQuestion;
 
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.editor.editorInput.PapelEditorInput;
-
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.MessageHelper;
 import aplicacao.helper.ValidatorHelper;
+import aplicacao.service.MecasoftService;
 import aplicacao.service.PapelService;
-import banco.connection.HibernateConnection;
-
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 public class PapelEditor extends MecasoftEditor {
 	
@@ -298,10 +296,12 @@ public class PapelEditor extends MecasoftEditor {
 
 	@Override
 	public void setFocus() {
-		if(HibernateConnection.isSessionRefresh(service.getPapel()) && service.getPapel().getId() != null)
-			service.setPapel(service.find(service.getPapel().getId()));
-		
 		initDataBindings();
+	}
+	
+	@Override
+	public MecasoftService<?> getService() {
+		return service;
 	}
 
 }

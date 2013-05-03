@@ -9,8 +9,6 @@ import banco.utils.MovimentacaoCaixaUtils;
 
 public class MovimentacaoCaixaService extends MecasoftService<MovimentacaoCaixa>{
 
-	private MovimentacaoCaixa movimentacao;
-	
 	@Override
 	public MovimentacaoCaixaUtils getDAO() {
 		return getInjector().getInstance(MovimentacaoCaixaUtils.class);
@@ -18,12 +16,12 @@ public class MovimentacaoCaixaService extends MecasoftService<MovimentacaoCaixa>
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(movimentacao);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(movimentacao);
+		getDAO().delete(modelo);
 	}
 	
 	public BigDecimal getTotalCaixa(Caixa caixa){
@@ -66,11 +64,11 @@ public class MovimentacaoCaixaService extends MecasoftService<MovimentacaoCaixa>
 	}
 
 	public MovimentacaoCaixa getMovimentacao() {
-		return movimentacao;
+		return getModelo();
 	}
 
 	public void setMovimentacao(MovimentacaoCaixa movimentacao) {
-		this.movimentacao = movimentacao;
+		setModelo(movimentacao);
 	}
 
 }

@@ -2,6 +2,8 @@ package tela.editor;
 
 import static aplicacao.helper.LayoutHelper.getActiveShell;
 
+import java.io.Serializable;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -21,6 +23,7 @@ import tela.dialog.ErroDialog;
 import tela.dialog.SimNaoCancelarDialog;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
+import aplicacao.service.MecasoftService;
 import banco.connection.HibernateConnection;
 
 public abstract class MecasoftEditor extends EditorPart implements ISaveablePart2{
@@ -38,11 +41,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	public abstract void salvarRegistro() throws ValidationException;
 	public abstract void excluirRegistro();
 	public abstract void addComponentes(Composite compositeConteudo);
-	
-	/**
-	 * Create contents of the editor part.
-	 * @param parent
-	 */
+	public abstract MecasoftService<?> getService();
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -143,7 +142,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	}
 	
 	public void closeThisEditor(){
-		HibernateConnection.commit();
+		HibernateConnection.commit((Serializable)getService().getModelo());
 		close();
 	}
 	
@@ -164,7 +163,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 			}
 			
 			if(sncd.getId() == IDialogConstants.CANCEL_ID){
-				HibernateConnection.rollBack();
+				HibernateConnection.rollBack((Serializable)getService().getModelo());
 				getSite().getWorkbenchWindow().getActivePage().closeAllEditors(false);
 				return NO;
 			}
@@ -191,5 +190,5 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	public void setErroMessage(String erro){
 		new ErroDialog(LayoutHelper.getActiveShell(), erro).open();
 	}
-	
+
 }

@@ -34,10 +34,10 @@ import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.MessageHelper;
 import aplicacao.helper.ValidatorHelper;
+import aplicacao.service.MecasoftService;
 import aplicacao.service.PapelService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.UsuarioService;
-import banco.connection.HibernateConnection;
 import banco.modelo.Papel;
 import banco.modelo.Pessoa;
 import banco.modelo.Usuario;
@@ -184,13 +184,8 @@ public class UsuarioEditor extends MecasoftEditor{
 	
 	@Override
 	public void setFocus() {
-		
-		if(HibernateConnection.isSessionRefresh(service.getUsuario()) && service.getUsuario().getId() != null)
-			service.setUsuario(service.find(service.getUsuario().getId()));
-		
 		papeis = papelService.findAll();
 		initDataBindings();
-		
 	}
 
 	protected DataBindingContext initDataBindings() {
@@ -224,5 +219,10 @@ public class UsuarioEditor extends MecasoftEditor{
 		IObservableValue servicegetUsuarioFuncionarionomeFantasiaObserveValue = PojoObservables.observeValue(service.getUsuario(), "funcionario.nomeFantasia");
 		bindingContext.bindValue(txtNomeFuncionarioObserveTextObserveWidget, servicegetUsuarioFuncionarionomeFantasiaObserveValue, null, null);
 		return bindingContext;
+	}
+
+	@Override
+	public MecasoftService<?> getService() {
+		return service;
 	}
 }

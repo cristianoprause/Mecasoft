@@ -8,8 +8,6 @@ import banco.utils.DuplicataUtils;
 
 public class DuplicataService extends MecasoftService<Duplicata>{
 
-	private Duplicata duplicata;
-	
 	@Override
 	public DuplicataUtils getDAO() {
 		return getInjector().getInstance(DuplicataUtils.class);
@@ -17,12 +15,12 @@ public class DuplicataService extends MecasoftService<Duplicata>{
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(duplicata);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(duplicata);
+		getDAO().delete(modelo);
 	}
 
 	@Override
@@ -52,11 +50,11 @@ public class DuplicataService extends MecasoftService<Duplicata>{
 	}
 
 	public Duplicata getDuplicata() {
-		return duplicata;
+		return getModelo();
 	}
 
 	public void setDuplicata(Duplicata duplicata) {
-		this.duplicata = duplicata;
+		setModelo(duplicata);
 	}
 
 }

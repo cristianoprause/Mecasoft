@@ -23,21 +23,13 @@ public class ServicoPrestadoDAO extends HibernateConnection implements
 	}
 
 	@Override
-	public void saveOrUpdateAutomatic(ServicoPrestado servico) {
-		if (servico.getId() != null)
-			getSessionAutomatico().merge(servico);
-		else
-			getSessionAutomatico().persist(servico);
-	}
-
-	@Override
 	public void delete(ServicoPrestado modelo) {
 		getSession().delete(modelo);
 	}
 
 	@Override
 	public ServicoPrestado find(Long id) {
-		Query q = getSession().createQuery(
+		Query q = createQuery(
 				"select s from ServicoPrestado s where s.id = :id");
 		q.setParameter("id", id);
 		return (ServicoPrestado) q.uniqueResult();
@@ -46,7 +38,7 @@ public class ServicoPrestadoDAO extends HibernateConnection implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ServicoPrestado> findAll() {
-		Query q = getSession().createQuery("select s from ServicoPrestado s");
+		Query q = createQuery("select s from ServicoPrestado s");
 		return q.list();
 	}
 
@@ -89,16 +81,6 @@ public class ServicoPrestadoDAO extends HibernateConnection implements
 		Query q = getSession()
 				.createQuery(
 						"select s from ServicoPrestado s where (s.ativo is :status or :status is null) "
-								+ "and (s.emExecucao is :emExecucao or :emExecucao is null)");
-		q.setParameter("status", status).setParameter("emExecucao", emExecucao);
-		return q.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<ServicoPrestado> findAllByStatusAndConclusaoAutomatic(
-			Boolean status, Boolean emExecucao) {
-		Query q = getSessionAutomatico().createQuery("select s from ServicoPrestado s where (s.ativo is :status or :status is null) "
 								+ "and (s.emExecucao is :emExecucao or :emExecucao is null)");
 		q.setParameter("status", status).setParameter("emExecucao", emExecucao);
 		return q.list();

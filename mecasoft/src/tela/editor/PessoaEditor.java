@@ -57,10 +57,10 @@ import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.CepService;
+import aplicacao.service.MecasoftService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.TipoFuncionarioService;
-import banco.connection.HibernateConnection;
 import banco.modelo.Cep;
 import banco.modelo.ForneceProduto;
 import banco.modelo.ProdutoServico;
@@ -560,9 +560,6 @@ public class PessoaEditor extends MecasoftEditor {
 	@Override
 	public void setFocus() {
 
-		if(!HibernateConnection.isSessionRefresh(service.getPessoa()) && service.getPessoa().getId() != null)
-			service.setPessoa(service.find(service.getPessoa().getId()));
-		
 		tvProduto.refresh();
 		tvVeiculo.refresh();
 		
@@ -738,5 +735,10 @@ public class PessoaEditor extends MecasoftEditor {
 		bindingContext.bindValue(txtNumerotextObserveTextObserveWidget, servicegetPessoaNumeroObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+	
+	@Override
+	public MecasoftService<?> getService() {
+		return service;
 	}
 }

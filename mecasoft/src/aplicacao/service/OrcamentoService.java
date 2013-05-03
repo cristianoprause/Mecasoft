@@ -7,8 +7,6 @@ import banco.utils.OrcamentoUtils;
 
 public class OrcamentoService extends MecasoftService<Orcamento>{
 
-	private Orcamento modelo;
-	
 	@Override
 	public OrcamentoUtils getDAO() {
 		return getInjector().getInstance(OrcamentoUtils.class);

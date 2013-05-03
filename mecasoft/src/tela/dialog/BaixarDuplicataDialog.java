@@ -234,7 +234,7 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 		service.getDuplicataPaga().setDuplicata(duplicata);
 		service.saveOrUpdate();
 		
-		HibernateConnection.commit();
+		HibernateConnection.commit(duplicata);
 		
 		openInformation("Duplicata baixa com sucesso!");
 		

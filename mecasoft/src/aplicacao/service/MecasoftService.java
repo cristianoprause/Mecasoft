@@ -9,6 +9,8 @@ import banco.utils.MecasoftUtils;
 
 public abstract class MecasoftService<T> {
 
+	protected T modelo;
+	
 	public abstract MecasoftUtils<T> getDAO();
 	
 	public Boolean isDirty(){
@@ -25,5 +27,13 @@ public abstract class MecasoftService<T> {
 	public abstract void delete();
 	public abstract T find(Long id);
 	public abstract List<T> findAll();
+
+	public T getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(T modelo) {
+		this.modelo = modelo;
+	}
 	
 }

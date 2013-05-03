@@ -25,7 +25,7 @@ public class ConfiguracaoDAO extends HibernateConnection implements Configuracao
 
 	@Override
 	public Configuracao find(Long id) {
-		Query q = getSession().createQuery("select c from Configuracao c where c.id = :id");
+		Query q = createQuery("select c from Configuracao c where c.id = :id");
 		q.setParameter("id", id);
 		return (Configuracao)q.uniqueResult();
 	}
@@ -33,7 +33,7 @@ public class ConfiguracaoDAO extends HibernateConnection implements Configuracao
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Configuracao> findAll() {
-		Query q = getSession().createQuery("select c from Configuracao c");
+		Query q = createQuery("select c from Configuracao c");
 		return q.list();
 	}
 

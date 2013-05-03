@@ -7,19 +7,17 @@ import banco.utils.PapelUtils;
 
 public class PapelService extends MecasoftService<Papel>{
 
-	private Papel papel;
-	
 	@Override
 	public PapelUtils getDAO() {
 		return getInjector().getInstance(PapelUtils.class);
 	}
 	
 	public void saveOrUpdate(){
-		getDAO().saveOrUpdate(papel);
+		getDAO().saveOrUpdate(modelo);
 	}
 	
 	public void delete(){
-		getDAO().delete(papel);
+		getDAO().delete(modelo);
 	}
 	
 	public Papel find(Long id){
@@ -31,11 +29,11 @@ public class PapelService extends MecasoftService<Papel>{
 	}
 
 	public Papel getPapel() {
-		return papel;
+		return getModelo();
 	}
 
 	public void setPapel(Papel papel) {
-		this.papel = papel;
+		setModelo(papel);
 	}
 
 }

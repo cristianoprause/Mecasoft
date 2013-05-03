@@ -37,7 +37,6 @@ import tela.viewerSorter.TableStatusServicoViewerSorter;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.service.PessoaService;
 import aplicacao.service.StatusServicoService;
-import banco.connection.HibernateConnection;
 import banco.modelo.Pessoa;
 import banco.modelo.StatusServico;
 
@@ -173,9 +172,6 @@ public class StatusFuncionarioEditor extends EditorPart {
 
 	@Override
 	public void setFocus() {
-		if(HibernateConnection.isSessionRefresh(service.getPessoa()) && service.getPessoa().getId() != null)
-			service.setPessoa(service.find(service.getPessoa().getId()));
-		
 		initDataBindings();
 	}
 

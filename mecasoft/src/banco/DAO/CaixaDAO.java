@@ -25,7 +25,7 @@ public class CaixaDAO extends HibernateConnection implements CaixaUtils{
 
 	@Override
 	public Caixa find(Long id) {
-		Query q = getSession().createQuery("select c from Caixa c where c.id = :id");
+		Query q = createQuery("select c from Caixa c where c.id = :id");
 		q.setParameter("id", id);
 		return (Caixa)q.uniqueResult();
 	}
@@ -33,13 +33,13 @@ public class CaixaDAO extends HibernateConnection implements CaixaUtils{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Caixa> findAll() {
-		Query q = getSession().createQuery("select c from Caixa c");
+		Query q = createQuery("select c from Caixa c");
 		return q.list();
 	}
 
 	@Override
 	public Caixa findUltimoCaixaByStatus(Boolean status) {
-		Query q = getSession().createQuery("select c from Caixa c where c.id = (select max(ca.id) from Caixa ca " +
+		Query q = createQuery("select c from Caixa c where c.id = (select max(ca.id) from Caixa ca " +
 										"where (:status is null) or (ca.dataFechamento is null and :status is true) " +
 										"or (ca.dataFechamento is not null and :status is false))");
 		q.setParameter("status", status);

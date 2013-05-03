@@ -7,20 +7,18 @@ import banco.utils.VeiculoUtils;
 
 public class VeiculoService extends MecasoftService<Veiculo>{
 
-	private Veiculo veiculo;
-	
 	@Override
 	public VeiculoUtils getDAO() {
 		return getInjector().getInstance(VeiculoUtils.class);
 	}
 	
 	public void saveOrUpdate(){
-		getDAO().saveOrUpdate(veiculo);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(veiculo);
+		getDAO().delete(modelo);
 	}
 	
 	public Veiculo find(Long id){
@@ -32,11 +30,11 @@ public class VeiculoService extends MecasoftService<Veiculo>{
 	}
 	
 	public Veiculo getVeiculo() {
-		return veiculo;
+		return getModelo();
 	}
 
 	public void setVeiculo(Veiculo veiculo) {
-		this.veiculo = veiculo;
+		setModelo(veiculo);
 	}
 
 

@@ -53,6 +53,7 @@ import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.helper.ValidatorHelper;
 import aplicacao.service.ItemServicoService;
+import aplicacao.service.MecasoftService;
 import aplicacao.service.OrcamentoService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
@@ -682,5 +683,10 @@ public class OrcamentoEditor extends MecasoftEditor {
 		bindingContext.bindValue(observeTextTxtNumeroObserveWidget, numeroServicegetModeloObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+	
+	@Override
+	public MecasoftService<?> getService() {
+		return service;
 	}
 }

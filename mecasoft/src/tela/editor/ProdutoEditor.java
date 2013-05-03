@@ -41,9 +41,9 @@ import tela.editor.editorInput.ProdutoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
+import aplicacao.service.MecasoftService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
-import banco.connection.HibernateConnection;
 import banco.modelo.ForneceProduto;
 import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
@@ -287,9 +287,11 @@ public class ProdutoEditor extends MecasoftEditor {
 
 	@Override
 	public void setFocus() {
-		if(!HibernateConnection.isSessionRefresh(service.getProdutoServico()) && service.getProdutoServico().getId() != null)
-			service.setProdutoServico(service.find(service.getProdutoServico().getId()));
-		
 		initDataBindings();
+	}
+	
+	@Override
+	public MecasoftService<?> getService() {
+		return service;
 	}
 }

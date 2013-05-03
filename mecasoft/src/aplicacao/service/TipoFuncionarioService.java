@@ -7,8 +7,6 @@ import banco.utils.TipoFuncionarioUtils;
 
 public class TipoFuncionarioService extends MecasoftService<TipoFuncionario>{
 
-	private TipoFuncionario tipo;
-	
 	@Override
 	public TipoFuncionarioUtils getDAO() {
 		return getInjector().getInstance(TipoFuncionarioUtils.class);
@@ -16,12 +14,12 @@ public class TipoFuncionarioService extends MecasoftService<TipoFuncionario>{
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(tipo);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(tipo);
+		getDAO().delete(modelo);
 	}
 
 	@Override
@@ -35,11 +33,11 @@ public class TipoFuncionarioService extends MecasoftService<TipoFuncionario>{
 	}
 	
 	public TipoFuncionario getTipo() {
-		return tipo;
+		return getModelo();
 	}
 
 	public void setTipo(TipoFuncionario tipo) {
-		this.tipo = tipo;
+		setModelo(tipo);
 	}
 	
 }

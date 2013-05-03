@@ -8,8 +8,6 @@ import banco.utils.ServicoPrestadoUtils;
 
 public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 
-	private ServicoPrestado servicoPrestado;
-	
 	@Override
 	public ServicoPrestadoUtils getDAO() {
 		return getInjector().getInstance(ServicoPrestadoUtils.class);
@@ -17,16 +15,12 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(servicoPrestado);
+		getDAO().saveOrUpdate(modelo);
 	}
 	
-	public void saveOrUpdateAutomatic(){
-		getDAO().saveOrUpdateAutomatic(servicoPrestado);
-	}
-
 	@Override
 	public void delete() {
-		getDAO().delete(servicoPrestado);
+		getDAO().delete(modelo);
 	}
 
 	@Override
@@ -51,16 +45,12 @@ public class ServicoPrestadoService extends MecasoftService<ServicoPrestado>{
 		return getDAO().findAllByStatusAndConclusao(true, true);
 	}
 
-	public List<ServicoPrestado> findAllNaoConcluidosAutomatic(){
-		return getDAO().findAllByStatusAndConclusaoAutomatic(true, true);
-	}
-	
 	public ServicoPrestado getServicoPrestado() {
-		return servicoPrestado;
+		return getModelo();
 	}
 	
 	public void setServicoPrestado(ServicoPrestado servicoPrestado) {
-		this.servicoPrestado = servicoPrestado;
+		setModelo(servicoPrestado);
 	}
 	
 }

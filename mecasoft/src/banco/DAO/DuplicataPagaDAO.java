@@ -27,7 +27,7 @@ public class DuplicataPagaDAO extends HibernateConnection implements DuplicataPa
 
 	@Override
 	public DuplicataPaga find(Long id) {
-		Query q = getSession().createQuery("select d from DuplicataPaga d where d.id = :id");
+		Query q = createQuery("select d from DuplicataPaga d where d.id = :id");
 		q.setParameter("id", id);
 		return (DuplicataPaga)q.uniqueResult();
 	}
@@ -35,7 +35,7 @@ public class DuplicataPagaDAO extends HibernateConnection implements DuplicataPa
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DuplicataPaga> findAll() {
-		Query q = getSession().createQuery("select d from DuplicataPaga d");
+		Query q = createQuery("select d from DuplicataPaga d");
 		return q.list();
 	}
 
@@ -49,7 +49,7 @@ public class DuplicataPagaDAO extends HibernateConnection implements DuplicataPa
 		c.set(Calendar.SECOND, 59);
 		dtFinal = c.getTime();
 		
-		Query q = getSession().createQuery("select d from DuplicataPaga d where d.dataPagamento between :dtInicial and :dtFinal");
+		Query q = createQuery("select d from DuplicataPaga d where d.dataPagamento between :dtInicial and :dtFinal");
 		q.setParameter("dtInicial", dtInicial)
 		.setParameter("dtFinal", dtFinal);
 		

@@ -29,14 +29,14 @@ public class StatusServicoDAO extends HibernateConnection implements StatusServi
 
 	@Override
 	public StatusServico find(Long id) {
-		Query q = getSession().createQuery("select s from ServicoPrestado s where s.id = :id");
+		Query q = createQuery("select s from ServicoPrestado s where s.id = :id");
 		q.setParameter("id", id);
 		return (StatusServico)q.uniqueResult();
 	}
 
 	@Override
 	public StatusServico findStatusFuncionario(Pessoa funcionario) {
-		Query q = getSession().createQuery("select s from StatusServico s where s.id = (select max(ss.id) " +
+		Query q = createQuery("select s from StatusServico s where s.id = (select max(ss.id) " +
 				"from StatusServico ss where ss.funcionario = :funcionario)");
 		q.setParameter("funcionario", funcionario);
 		return (StatusServico) q.uniqueResult();
@@ -45,7 +45,7 @@ public class StatusServicoDAO extends HibernateConnection implements StatusServi
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<StatusServico> findAll() {
-		Query q = getSession().createQuery("select s from StatusServico s");
+		Query q = createQuery("select s from StatusServico s");
 		return q.list();
 	}
 
@@ -73,7 +73,7 @@ public class StatusServicoDAO extends HibernateConnection implements StatusServi
 			dtFinal = c.getTime();
 		}
 		
-		Query q = getSession().createQuery("select s from StatusServico s " +
+		Query q = createQuery("select s from StatusServico s " +
 				"where (s.data >= :dtInicial or cast(:dtInicial as date) is null) " +
 				"  and (s.data <= :dtFinal or cast(:dtFinal as date) is null) " +
 				"  and (s.funcionario = :funcionario or :funcionario is null) " +

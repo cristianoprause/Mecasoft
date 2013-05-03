@@ -25,7 +25,7 @@ public class TipoFuncionarioDAO extends HibernateConnection implements TipoFunci
 
 	@Override
 	public TipoFuncionario find(Long id) {
-		Query q = getSession().createQuery("select t from TipoFuncionario t where t.id = :id");
+		Query q = createQuery("select t from TipoFuncionario t where t.id = :id");
 		q.setParameter("id", id);
 		return (TipoFuncionario)q.uniqueResult();
 	}
@@ -33,8 +33,7 @@ public class TipoFuncionarioDAO extends HibernateConnection implements TipoFunci
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TipoFuncionario> findAll() {
-//		Query q = createQueryClearSession("select t from TipoFuncionario t");
-		Query q = getSession().createQuery("select t from TipoFuncionario t");
+		Query q = createQuery("select t from TipoFuncionario t");
 		return q.list();
 	}
 

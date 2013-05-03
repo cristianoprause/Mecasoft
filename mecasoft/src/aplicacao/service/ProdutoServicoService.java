@@ -7,8 +7,6 @@ import banco.utils.ProdutoServicoUtils;
 
 public class ProdutoServicoService extends MecasoftService<ProdutoServico>{
 
-	private ProdutoServico produtoServico;
-	
 	@Override
 	public ProdutoServicoUtils getDAO() {
 		return getInjector().getInstance(ProdutoServicoUtils.class);
@@ -16,12 +14,12 @@ public class ProdutoServicoService extends MecasoftService<ProdutoServico>{
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(produtoServico);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(produtoServico);
+		getDAO().delete(modelo);
 	}
 
 	@Override
@@ -51,11 +49,11 @@ public class ProdutoServicoService extends MecasoftService<ProdutoServico>{
 	}
 	
 	public ProdutoServico getProdutoServico() {
-		return produtoServico;
+		return getModelo();
 	}
 
 	public void setProdutoServico(ProdutoServico produtoServico) {
-		this.produtoServico = produtoServico;
+		setModelo(produtoServico);
 	}
 	
 }

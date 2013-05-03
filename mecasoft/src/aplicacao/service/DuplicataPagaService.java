@@ -8,8 +8,6 @@ import banco.utils.DuplicataPagaUtils;
 
 public class DuplicataPagaService extends MecasoftService<DuplicataPaga>{
 
-	private DuplicataPaga duplicataPaga;
-	
 	@Override
 	public DuplicataPagaUtils getDAO() {
 		return getInjector().getInstance(DuplicataPagaUtils.class);
@@ -17,12 +15,12 @@ public class DuplicataPagaService extends MecasoftService<DuplicataPaga>{
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(duplicataPaga);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(duplicataPaga);
+		getDAO().delete(modelo);
 	}
 
 	@Override
@@ -40,11 +38,11 @@ public class DuplicataPagaService extends MecasoftService<DuplicataPaga>{
 	}
 
 	public DuplicataPaga getDuplicataPaga() {
-		return duplicataPaga;
+		return getModelo();
 	}
 
 	public void setDuplicataPaga(DuplicataPaga duplicataPaga) {
-		this.duplicataPaga = duplicataPaga;
+		setModelo(duplicataPaga);
 	}
 
 }

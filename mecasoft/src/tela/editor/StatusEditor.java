@@ -18,11 +18,10 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
-import banco.connection.HibernateConnection;
-
 import tela.editor.editorInput.StatusEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.UsuarioHelper;
+import aplicacao.service.MecasoftService;
 import aplicacao.service.StatusService;
 
 public class StatusEditor extends MecasoftEditor {
@@ -131,9 +130,11 @@ public class StatusEditor extends MecasoftEditor {
 
 	@Override
 	public void setFocus() {
-		if(HibernateConnection.isSessionRefresh(service.getStatus()) && service.getStatus().getId() != null)
-			service.setStatus(service.find(service.getStatus().getId()));
-		
 		initDataBindings();
+	}
+	
+	@Override
+	public MecasoftService<?> getService() {
+		return service;
 	}
 }

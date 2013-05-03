@@ -5,8 +5,10 @@ import static aplicacao.helper.ValidatorHelper.validar;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -27,12 +29,10 @@ import tela.dialog.SelecionarItemDialog;
 import tela.editor.editorInput.VeiculoEditorInput;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
+import aplicacao.service.MecasoftService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.VeiculoService;
-import banco.connection.HibernateConnection;
 import banco.modelo.Pessoa;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.core.databinding.beans.PojoProperties;
 
 public class VeiculoEditor extends MecasoftEditor {
 
@@ -210,10 +210,6 @@ public class VeiculoEditor extends MecasoftEditor {
 	
 	@Override
 	public void setFocus() {
-		
-		if(HibernateConnection.isSessionRefresh(service.getVeiculo()) && service.getVeiculo().getId() != null)
-			service.setVeiculo(service.find(service.getVeiculo().getId()));
-		
 		initDataBindings();
 		
 	}
@@ -263,5 +259,10 @@ public class VeiculoEditor extends MecasoftEditor {
 		bindingContext.bindValue(observeEnabledTxtHorimetrotextObserveWidget, possuiHorimetroServicegetVeiculoObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+
+	@Override
+	public MecasoftService<?> getService() {
+		return service;
 	}
 }

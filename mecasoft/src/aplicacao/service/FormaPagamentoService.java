@@ -7,8 +7,6 @@ import banco.utils.FormaPagamentoUtils;
 
 public class FormaPagamentoService extends MecasoftService<FormaPagamento>{
 
-	private FormaPagamento forma;
-	
 	@Override
 	public FormaPagamentoUtils getDAO() {
 		return getInjector().getInstance(FormaPagamentoUtils.class);
@@ -16,12 +14,12 @@ public class FormaPagamentoService extends MecasoftService<FormaPagamento>{
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(forma);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(forma);
+		getDAO().delete(modelo);
 	}
 
 	@Override
@@ -39,11 +37,11 @@ public class FormaPagamentoService extends MecasoftService<FormaPagamento>{
 	}
 
 	public FormaPagamento getForma() {
-		return forma;
+		return getModelo();
 	}
 
 	public void setForma(FormaPagamento forma) {
-		this.forma = forma;
+		setModelo(forma);
 	}
 
 }

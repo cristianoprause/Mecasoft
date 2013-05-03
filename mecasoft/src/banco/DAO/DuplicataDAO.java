@@ -26,21 +26,21 @@ public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 
 	@Override
 	public Duplicata find(Long id) {
-		Query q = getSession().createQuery("select d from Duplicata d where d.id = :id");
+		Query q = createQuery("select d from Duplicata d where d.id = :id");
 		q.setParameter("id", id);
 		return (Duplicata)q.uniqueResult();
 	}
 
 	@Override
 	public Duplicata findUltimaDuplicata() {
-		Query q = getSession().createQuery("select d from Duplicata d where d.id = (" +
+		Query q = createQuery("select d from Duplicata d where d.id = (" +
 				"select max(dup.id) from Duplicata dup)");
 		return (Duplicata) q.uniqueResult();
 	}
 	
 	@Override
 	public Duplicata findByNumero(String numero) {
-		Query q = getSession().createQuery("Select d from Duplicata d where d.numero like :numero and d.pago is false");
+		Query q = createQuery("Select d from Duplicata d where d.numero like :numero and d.pago is false");
 		q.setParameter("numero", numero);
 		return (Duplicata) q.uniqueResult();
 	}
@@ -48,14 +48,14 @@ public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Duplicata> findAll() {
-		Query q = getSession().createQuery("select d from Duplicata d");
+		Query q = createQuery("select d from Duplicata d");
 		return q.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Duplicata> findAllByPagamento(boolean pago) {
-		Query q = getSession().createQuery("select d from Duplicata d where d.pago is :pago");
+		Query q = createQuery("select d from Duplicata d where d.pago is :pago");
 		q.setParameter("pago", pago);
 		return q.list();
 	}
@@ -63,7 +63,7 @@ public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Duplicata> findAllByPeriodoAndPagamento(Date dtInicial, Date dtFinal, Boolean pago) {
-		Query q = getSession().createQuery("select d from Duplicata d where (d.dataVencimento between :dtInicial and :dtFinal) " +
+		Query q = createQuery("select d from Duplicata d where (d.dataVencimento between :dtInicial and :dtFinal) " +
 											"and (d.pago is :pago or :pago is null)");
 		q.setParameter("dtInicial", dtInicial)
 		.setParameter("dtFinal", dtFinal)

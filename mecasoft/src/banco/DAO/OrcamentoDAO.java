@@ -25,7 +25,7 @@ public class OrcamentoDAO extends HibernateConnection implements OrcamentoUtils{
 
 	@Override
 	public Orcamento find(Long id) {
-		Query q = getSession().createQuery("select o from Orcamento o where o.id = :id");
+		Query q = createQuery("select o from Orcamento o where o.id = :id");
 		q.setParameter("id", id);
 		return (Orcamento)q.uniqueResult();
 	}
@@ -33,7 +33,7 @@ public class OrcamentoDAO extends HibernateConnection implements OrcamentoUtils{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Orcamento> findAll() {
-		Query q = getSession().createQuery("select o from Orcamento o");
+		Query q = createQuery("select o from Orcamento o");
 		return q.list();
 	}
 
@@ -41,7 +41,7 @@ public class OrcamentoDAO extends HibernateConnection implements OrcamentoUtils{
 	@Override
 	public List<Orcamento> findAllByStatus(String status) {
 		boolean sts = status.equals(Orcamento.PENDENTE);
-		Query q = getSession().createQuery("select o from Orcamento o where o.pendente is :sts");
+		Query q = createQuery("select o from Orcamento o where o.pendente is :sts");
 		q.setParameter("sts", sts);
 		return q.list();
 	}

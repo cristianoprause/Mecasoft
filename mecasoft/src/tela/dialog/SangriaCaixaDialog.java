@@ -96,7 +96,7 @@ public class SangriaCaixaDialog extends TitleAreaDialog {
 			service.getMovimentacao().setTipo(MovimentacaoCaixa.TIPOSAIDA);
 			
 			service.saveOrUpdate();
-			HibernateConnection.commitSemClear();
+			HibernateConnection.commit(service.getMovimentacao());
 			
 			openInformation("Sangria realizada com sucesso");
 			

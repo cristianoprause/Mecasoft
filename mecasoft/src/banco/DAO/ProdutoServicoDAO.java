@@ -25,7 +25,7 @@ public class ProdutoServicoDAO extends HibernateConnection implements ProdutoSer
 
 	@Override
 	public ProdutoServico find(Long id) {
-		Query q = getSession().createQuery("select p from ProdutoServico p where p.id = :id");
+		Query q = createQuery("select p from ProdutoServico p where p.id = :id");
 		q.setParameter("id", id);
 		return (ProdutoServico)q.uniqueResult();
 	}
@@ -33,14 +33,14 @@ public class ProdutoServicoDAO extends HibernateConnection implements ProdutoSer
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ProdutoServico> findAll() {
-		Query q = getSession().createQuery("select p from ProdutoServico p");
+		Query q = createQuery("select p from ProdutoServico p");
 		return q.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ProdutoServico> findAllByTipoAndStatus(String tipo, Boolean status) {
-		Query q = getSession().createQuery("select p from ProdutoServico p where p.tipo like :tipo and (p.ativo is :status or :status is null)");
+		Query q = createQuery("select p from ProdutoServico p where p.tipo like :tipo and (p.ativo is :status or :status is null)");
 		q.setParameter("tipo", tipo)
 		.setParameter("status", status);
 		return q.list();

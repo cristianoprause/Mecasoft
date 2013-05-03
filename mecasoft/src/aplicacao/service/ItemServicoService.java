@@ -7,8 +7,6 @@ import banco.utils.ItemServicoUtils;
 
 public class ItemServicoService extends MecasoftService<ItemServico>{
 	
-	private ItemServico modelo;
-
 	@Override
 	public ItemServicoUtils getDAO() {
 		return getInjector().getInstance(ItemServicoUtils.class);

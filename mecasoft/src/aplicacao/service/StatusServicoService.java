@@ -10,8 +10,6 @@ import banco.utils.StatusServicoUtils;
 
 public class StatusServicoService extends MecasoftService<StatusServico>{
 
-	private StatusServico statusServico;
-	
 	@Override
 	public StatusServicoUtils getDAO() {
 		return getInjector().getInstance(StatusServicoUtils.class);
@@ -19,12 +17,12 @@ public class StatusServicoService extends MecasoftService<StatusServico>{
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(statusServico);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(statusServico);
+		getDAO().delete(modelo);
 	}
 
 	@Override
@@ -50,11 +48,11 @@ public class StatusServicoService extends MecasoftService<StatusServico>{
 	}
 	
 	public StatusServico getStatusServico() {
-		return statusServico;
+		return getModelo();
 	}
 
 	public void setStatusServico(StatusServico statusServico) {
-		this.statusServico = statusServico;
+		setModelo(statusServico);
 	}
 
 }

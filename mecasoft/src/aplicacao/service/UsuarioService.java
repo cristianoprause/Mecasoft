@@ -7,19 +7,17 @@ import banco.utils.UsuarioUtils;
 
 public class UsuarioService extends MecasoftService<Usuario>{
 
-	private Usuario usuario;
-	
 	@Override
 	public UsuarioUtils getDAO() {
 		return getInjector().getInstance(UsuarioUtils.class);
 	}
 	
 	public void saveOrUpdate(){
-		getDAO().saveOrUpdate(usuario);
+		getDAO().saveOrUpdate(modelo);
 	}
 	
 	public void delete(){
-		getDAO().delete(usuario);
+		getDAO().delete(modelo);
 	}
 	
 	public Usuario find(Long id){
@@ -43,11 +41,11 @@ public class UsuarioService extends MecasoftService<Usuario>{
 	}
 
 	public Usuario getUsuario() {
-		return usuario;
+		return getModelo();
 	}
 
 	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+		setModelo(usuario);
 	}
 	
 }

@@ -56,10 +56,10 @@ import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataService;
+import aplicacao.service.MecasoftService;
 import aplicacao.service.MovimentacaoCaixaService;
 import aplicacao.service.OrcamentoService;
 import aplicacao.service.ServicoPrestadoService;
-import banco.connection.HibernateConnection;
 import banco.modelo.Duplicata;
 import banco.modelo.FormaPagtoUtilizada;
 import banco.modelo.ItemServico;
@@ -467,8 +467,6 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 
 	@Override
 	public void setFocus() {
-		if(HibernateConnection.isSessionRefresh(service.getServicoPrestado()) && service.getServicoPrestado().getId() != null)
-			service.setServicoPrestado(service.find(service.getServicoPrestado().getId()));
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
@@ -510,5 +508,10 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		bindingContext.bindValue(observeTextTxtIsstextObserveWidget, issServicegetServicoPrestadoObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+	
+	@Override
+	public MecasoftService<?> getService() {
+		return service;
 	}
 }

@@ -284,7 +284,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			
 			UsuarioHelper.setConfiguracaoPadrao(service.getConfiguracao());
 			openInformation("Configurações salvas com sucesso!");
-			HibernateConnection.commitSemClear();
+			HibernateConnection.commit(service.getConfiguracao());
 			super.okPressed();
 			
 		}catch (ValidationException e) {

@@ -9,20 +9,18 @@ import banco.utils.PessoaUtils;
 
 public class PessoaService extends MecasoftService<Pessoa>{
 
-	private Pessoa pessoa;
-	
 	@Override
 	public PessoaUtils getDAO() {
 		return getInjector().getInstance(PessoaUtils.class);
 	}
 	
 	public void saveOrUpdate(){
-		getDAO().saveOrUpdate(pessoa);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(pessoa);
+		getDAO().delete(modelo);
 	}
 	
 	public Pessoa find(Long id){
@@ -68,11 +66,11 @@ public class PessoaService extends MecasoftService<Pessoa>{
 	}
 
 	public Pessoa getPessoa() {
-		return pessoa;
+		return getModelo();
 	}
 
 	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
+		setModelo(pessoa);
 	}
 
 

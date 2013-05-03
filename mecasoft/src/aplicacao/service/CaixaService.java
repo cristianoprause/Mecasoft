@@ -7,8 +7,6 @@ import banco.utils.CaixaUtils;
 
 public class CaixaService extends MecasoftService<Caixa>{
 
-	private Caixa caixa;
-	
 	@Override
 	public CaixaUtils getDAO() {
 		return getInjector().getInstance(CaixaUtils.class);
@@ -16,12 +14,12 @@ public class CaixaService extends MecasoftService<Caixa>{
 
 	@Override
 	public void saveOrUpdate() {
-		getDAO().saveOrUpdate(caixa);
+		getDAO().saveOrUpdate(modelo);
 	}
 
 	@Override
 	public void delete() {
-		getDAO().delete(caixa);
+		getDAO().delete(modelo);
 	}
 
 	@Override
@@ -43,11 +41,11 @@ public class CaixaService extends MecasoftService<Caixa>{
 	}
 
 	public Caixa getCaixa() {
-		return caixa;
+		return getModelo();
 	}
 
 	public void setCaixa(Caixa caixa) {
-		this.caixa = caixa;
+		setModelo(caixa);
 	}
 
 }

@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -72,13 +73,13 @@ import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ItemServicoService;
+import aplicacao.service.MecasoftService;
 import aplicacao.service.OrcamentoService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.ServicoPrestadoService;
 import aplicacao.service.StatusService;
 import aplicacao.service.StatusServicoService;
-import banco.connection.HibernateConnection;
 import banco.modelo.ForneceProduto;
 import banco.modelo.ItemServico;
 import banco.modelo.Orcamento;
@@ -88,7 +89,6 @@ import banco.modelo.ServicoPrestado;
 import banco.modelo.Status;
 import banco.modelo.StatusServico;
 import banco.modelo.Veiculo;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
 
 public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
@@ -1060,9 +1060,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	@Override
 	public void setFocus() {
 		
-		if(!HibernateConnection.isSessionRefresh(service.getServicoPrestado()) && service.getServicoPrestado().getId() != null)
-			service.setServicoPrestado(service.find(service.getServicoPrestado().getId()));
-		
 		listaStatus = statusService.findAllAtivos();
 		initDataBindings();
 		if(!service.getServicoPrestado().isEmExecucao())
@@ -1170,4 +1167,10 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		//
 		return bindingContext;
 	}
+
+	@Override
+	public MecasoftService<?> getService() {
+		return service;
+	}
+
 }

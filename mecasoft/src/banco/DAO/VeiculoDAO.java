@@ -23,7 +23,7 @@ public class VeiculoDAO extends HibernateConnection implements VeiculoUtils{
 
 	@Override
 	public Veiculo find(Long id) {
-		Query q = getSession().createQuery("select v from Veiculo v where v.id = :id");
+		Query q = createQuery("select v from Veiculo v where v.id = :id");
 		q.setParameter("id", id);
 		return (Veiculo)q.uniqueResult();
 	}
@@ -31,7 +31,7 @@ public class VeiculoDAO extends HibernateConnection implements VeiculoUtils{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Veiculo> findAll() {
-		Query q = getSession().createQuery("select v from Veiculo v");
+		Query q = createQuery("select v from Veiculo v");
 		return q.list();
 	}
 }
