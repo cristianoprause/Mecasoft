@@ -2,7 +2,7 @@ package banco.DAO;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.Veiculo;
@@ -13,9 +13,9 @@ public class VeiculoDAO extends HibernateConnection implements VeiculoUtils{
 	@Override
 	public void saveOrUpdate(Veiculo modelo) {
 		if(modelo.getId() == null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
@@ -23,15 +23,15 @@ public class VeiculoDAO extends HibernateConnection implements VeiculoUtils{
 
 	@Override
 	public Veiculo find(Long id) {
-		Query q = createQuery("select v from Veiculo v where v.id = :id");
+		Query q = getEntityManager().createQuery("select v from Veiculo v where v.id = :id");
 		q.setParameter("id", id);
-		return (Veiculo)q.uniqueResult();
+		return (Veiculo)q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Veiculo> findAll() {
-		Query q = createQuery("select v from Veiculo v");
-		return q.list();
+		Query q = getEntityManager().createQuery("select v from Veiculo v");
+		return q.getResultList();
 	}
 }

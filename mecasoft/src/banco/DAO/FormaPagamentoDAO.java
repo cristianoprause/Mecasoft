@@ -2,7 +2,7 @@ package banco.DAO;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.FormaPagamento;
@@ -13,36 +13,36 @@ public class FormaPagamentoDAO extends HibernateConnection implements FormaPagam
 	@Override
 	public void saveOrUpdate(FormaPagamento modelo) {
 		if(modelo.getId() != null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
 	public void delete(FormaPagamento modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override
 	public FormaPagamento find(Long id) {
-		Query q = createQuery("select f from FormaPagamento f where f.id = :id");
+		Query q = getEntityManager().createQuery("select f from FormaPagamento f where f.id = :id");
 		q.setParameter("id", id);
-		return (FormaPagamento)q.uniqueResult();
+		return (FormaPagamento)q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<FormaPagamento> findAll() {
-		Query q = createQuery("select f from FormaPagamento f");
-		return q.list();
+		Query q = getEntityManager().createQuery("select f from FormaPagamento f");
+		return q.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<FormaPagamento> findAllByStatus(Boolean status) {
-		Query q = createQuery("select f from FormaPagamento f where f.ativo is :status");
+		Query q = getEntityManager().createQuery("select f from FormaPagamento f where f.ativo is :status");
 		q.setParameter("status", status);
-		return q.list();
+		return q.getResultList();
 	}
 
 }

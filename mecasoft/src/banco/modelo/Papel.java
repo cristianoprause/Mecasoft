@@ -11,8 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Papel implements Serializable{
@@ -27,7 +26,7 @@ public class Papel implements Serializable{
 	private Long id;
 	
 	@Column(unique=true)
-	@NotEmpty(message="Informe o nome.")
+	@NotNull(message="Informe o nome.")
 	private String nome;
 	
 	@Column

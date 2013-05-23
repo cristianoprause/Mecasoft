@@ -2,7 +2,7 @@ package banco.DAO;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.Caixa;
@@ -14,38 +14,38 @@ public class MovimentacaoCaixaDAO extends HibernateConnection implements Movimen
 	@Override
 	public void saveOrUpdate(MovimentacaoCaixa modelo) {
 		if(modelo.getId() != null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
 	public void delete(MovimentacaoCaixa modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override
 	public MovimentacaoCaixa find(Long id) {
-		Query q = createQuery("select m from MovimentacaoCaixa m where m.id = :id");
+		Query q = getEntityManager().createQuery("select m from MovimentacaoCaixa m where m.id = :id");
 		q.setParameter("id", id);
-		return (MovimentacaoCaixa)q.uniqueResult();
+		return (MovimentacaoCaixa)q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<MovimentacaoCaixa> findAll() {
-		Query q = createQuery("select m from MovimentacaoCaixa m");
-		return q.list();
+		Query q = getEntityManager().createQuery("select m from MovimentacaoCaixa m");
+		return q.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<MovimentacaoCaixa> findAllByCaixaAndTipo(Caixa caixa, Character tipo) {
-		Query q = createQuery("select m from MovimentacaoCaixa m where m.caixa = :caixa " +
+		javax.persistence.Query q = getEntityManager().createQuery("select m from MovimentacaoCaixa m where m.caixa = :caixa " +
 																			"and (m.tipo = :tipo or :tipo is null)");
 		q.setParameter("caixa", caixa)
 		.setParameter("tipo", tipo);
-		return q.list();
+		return q.getResultList();
 	}
 
 }

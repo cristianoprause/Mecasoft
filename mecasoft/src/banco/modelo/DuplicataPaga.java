@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class DuplicataPaga implements Serializable{
@@ -20,7 +22,7 @@ public class DuplicataPaga implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataPagamento = new Date();
 	
 	@Column

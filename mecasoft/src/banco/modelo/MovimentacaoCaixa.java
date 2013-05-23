@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import aplicacao.helper.UsuarioHelper;
@@ -47,7 +49,7 @@ public class MovimentacaoCaixa implements Serializable{
 	@Column
 	private String status;
 	
-	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataMovimentacao = new Date();
 	
 	@ManyToOne

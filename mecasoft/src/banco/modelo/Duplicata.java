@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Duplicata implements Serializable{
@@ -29,7 +31,7 @@ public class Duplicata implements Serializable{
 	@Column
 	private BigDecimal valor = BigDecimal.ZERO;
 	
-	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataVencimento;
 	
 	@Column

@@ -3,7 +3,7 @@ package banco.DAO;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.ServicoPrestado;
@@ -17,29 +17,29 @@ public class ServicoPrestadoDAO extends HibernateConnection implements
 	@Override
 	public void saveOrUpdate(ServicoPrestado modelo) {
 		if (modelo.getId() != null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
 	public void delete(ServicoPrestado modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override
 	public ServicoPrestado find(Long id) {
-		Query q = createQuery(
+		Query q = getEntityManager().createQuery(
 				"select s from ServicoPrestado s where s.id = :id");
 		q.setParameter("id", id);
-		return (ServicoPrestado) q.uniqueResult();
+		return (ServicoPrestado) q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ServicoPrestado> findAll() {
-		Query q = createQuery("select s from ServicoPrestado s");
-		return q.list();
+		Query q = getEntityManager().createQuery("select s from ServicoPrestado s");
+		return q.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -63,7 +63,7 @@ public class ServicoPrestadoDAO extends HibernateConnection implements
 			dataFinal = c.getTime();
 		}
 
-		Query q = createQuery("select s from ServicoPrestado s where (s.dataAbertura between :dataInicial and :dataFinal) "
+		Query q = getEntityManager().createQuery("select s from ServicoPrestado s where (s.dataAbertura between :dataInicial and :dataFinal) "
 								+ "and (s.ativo is :status or :status is null) "
 								+ "and (s.emExecucao is :emExecucao or :emExecucao is null)");
 		q.setParameter("dataInicial", dataInicial);
@@ -71,19 +71,19 @@ public class ServicoPrestadoDAO extends HibernateConnection implements
 		q.setParameter("status", status);
 		q.setParameter("emExecucao", emExecucao);
 
-		return q.list();
+		return q.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ServicoPrestado> findAllByStatusAndConclusao(Boolean status,
 			Boolean emExecucao) {
-		Query q = getSession()
+		Query q = getEntityManager()
 				.createQuery(
 						"select s from ServicoPrestado s where (s.ativo is :status or :status is null) "
 								+ "and (s.emExecucao is :emExecucao or :emExecucao is null)");
 		q.setParameter("status", status).setParameter("emExecucao", emExecucao);
-		return q.list();
+		return q.getResultList();
 	}
 
 }

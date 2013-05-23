@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.DuplicataPaga;
@@ -15,28 +15,28 @@ public class DuplicataPagaDAO extends HibernateConnection implements DuplicataPa
 	@Override
 	public void saveOrUpdate(DuplicataPaga modelo) {
 		if(modelo.getId() != null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
 	public void delete(DuplicataPaga modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override
 	public DuplicataPaga find(Long id) {
-		Query q = createQuery("select d from DuplicataPaga d where d.id = :id");
+		Query q = getEntityManager().createQuery("select d from DuplicataPaga d where d.id = :id");
 		q.setParameter("id", id);
-		return (DuplicataPaga)q.uniqueResult();
+		return (DuplicataPaga)q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DuplicataPaga> findAll() {
-		Query q = createQuery("select d from DuplicataPaga d");
-		return q.list();
+		Query q = getEntityManager().createQuery("select d from DuplicataPaga d");
+		return q.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -49,11 +49,11 @@ public class DuplicataPagaDAO extends HibernateConnection implements DuplicataPa
 		c.set(Calendar.SECOND, 59);
 		dtFinal = c.getTime();
 		
-		Query q = createQuery("select d from DuplicataPaga d where d.dataPagamento between :dtInicial and :dtFinal");
+		Query q = getEntityManager().createQuery("select d from DuplicataPaga d where d.dataPagamento between :dtInicial and :dtFinal");
 		q.setParameter("dtInicial", dtInicial)
 		.setParameter("dtFinal", dtFinal);
 		
-		return q.list();
+		return q.getResultList();
 	}
 
 }

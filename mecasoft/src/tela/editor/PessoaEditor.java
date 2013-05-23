@@ -482,10 +482,11 @@ public class PessoaEditor extends MecasoftEditor {
 						return;
 					}
 					
-					service.getPessoa().getListaProduto().remove(fp);
 					fp.getId().getProduto().getListaFornecedores().remove(fp);
+					service.getPessoa().getListaProduto().remove(fp);
 					
 					tvProduto.refresh();
+					initDataBindings();
 					
 				}
 			}

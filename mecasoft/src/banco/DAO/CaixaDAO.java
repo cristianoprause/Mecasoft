@@ -2,7 +2,7 @@ package banco.DAO;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.Caixa;
@@ -13,37 +13,41 @@ public class CaixaDAO extends HibernateConnection implements CaixaUtils{
 	@Override
 	public void saveOrUpdate(Caixa modelo) {
 		if(modelo.getId() != null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
 	public void delete(Caixa modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override
 	public Caixa find(Long id) {
-		Query q = createQuery("select c from Caixa c where c.id = :id");
+		Query q = getEntityManager().createQuery("select c from Caixa c where c.id = :id");
 		q.setParameter("id", id);
-		return (Caixa)q.uniqueResult();
+		return (Caixa)q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Caixa> findAll() {
-		Query q = createQuery("select c from Caixa c");
-		return q.list();
+		Query q = getEntityManager().createQuery("select c from Caixa c");
+		return q.getResultList();
 	}
 
 	@Override
 	public Caixa findUltimoCaixaByStatus(Boolean status) {
-		Query q = createQuery("select c from Caixa c where c.id = (select max(ca.id) from Caixa ca " +
-										"where (:status is null) or (ca.dataFechamento is null and :status is true) " +
-										"or (ca.dataFechamento is not null and :status is false))");
-		q.setParameter("status", status);
-		return (Caixa) q.uniqueResult();
+		try{
+			Query q = getEntityManager().createQuery("select c from Caixa c where c.id = (select max(ca.id) from Caixa ca " +
+											"where (:status is null) or (ca.dataFechamento is null and :status is true) " +
+											"or (ca.dataFechamento is not null and :status is false))");
+			q.setParameter("status", status);
+			return (Caixa) q.getSingleResult();
+		}catch(Exception e){
+			return null;
+		}
 	}
 
 }

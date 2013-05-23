@@ -13,7 +13,7 @@ public class ItemServicoDAO extends HibernateConnection implements ItemServicoUt
 
 	@Override
 	public void delete(ItemServico modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override

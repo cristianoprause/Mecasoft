@@ -12,8 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import aplicacao.helper.PadraoHelper;
 
 @Entity
@@ -29,7 +27,7 @@ public class Usuario implements Serializable{
 	private boolean ativo = true;
 	
 	@Column
-	@NotEmpty(message="Informe o login.")
+	@NotNull(message="Informe o login.")
 	private String login;
 	
 	@Column

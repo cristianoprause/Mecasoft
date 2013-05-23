@@ -11,9 +11,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class ForneceProduto implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3732028380422990967L;
 
 	@EmbeddedId

@@ -18,9 +18,11 @@ public abstract class MecasoftService<T> {
 	}
 	
 	public Injector getInjector(){
-	
 		return InjectorHelper.getInstance();
-		
+	}
+	
+	public void rollBack(){
+		getDAO().rollBack();
 	}
 	
 	public abstract void saveOrUpdate();

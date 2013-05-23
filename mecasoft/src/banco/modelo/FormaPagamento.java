@@ -7,8 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import aplicacao.helper.PadraoHelper;
 
@@ -25,7 +24,7 @@ public class FormaPagamento implements Serializable{
 	private Long id;
 	
 	@Column
-	@NotEmpty(message="Informe o nome.")
+	@NotNull(message="Informe o nome.")
 	private String nome;
 	
 	@Column

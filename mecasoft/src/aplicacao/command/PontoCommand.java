@@ -10,7 +10,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import tela.dialog.PontoDialog;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.StatusServicoService;
-import banco.connection.HibernateConnection;
 import banco.modelo.StatusServico;
 
 public class PontoCommand extends AbstractHandler {
@@ -33,7 +32,7 @@ public class PontoCommand extends AbstractHandler {
 			StatusServico ss = newStatusServico(statusFuncionario);
 			service.setStatusServico(ss);
 			service.saveOrUpdate();
-			HibernateConnection.commit(ss);
+//			HibernateConnection.commit(ss);
 		}
 		
 		return null;

@@ -8,23 +8,21 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import banco.connection.HibernateConnection;
-import banco.modelo.Caixa;
-import banco.modelo.MovimentacaoCaixa;
-
+import tela.componentes.MecasoftText;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.MessageHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.CaixaService;
 import aplicacao.service.MovimentacaoCaixaService;
-import tela.componentes.MecasoftText;
+import banco.modelo.Caixa;
+import banco.modelo.MovimentacaoCaixa;
 
 public class AbrirFecharCaixaDialog extends TitleAreaDialog {
 
@@ -175,7 +173,7 @@ public class AbrirFecharCaixaDialog extends TitleAreaDialog {
 		
 		service.setCaixa(caixa);
 		service.saveOrUpdate();
-		HibernateConnection.commit(caixa);
+//		HibernateConnection.commit(caixa);
 		
 		if(caixa.getDataFechamento() == null)
 			MessageHelper.openInformation("Caixa aberto com sucesso!");

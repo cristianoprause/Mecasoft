@@ -30,7 +30,6 @@ import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.MovimentacaoCaixaService;
 import aplicacao.service.PessoaService;
-import banco.connection.HibernateConnection;
 import banco.modelo.MovimentacaoCaixa;
 import banco.modelo.Pessoa;
 
@@ -198,7 +197,7 @@ public class PagamentoFuncionarioDialog extends TitleAreaDialog {
 		service.saveOrUpdate();
 		
 		//commita
-		HibernateConnection.commit(service.getPessoa());
+//		HibernateConnection.commit(service.getPessoa());
 		
 		openInformation("Funcionário pago com sucesso!");
 		

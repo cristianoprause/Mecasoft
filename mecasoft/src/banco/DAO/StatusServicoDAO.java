@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.Pessoa;
@@ -17,36 +17,36 @@ public class StatusServicoDAO extends HibernateConnection implements StatusServi
 	@Override
 	public void saveOrUpdate(StatusServico modelo) {
 		if(modelo.getId() != null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
 	public void delete(StatusServico modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override
 	public StatusServico find(Long id) {
-		Query q = createQuery("select s from ServicoPrestado s where s.id = :id");
+		Query q = getEntityManager().createQuery("select s from ServicoPrestado s where s.id = :id");
 		q.setParameter("id", id);
-		return (StatusServico)q.uniqueResult();
+		return (StatusServico)q.getSingleResult();
 	}
 
 	@Override
 	public StatusServico findStatusFuncionario(Pessoa funcionario) {
-		Query q = createQuery("select s from StatusServico s where s.id = (select max(ss.id) " +
+		Query q = getEntityManager().createQuery("select s from StatusServico s where s.id = (select max(ss.id) " +
 				"from StatusServico ss where ss.funcionario = :funcionario)");
 		q.setParameter("funcionario", funcionario);
-		return (StatusServico) q.uniqueResult();
+		return (StatusServico) q.getSingleResult();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<StatusServico> findAll() {
-		Query q = createQuery("select s from StatusServico s");
-		return q.list();
+		Query q = getEntityManager().createQuery("select s from StatusServico s");
+		return q.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -73,7 +73,7 @@ public class StatusServicoDAO extends HibernateConnection implements StatusServi
 			dtFinal = c.getTime();
 		}
 		
-		Query q = createQuery("select s from StatusServico s " +
+		Query q = getEntityManager().createQuery("select s from StatusServico s " +
 				"where (s.data >= :dtInicial or cast(:dtInicial as date) is null) " +
 				"  and (s.data <= :dtFinal or cast(:dtFinal as date) is null) " +
 				"  and (s.funcionario = :funcionario or :funcionario is null) " +
@@ -89,7 +89,7 @@ public class StatusServicoDAO extends HibernateConnection implements StatusServi
 		.setParameter("funcionario", funcionario)
 		.setParameter("servicoPrestadoId", servico == null ? null : servico.getId());
 		
-		return q.list();
+		return q.getResultList();
 	}
 
 }

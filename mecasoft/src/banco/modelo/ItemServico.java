@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,9 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 @Entity
 public class ItemServico implements Serializable{
@@ -56,8 +54,7 @@ public class ItemServico implements Serializable{
 	@JoinColumn(name="servicoPrestado_id")
 	private ServicoPrestado servicoPrestado;
 	
-	@ManyToMany
-	@Cascade(value={CascadeType.ALL})
+	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name="itensdoservico",
 		joinColumns={
 			@JoinColumn(name="servico_id", referencedColumnName = "id")

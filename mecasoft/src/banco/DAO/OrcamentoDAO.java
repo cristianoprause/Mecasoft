@@ -2,7 +2,7 @@ package banco.DAO;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.Orcamento;
@@ -13,37 +13,37 @@ public class OrcamentoDAO extends HibernateConnection implements OrcamentoUtils{
 	@Override
 	public void saveOrUpdate(Orcamento modelo) {
 		if(modelo.getId() != null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
 	public void delete(Orcamento modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override
 	public Orcamento find(Long id) {
-		Query q = createQuery("select o from Orcamento o where o.id = :id");
+		Query q = getEntityManager().createQuery("select o from Orcamento o where o.id = :id");
 		q.setParameter("id", id);
-		return (Orcamento)q.uniqueResult();
+		return (Orcamento)q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Orcamento> findAll() {
-		Query q = createQuery("select o from Orcamento o");
-		return q.list();
+		Query q = getEntityManager().createQuery("select o from Orcamento o");
+		return q.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Orcamento> findAllByStatus(String status) {
 		boolean sts = status.equals(Orcamento.PENDENTE);
-		Query q = createQuery("select o from Orcamento o where o.pendente is :sts");
+		Query q = getEntityManager().createQuery("select o from Orcamento o where o.pendente is :sts");
 		q.setParameter("sts", sts);
-		return q.list();
+		return q.getResultList();
 	}
 
 }

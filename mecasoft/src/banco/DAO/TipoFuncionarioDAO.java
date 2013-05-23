@@ -2,7 +2,7 @@ package banco.DAO;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.TipoFuncionario;
@@ -13,28 +13,28 @@ public class TipoFuncionarioDAO extends HibernateConnection implements TipoFunci
 	@Override
 	public void saveOrUpdate(TipoFuncionario modelo) {
 		if(modelo.getId() != null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
 	public void delete(TipoFuncionario modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override
 	public TipoFuncionario find(Long id) {
-		Query q = createQuery("select t from TipoFuncionario t where t.id = :id");
+		Query q = getEntityManager().createQuery("select t from TipoFuncionario t where t.id = :id");
 		q.setParameter("id", id);
-		return (TipoFuncionario)q.uniqueResult();
+		return (TipoFuncionario)q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TipoFuncionario> findAll() {
-		Query q = createQuery("select t from TipoFuncionario t");
-		return q.list();
+		Query q = getEntityManager().createQuery("select t from TipoFuncionario t");
+		return q.getResultList();
 	}
 
 }

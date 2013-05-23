@@ -30,7 +30,6 @@ import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.DuplicataPagaService;
 import aplicacao.service.DuplicataService;
 import aplicacao.service.MovimentacaoCaixaService;
-import banco.connection.HibernateConnection;
 import banco.modelo.Duplicata;
 import banco.modelo.DuplicataPaga;
 import banco.modelo.MovimentacaoCaixa;
@@ -234,7 +233,7 @@ public class BaixarDuplicataDialog extends TitleAreaDialog {
 		service.getDuplicataPaga().setDuplicata(duplicata);
 		service.saveOrUpdate();
 		
-		HibernateConnection.commit(duplicata);
+//		HibernateConnection.commit(duplicata);
 		
 		openInformation("Duplicata baixa com sucesso!");
 		

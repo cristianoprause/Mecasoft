@@ -12,8 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import aplicacao.helper.PadraoHelper;
 
 @Entity
@@ -34,7 +32,7 @@ public class Veiculo implements Serializable{
 	private String marca;
 	
 	@Column
-	@NotEmpty(message="Informe o modelo.")
+	@NotNull(message="Informe o modelo.")
 	private String modelo;
 	
 	@Column

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,8 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import aplicacao.helper.PadraoHelper;
@@ -28,9 +27,6 @@ import aplicacao.helper.PadraoHelper;
 @Inheritance(strategy=InheritanceType.JOINED)
 public class Pessoa implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5104439984829411483L;
 	
 	public static String CLIENTE = "CLIENTE";
@@ -98,12 +94,10 @@ public class Pessoa implements Serializable{
 	@Column
 	private boolean tipoFuncionario;
 	
-	@OneToMany(mappedBy="cliente")
-	@Cascade(value={CascadeType.ALL})
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	private List<Veiculo> listaVeiculo = new ArrayList<Veiculo>();
 	
-	@OneToMany(mappedBy="id.pessoa",orphanRemoval=true)
-    @Cascade(value= {CascadeType.ALL})
+	@OneToMany(cascade=CascadeType.ALL)
     private List<ForneceProduto> listaProduto = new ArrayList<ForneceProduto>();
 	
 	@Column

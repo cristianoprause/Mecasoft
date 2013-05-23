@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Caixa implements Serializable{
@@ -25,10 +27,10 @@ public class Caixa implements Serializable{
 	@Column
 	private BigDecimal valorFechamento;
 	
-	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataAbertura;
 	
-	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataFechamento;
 
 	public Long getId() {

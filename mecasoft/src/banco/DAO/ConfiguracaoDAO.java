@@ -2,7 +2,7 @@ package banco.DAO;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 
 import banco.connection.HibernateConnection;
 import banco.modelo.Configuracao;
@@ -13,28 +13,28 @@ public class ConfiguracaoDAO extends HibernateConnection implements Configuracao
 	@Override
 	public void saveOrUpdate(Configuracao modelo) {
 		if(modelo.getId() != null)
-			getSession().merge(modelo);
+			getEntityManager().merge(modelo);
 		else
-			getSession().persist(modelo);
+			getEntityManager().persist(modelo);
 	}
 
 	@Override
 	public void delete(Configuracao modelo) {
-		getSession().delete(modelo);
+		getEntityManager().remove(modelo);
 	}
 
 	@Override
 	public Configuracao find(Long id) {
-		Query q = createQuery("select c from Configuracao c where c.id = :id");
+		Query q = getEntityManager().createQuery("select c from Configuracao c where c.id = :id");
 		q.setParameter("id", id);
-		return (Configuracao)q.uniqueResult();
+		return (Configuracao)q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Configuracao> findAll() {
-		Query q = createQuery("select c from Configuracao c");
-		return q.list();
+		Query q = getEntityManager().createQuery("select c from Configuracao c");
+		return q.getResultList();
 	}
 
 }

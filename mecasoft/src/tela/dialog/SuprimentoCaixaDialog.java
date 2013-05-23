@@ -25,7 +25,6 @@ import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.MovimentacaoCaixaService;
-import banco.connection.HibernateConnection;
 import banco.modelo.MovimentacaoCaixa;
 
 public class SuprimentoCaixaDialog extends TitleAreaDialog {
@@ -92,7 +91,7 @@ public class SuprimentoCaixaDialog extends TitleAreaDialog {
 			service.getMovimentacao().setTipo(MovimentacaoCaixa.TIPOENTRADA);
 			
 			service.saveOrUpdate();
-			HibernateConnection.commit(service.getMovimentacao());
+//			HibernateConnection.commit(service.getMovimentacao());
 			
 			openInformation("Suprimento realizado com sucesso!");
 			

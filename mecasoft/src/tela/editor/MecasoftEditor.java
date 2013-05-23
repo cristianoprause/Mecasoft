@@ -2,8 +2,7 @@ package tela.editor;
 
 import static aplicacao.helper.LayoutHelper.getActiveShell;
 
-import java.io.Serializable;
-
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -24,9 +23,10 @@ import tela.dialog.SimNaoCancelarDialog;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.LayoutHelper;
 import aplicacao.service.MecasoftService;
-import banco.connection.HibernateConnection;
 
 public abstract class MecasoftEditor extends EditorPart implements ISaveablePart2{
+	
+	private Logger log = Logger.getLogger(getClass());
 	
 	protected Composite compositeConteudo;
 	private Composite compositeBotoes;
@@ -70,7 +70,11 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 					closeThisEditor();
 				} catch (ValidationException e4) {
 					setErroMessage(e4.getMessage());
+					log.warn(e4);
 					return;
+				}catch(Exception e1){
+					log.error(e1);
+					e1.printStackTrace();
 				}
 			}
 		});
@@ -142,7 +146,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	}
 	
 	public void closeThisEditor(){
-		HibernateConnection.commit((Serializable)getService().getModelo());
+//		getService().commit();
 		close();
 	}
 	
@@ -163,7 +167,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 			}
 			
 			if(sncd.getId() == IDialogConstants.CANCEL_ID){
-				HibernateConnection.rollBack((Serializable)getService().getModelo());
+//				getService().rollBack();
 				getSite().getWorkbenchWindow().getActivePage().closeAllEditors(false);
 				return NO;
 			}

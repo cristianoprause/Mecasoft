@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,10 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import aplicacao.helper.PadraoHelper;
 
@@ -37,7 +35,7 @@ public class ProdutoServico implements Serializable{
 	private boolean ativo = true;
 	
 	@Column
-	@NotEmpty(message="Informe a descrição.")
+	@NotNull(message="Informe a descrição.")
 	private String descricao;
 	
 	@Column
@@ -46,12 +44,10 @@ public class ProdutoServico implements Serializable{
 	@Column(precision=14, scale=2)
 	private BigDecimal valorUnitario = BigDecimal.ZERO;
 	
-	@OneToMany(mappedBy="id.produto", orphanRemoval=true)
-	@Cascade(value= {CascadeType.ALL})
+	@OneToMany(cascade=CascadeType.ALL)
 	private List<ForneceProduto> listaFornecedores = new ArrayList<ForneceProduto>();
 	
-	@ManyToMany
-	@Cascade(value={CascadeType.ALL})
+	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name="produtoServicoParametrizado",
 		joinColumns={
 			@JoinColumn(name="servico_id", referencedColumnName = "id")

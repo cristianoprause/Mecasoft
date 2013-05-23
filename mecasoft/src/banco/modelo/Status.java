@@ -7,8 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import aplicacao.helper.PadraoHelper;
 
@@ -25,7 +24,7 @@ public class Status implements Serializable{
 	private Long id;
 	
 	@Column
-	@NotEmpty(message="Informe a descrição.")
+	@NotNull(message="Informe a descrição.")
 	private String descricao;
 	
 	@Column

@@ -14,11 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import aplicacao.helper.FormatterHelper;
 
@@ -33,7 +31,7 @@ public class Orcamento implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dtLancamento = new Date();
 	
 	@Column
@@ -59,9 +57,8 @@ public class Orcamento implements Serializable{
 	@OneToOne
 	private ServicoPrestado servico;
 	
-	@OneToMany(mappedBy="orcamento", orphanRemoval=true)
-	@NotEmpty(message="Adicione ao menos um serviço.")
-	@Cascade(value={CascadeType.ALL})
+	@OneToMany(mappedBy="orcamento", cascade=javax.persistence.CascadeType.ALL)
+	@NotNull(message="Adicione ao menos um serviço.")
 	private List<ItemServico> listaServico = new ArrayList<ItemServico>();
 
 	public Long getId() {

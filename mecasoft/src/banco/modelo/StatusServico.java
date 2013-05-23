@@ -3,29 +3,27 @@ package banco.modelo;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import aplicacao.helper.UsuarioHelper;
 
 @Entity
 public class StatusServico implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8385124302550067162L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date data = new Date();
 	
 	@ManyToOne

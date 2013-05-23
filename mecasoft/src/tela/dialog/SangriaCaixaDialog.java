@@ -27,7 +27,6 @@ import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.MovimentacaoCaixaService;
-import banco.connection.HibernateConnection;
 import banco.modelo.Caixa;
 import banco.modelo.MovimentacaoCaixa;
 
@@ -96,7 +95,7 @@ public class SangriaCaixaDialog extends TitleAreaDialog {
 			service.getMovimentacao().setTipo(MovimentacaoCaixa.TIPOSAIDA);
 			
 			service.saveOrUpdate();
-			HibernateConnection.commit(service.getMovimentacao());
+//			HibernateConnection.commit(service.getMovimentacao());
 			
 			openInformation("Sangria realizada com sucesso");
 			
