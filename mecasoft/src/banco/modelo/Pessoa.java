@@ -97,7 +97,7 @@ public class Pessoa implements Serializable{
 	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	private List<Veiculo> listaVeiculo = new ArrayList<Veiculo>();
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="pessoa", orphanRemoval=true)
     private List<ForneceProduto> listaProduto = new ArrayList<ForneceProduto>();
 	
 	@Column

@@ -63,7 +63,7 @@ public class ForneceProdutoEditingSupport extends EditingSupport{
 	
 	private void calcularValores(ForneceProduto forneceProd){
 		BigDecimal media = BigDecimal.ZERO;
-		ProdutoServico ps = forneceProd.getId().getProduto();
+		ProdutoServico ps = forneceProd.getProduto();
 		
 		for(ForneceProduto fp : ps.getListaFornecedores()){
 			if(fp.getValorUnitario() != null){

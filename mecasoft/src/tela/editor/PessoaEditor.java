@@ -422,7 +422,7 @@ public class PessoaEditor extends MecasoftEditor {
 		tvcDescricao.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return ((ForneceProduto)element).getId().getProduto().getDescricao();
+				return ((ForneceProduto)element).getProduto().getDescricao();
 			}
 		});
 		TableColumn tblclmnDescricao = tvcDescricao.getColumn();
@@ -452,8 +452,8 @@ public class PessoaEditor extends MecasoftEditor {
 				ProdutoServico ps = selecionarProduto();
 				if(ps != null){
 					ForneceProduto fp = new ForneceProduto();
-					fp.getId().setPessoa(service.getPessoa());
-					fp.getId().setProduto(ps);
+					fp.setPessoa(service.getPessoa());
+					fp.setProduto(ps);
 					service.getPessoa().getListaProduto().add(fp);
 					tvProduto.refresh();
 				}
@@ -476,13 +476,13 @@ public class PessoaEditor extends MecasoftEditor {
 					
 					ForneceProduto fp = (ForneceProduto)selecao.getFirstElement();
 					
-					if(fp.getId().getProduto().getListaFornecedores().size() == 1 && fp.getId().getProduto().getAtivo()){
+					if(fp.getProduto().getListaFornecedores().size() == 1 && fp.getProduto().getAtivo()){
 						setErroMessage("Não é possível remover este produto.\nDirija-se ao cadastro de produtos e desative-o, " +
 								"para que o fornecedor possa ser removido.");
 						return;
 					}
 					
-					fp.getId().getProduto().getListaFornecedores().remove(fp);
+					fp.getProduto().getListaFornecedores().remove(fp);
 					service.getPessoa().getListaProduto().remove(fp);
 					
 					tvProduto.refresh();
@@ -581,7 +581,7 @@ public class PessoaEditor extends MecasoftEditor {
 		
 		//remove os produtos ja adicionados
 		for(ForneceProduto fp : service.getPessoa().getListaProduto()){
-			listaProdutos.remove(fp.getId().getProduto());
+			listaProdutos.remove(fp.getProduto());
 		}
 		
 		sid.setElements(listaProdutos.toArray());

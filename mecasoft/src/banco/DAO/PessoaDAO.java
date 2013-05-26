@@ -29,9 +29,9 @@ public class PessoaDAO extends HibernateConnection implements PessoaUtils{
 
 	@Override
 	public Pessoa find(Long id) {
-		Query q = getEntityManager().createQuery("select p from Pessoa p where p.id = :id");
+		Query q = createQueryNoCache("select p from Pessoa p where p.id = :id");
 		q.setParameter("id", id);
-		return (Pessoa)q.getResultList();
+		return (Pessoa)q.getSingleResult();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -56,11 +56,11 @@ public class PessoaDAO extends HibernateConnection implements PessoaUtils{
 		else if(tipo.equals(Pessoa.FUNCIONARIO))
 			funcionario = true;
 		
-		Query q = getEntityManager().createQuery("select p from Pessoa p where (p.ativo is :status or :status is null) " +
-			"and ((p.tipoCliente is :cliente and :cliente is true) " +
-			       "or (p.tipoFornecedor is :fornecedor and :fornecedor is true) " +
-			       "or (p.tipoFuncionario is :funcionario and :funcionario is true) " +
-			       "or (:tipo like ''))");
+		Query q = getEntityManager().createQuery("select p from Pessoa p where (p.ativo = cast(:status as boolean) or :status is null) " +
+			"and ((p.tipoCliente = cast(:cliente as boolean) and cast(:cliente as boolean) is true) " +
+			       "or (p.tipoFornecedor = cast(:fornecedor as boolean) and cast(:fornecedor as boolean) is true) " +
+			       "or (p.tipoFuncionario = cast(:funcionario as boolean) and cast(:funcionario as boolean) is true) " +
+			       "or (:tipo = ''))");
 		q.setParameter("status", status)
 		.setParameter("cliente", cliente)
 		.setParameter("fornecedor", fornecedor)

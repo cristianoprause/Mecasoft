@@ -117,7 +117,7 @@ public class ServicoEditor extends MecasoftEditor {
 		tvcNome.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return ((ForneceProduto)element).getId().getPessoa().getNome();
+				return ((ForneceProduto)element).getPessoa().getNome();
 			}
 		});
 		TableColumn tblclmnNome = tvcNome.getColumn();
@@ -153,8 +153,8 @@ public class ServicoEditor extends MecasoftEditor {
 				Pessoa prestador = selecionarPrestador();
 				if(prestador != null){
 					ForneceProduto fp = new ForneceProduto();
-					fp.getId().setPessoa(prestador);
-					fp.getId().setProduto(service.getProdutoServico());
+					fp.setPessoa(prestador);
+					fp.setProduto(service.getProdutoServico());
 					
 					service.getProdutoServico().getListaFornecedores().add(fp);
 					calcularMedia();
@@ -181,7 +181,7 @@ public class ServicoEditor extends MecasoftEditor {
 					ForneceProduto fp = (ForneceProduto) selecao.getFirstElement();
 					
 					service.getProdutoServico().getListaFornecedores().remove(fp);
-					fp.getId().getPessoa().getListaProduto().remove(fp);
+					fp.getPessoa().getListaProduto().remove(fp);
 					calcularMedia();
 					
 					tvPrestador.refresh();
@@ -317,7 +317,7 @@ public class ServicoEditor extends MecasoftEditor {
 		
 		//removendo os fornecedores ja adicionados
 		for(ForneceProduto fp : service.getProdutoServico().getListaFornecedores()){
-			listaPrestador.remove(fp.getId().getPessoa());
+			listaPrestador.remove(fp.getPessoa());
 		}
 		
 		sid.setElements(listaPrestador.toArray());

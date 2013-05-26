@@ -27,7 +27,7 @@ public class FornecedorItemServicoEditingSupport extends EditingSupport{
 		String arrayNomes[] = new String[listaFornecedor.size()];
 		
 		for(int c = 0; c < listaFornecedor.size(); c++){
-			arrayNomes[c] = listaFornecedor.get(c).getId().getPessoa().getNome();
+			arrayNomes[c] = listaFornecedor.get(c).getPessoa().getNome();
 		}
 		
 		return new ComboBoxCellEditor(viewer.getTree(), arrayNomes);
@@ -45,7 +45,7 @@ public class FornecedorItemServicoEditingSupport extends EditingSupport{
 		
 		if(is.getFornecedor() != null){
 			for(int c = 0; c < is.getItem().getListaFornecedores().size(); c++){
-				if(is.getFornecedor().equals(listaFornecedor.get(c).getId().getPessoa()))
+				if(is.getFornecedor().equals(listaFornecedor.get(c).getPessoa()))
 					return c;
 			}
 		}
@@ -59,7 +59,7 @@ public class FornecedorItemServicoEditingSupport extends EditingSupport{
 		Integer posicao = (Integer)value;
 		
 		if(posicao > -1){
-			is.setFornecedor(is.getItem().getListaFornecedores().get(posicao).getId().getPessoa());
+			is.setFornecedor(is.getItem().getListaFornecedores().get(posicao).getPessoa());
 			is.setValorUnitario(is.getItem().getListaFornecedores().get(posicao).getValorUnitario());
 			
 			BigDecimal total = is.getValorUnitario().multiply(new BigDecimal(is.getQuantidade()));

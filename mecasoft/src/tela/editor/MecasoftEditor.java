@@ -146,7 +146,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	}
 	
 	public void closeThisEditor(){
-//		getService().commit();
+		getService().commit();
 		close();
 	}
 	
@@ -167,7 +167,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 			}
 			
 			if(sncd.getId() == IDialogConstants.CANCEL_ID){
-//				getService().rollBack();
+				getService().rollBack();
 				getSite().getWorkbenchWindow().getActivePage().closeAllEditors(false);
 				return NO;
 			}

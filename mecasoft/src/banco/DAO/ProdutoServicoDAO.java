@@ -40,7 +40,7 @@ public class ProdutoServicoDAO extends HibernateConnection implements ProdutoSer
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ProdutoServico> findAllByTipoAndStatus(String tipo, Boolean status) {
-		Query q = getEntityManager().createQuery("select p from ProdutoServico p where p.tipo like :tipo and (p.ativo is :status or :status is null)");
+		Query q = getEntityManager().createQuery("select p from ProdutoServico p where p.tipo like :tipo and (p.ativo = cast(:status as boolean) or :status is null)");
 		q.setParameter("tipo", tipo)
 		.setParameter("status", status);
 		return q.getResultList();

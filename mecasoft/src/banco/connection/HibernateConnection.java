@@ -1,21 +1,24 @@
 package banco.connection;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
+import org.eclipse.persistence.config.QueryHints;
 import org.eclipse.persistence.internal.jpa.EntityManagerImpl;
 import org.eclipse.persistence.internal.sessions.UnitOfWorkImpl;
 
-import com.google.inject.Inject;
-
 public class HibernateConnection {
 
-	@Inject
 	private EntityManager entityManager;
 	private UnitOfWorkImpl uowi;
 	
 	public boolean isDirty(){
 		EntityManagerImpl manager = (EntityManagerImpl) getEntityManager();
 		return manager.getUnitOfWork().hasChanges();
+	}
+	
+	public void commit(){
+		getEntityManager().getTransaction().commit();
 	}
 	
 	public void rollBack() {
@@ -34,7 +37,18 @@ public class HibernateConnection {
 	}
 	
 	public EntityManager getEntityManager() {
+		if(entityManager == null)
+			entityManager = MecasoftEntityManager.getEntityManager();
+
+		if(!entityManager.getTransaction().isActive())
+			entityManager.getTransaction().begin();
 		return entityManager;
+	}
+	
+	public Query createQueryNoCache(String query){
+		Query q = getEntityManager().createQuery(query);
+		q.setHint(QueryHints.CACHE_STORE_MODE, "REFRESH");
+		return q;
 	}
 	
 //	private static SessionFactory sf;

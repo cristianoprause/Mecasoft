@@ -558,7 +558,7 @@ public class OrcamentoEditor extends MecasoftEditor {
 		SelecionarItemDialog sid = new SelecionarItemDialog(getActiveShell(), new LabelProvider(){
 			@Override
 			public String getText(Object element) {
-				return ((ForneceProduto)element).getId().getPessoa().getNome() + " - R$" +
+				return ((ForneceProduto)element).getPessoa().getNome() + " - R$" +
 						FormatterHelper.getDecimalFormat().format(((ForneceProduto)element).getValorUnitario());
 			}
 		});
@@ -566,7 +566,7 @@ public class OrcamentoEditor extends MecasoftEditor {
 		sid.setElements(produto.getListaFornecedores().toArray());
 		
 		ForneceProduto fp =  (ForneceProduto)sid.getElementoSelecionado();
-		return fp == null ? null : fp.getId().getPessoa();
+		return fp == null ? null : fp.getPessoa();
 	}
 	
 	public void adicionarItens(ProdutoServico ps, ItemServico servicoPertence, Pessoa fornecedor){
@@ -587,7 +587,7 @@ public class OrcamentoEditor extends MecasoftEditor {
 		if(fornecedor != null){
 			for(int c = 0; c < fornecedor.getListaProduto().size() && fp == null; c++){
 				ForneceProduto fpFornecedor = fornecedor.getListaProduto().get(c);
-				if(fpFornecedor.getId().getProduto().getId().compareTo(ps.getId()) == 0)
+				if(fpFornecedor.getProduto().getId().compareTo(ps.getId()) == 0)
 					fp = fpFornecedor;
 			}
 		}

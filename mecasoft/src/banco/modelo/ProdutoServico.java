@@ -44,7 +44,7 @@ public class ProdutoServico implements Serializable{
 	@Column(precision=14, scale=2)
 	private BigDecimal valorUnitario = BigDecimal.ZERO;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="produto", orphanRemoval=true)
 	private List<ForneceProduto> listaFornecedores = new ArrayList<ForneceProduto>();
 	
 	@ManyToMany(cascade=CascadeType.ALL)
