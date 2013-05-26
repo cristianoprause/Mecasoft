@@ -4,23 +4,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Papel;
 import banco.utils.PapelUtils;
 
-public class PapelDAO extends HibernateConnection implements PapelUtils{
+public class PapelDAO extends EclipseLinkConnection implements PapelUtils{
 
 	@Override
 	public void saveOrUpdate(Papel modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(Papel modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override

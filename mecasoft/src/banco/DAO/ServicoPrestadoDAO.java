@@ -5,26 +5,26 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.ServicoPrestado;
 import banco.utils.ServicoPrestadoUtils;
 
 import com.ibm.icu.util.Calendar;
 
-public class ServicoPrestadoDAO extends HibernateConnection implements
+public class ServicoPrestadoDAO extends EclipseLinkConnection implements
 		ServicoPrestadoUtils {
 
 	@Override
 	public void saveOrUpdate(ServicoPrestado modelo) {
 		if (modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(ServicoPrestado modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override
@@ -64,8 +64,8 @@ public class ServicoPrestadoDAO extends HibernateConnection implements
 		}
 
 		Query q = getEntityManager().createQuery("select s from ServicoPrestado s where (s.dataAbertura between :dataInicial and :dataFinal) "
-								+ "and (s.ativo is :status or :status is null) "
-								+ "and (s.emExecucao is :emExecucao or :emExecucao is null)");
+								+ "and (s.ativo = :status or :status is null) "
+								+ "and (s.emExecucao = :emExecucao or :emExecucao is null)");
 		q.setParameter("dataInicial", dataInicial);
 		q.setParameter("dataFinal", dataFinal);
 		q.setParameter("status", status);
@@ -80,8 +80,8 @@ public class ServicoPrestadoDAO extends HibernateConnection implements
 			Boolean emExecucao) {
 		Query q = getEntityManager()
 				.createQuery(
-						"select s from ServicoPrestado s where (s.ativo is :status or :status is null) "
-								+ "and (s.emExecucao is :emExecucao or :emExecucao is null)");
+						"select s from ServicoPrestado s where (s.ativo = :status or :status is null) "
+								+ "and (s.emExecucao = :emExecucao or :emExecucao is null)");
 		q.setParameter("status", status).setParameter("emExecucao", emExecucao);
 		return q.getResultList();
 	}

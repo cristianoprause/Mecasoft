@@ -4,23 +4,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.FormaPagamento;
 import banco.utils.FormaPagamentoUtils;
 
-public class FormaPagamentoDAO extends HibernateConnection implements FormaPagamentoUtils{
+public class FormaPagamentoDAO extends EclipseLinkConnection implements FormaPagamentoUtils{
 
 	@Override
 	public void saveOrUpdate(FormaPagamento modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(FormaPagamento modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class FormaPagamentoDAO extends HibernateConnection implements FormaPagam
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<FormaPagamento> findAllByStatus(Boolean status) {
-		Query q = getEntityManager().createQuery("select f from FormaPagamento f where f.ativo is :status");
+		Query q = getEntityManager().createQuery("select f from FormaPagamento f where f.ativo = :status");
 		q.setParameter("status", status);
 		return q.getResultList();
 	}

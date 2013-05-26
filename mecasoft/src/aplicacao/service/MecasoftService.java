@@ -21,10 +21,6 @@ public abstract class MecasoftService<T> {
 		return InjectorHelper.getInstance();
 	}
 	
-	public void commit(){
-		getDAO().commit();
-	}
-	
 	public void rollBack(){
 		getDAO().rollBack();
 	}

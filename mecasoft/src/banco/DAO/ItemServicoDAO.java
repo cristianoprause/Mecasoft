@@ -2,18 +2,18 @@ package banco.DAO;
 
 import java.util.List;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.ItemServico;
 import banco.utils.ItemServicoUtils;
 
-public class ItemServicoDAO extends HibernateConnection implements ItemServicoUtils{
+public class ItemServicoDAO extends EclipseLinkConnection implements ItemServicoUtils{
 
 	@Override
 	public void saveOrUpdate(ItemServico modelo) {}
 
 	@Override
 	public void delete(ItemServico modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override

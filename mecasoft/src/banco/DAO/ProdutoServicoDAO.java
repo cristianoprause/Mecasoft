@@ -4,23 +4,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.ProdutoServico;
 import banco.utils.ProdutoServicoUtils;
 
-public class ProdutoServicoDAO extends HibernateConnection implements ProdutoServicoUtils{
+public class ProdutoServicoDAO extends EclipseLinkConnection implements ProdutoServicoUtils{
 
 	@Override
 	public void saveOrUpdate(ProdutoServico modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(ProdutoServico modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override

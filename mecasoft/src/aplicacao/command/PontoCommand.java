@@ -32,7 +32,7 @@ public class PontoCommand extends AbstractHandler {
 			StatusServico ss = newStatusServico(statusFuncionario);
 			service.setStatusServico(ss);
 			service.saveOrUpdate();
-//			HibernateConnection.commit(ss);
+//			service.commit();
 		}
 		
 		return null;

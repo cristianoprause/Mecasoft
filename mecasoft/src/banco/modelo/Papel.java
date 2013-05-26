@@ -59,7 +59,7 @@ public class Papel implements Serializable{
 	@Column
 	private boolean gerarRelatorio;
 	
-	@OneToMany(mappedBy="papel", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="papel", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Usuario> listaUsuarios = new ArrayList<Usuario>();
 
 	public Long getId() {

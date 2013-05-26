@@ -4,18 +4,18 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Veiculo;
 import banco.utils.VeiculoUtils;
 
-public class VeiculoDAO extends HibernateConnection implements VeiculoUtils{
+public class VeiculoDAO extends EclipseLinkConnection implements VeiculoUtils{
 
 	@Override
 	public void saveOrUpdate(Veiculo modelo) {
 		if(modelo.getId() == null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override

@@ -57,7 +57,7 @@ public class Orcamento implements Serializable{
 	@OneToOne
 	private ServicoPrestado servico;
 	
-	@OneToMany(mappedBy="orcamento", cascade=javax.persistence.CascadeType.ALL)
+	@OneToMany(mappedBy="orcamento", cascade=javax.persistence.CascadeType.ALL, orphanRemoval=true)
 	@NotNull(message="Adicione ao menos um serviço.")
 	private List<ItemServico> listaServico = new ArrayList<ItemServico>();
 

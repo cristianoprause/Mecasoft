@@ -94,7 +94,7 @@ public class Pessoa implements Serializable{
 	@Column
 	private boolean tipoFuncionario;
 	
-	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Veiculo> listaVeiculo = new ArrayList<Veiculo>();
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="pessoa", orphanRemoval=true)

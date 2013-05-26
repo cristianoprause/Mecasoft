@@ -6,23 +6,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.DuplicataPaga;
 import banco.utils.DuplicataPagaUtils;
 
-public class DuplicataPagaDAO extends HibernateConnection implements DuplicataPagaUtils{
+public class DuplicataPagaDAO extends EclipseLinkConnection implements DuplicataPagaUtils{
 
 	@Override
 	public void saveOrUpdate(DuplicataPaga modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(DuplicataPaga modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override

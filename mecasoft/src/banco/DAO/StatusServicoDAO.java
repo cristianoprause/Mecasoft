@@ -6,25 +6,25 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Pessoa;
 import banco.modelo.ServicoPrestado;
 import banco.modelo.StatusServico;
 import banco.utils.StatusServicoUtils;
 
-public class StatusServicoDAO extends HibernateConnection implements StatusServicoUtils{
+public class StatusServicoDAO extends EclipseLinkConnection implements StatusServicoUtils{
 
 	@Override
 	public void saveOrUpdate(StatusServico modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(StatusServico modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override

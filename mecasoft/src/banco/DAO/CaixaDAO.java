@@ -4,23 +4,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Caixa;
 import banco.utils.CaixaUtils;
 
-public class CaixaDAO extends HibernateConnection implements CaixaUtils{
+public class CaixaDAO extends EclipseLinkConnection implements CaixaUtils{
 
 	@Override
 	public void saveOrUpdate(Caixa modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(Caixa modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override

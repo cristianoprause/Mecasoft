@@ -4,23 +4,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.TipoFuncionario;
 import banco.utils.TipoFuncionarioUtils;
 
-public class TipoFuncionarioDAO extends HibernateConnection implements TipoFuncionarioUtils{
+public class TipoFuncionarioDAO extends EclipseLinkConnection implements TipoFuncionarioUtils{
 
 	@Override
 	public void saveOrUpdate(TipoFuncionario modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(TipoFuncionario modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override

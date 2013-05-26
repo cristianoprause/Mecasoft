@@ -75,13 +75,13 @@ public class ServicoPrestado implements Serializable{
 	@OneToOne
 	private Orcamento orcamento;
 	
-	@OneToMany(mappedBy="servicoPrestado", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="servicoPrestado", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<ItemServico> listaServicos = new ArrayList<ItemServico>();
 	
-	@OneToMany(mappedBy="servicoPrestado", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="servicoPrestado", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<StatusServico> listaStatus = new ArrayList<StatusServico>();
 	
-	@OneToMany(mappedBy="servicoPrestado", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="servicoPrestado", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<FormaPagtoUtilizada> listaFormaPagto = new ArrayList<FormaPagtoUtilizada>();
 	
 	public StatusServico getUltimoStatus(){

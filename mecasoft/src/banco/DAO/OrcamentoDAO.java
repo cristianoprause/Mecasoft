@@ -4,23 +4,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Orcamento;
 import banco.utils.OrcamentoUtils;
 
-public class OrcamentoDAO extends HibernateConnection implements OrcamentoUtils{
+public class OrcamentoDAO extends EclipseLinkConnection implements OrcamentoUtils{
 
 	@Override
 	public void saveOrUpdate(Orcamento modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(Orcamento modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class OrcamentoDAO extends HibernateConnection implements OrcamentoUtils{
 	@Override
 	public List<Orcamento> findAllByStatus(String status) {
 		boolean sts = status.equals(Orcamento.PENDENTE);
-		Query q = getEntityManager().createQuery("select o from Orcamento o where o.pendente is :sts");
+		Query q = getEntityManager().createQuery("select o from Orcamento o where o.pendente = :sts");
 		q.setParameter("sts", sts);
 		return q.getResultList();
 	}

@@ -4,23 +4,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Configuracao;
 import banco.utils.ConfiguracaoUtils;
 
-public class ConfiguracaoDAO extends HibernateConnection implements ConfiguracaoUtils{
+public class ConfiguracaoDAO extends EclipseLinkConnection implements ConfiguracaoUtils{
 
 	@Override
 	public void saveOrUpdate(Configuracao modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(Configuracao modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override

@@ -4,24 +4,24 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Caixa;
 import banco.modelo.MovimentacaoCaixa;
 import banco.utils.MovimentacaoCaixaUtils;
 
-public class MovimentacaoCaixaDAO extends HibernateConnection implements MovimentacaoCaixaUtils{
+public class MovimentacaoCaixaDAO extends EclipseLinkConnection implements MovimentacaoCaixaUtils{
 
 	@Override
 	public void saveOrUpdate(MovimentacaoCaixa modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(MovimentacaoCaixa modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override

@@ -5,23 +5,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Duplicata;
 import banco.utils.DuplicataUtils;
 
-public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
+public class DuplicataDAO extends EclipseLinkConnection implements DuplicataUtils{
 
 	@Override
 	public void saveOrUpdate(Duplicata modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(Duplicata modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Duplicata> findAllByPagamento(boolean pago) {
-		Query q = getEntityManager().createQuery("select d from Duplicata d where d.pago is :pago");
+		Query q = getEntityManager().createQuery("select d from Duplicata d where d.pago = :pago");
 		q.setParameter("pago", pago);
 		return q.getResultList();
 	}
@@ -64,7 +64,7 @@ public class DuplicataDAO extends HibernateConnection implements DuplicataUtils{
 	@Override
 	public List<Duplicata> findAllByPeriodoAndPagamento(Date dtInicial, Date dtFinal, Boolean pago) {
 		Query q = getEntityManager().createQuery("select d from Duplicata d where (d.dataVencimento between :dtInicial and :dtFinal) " +
-											"and (d.pago is :pago or :pago is null)");
+											"and (d.pago = :pago or :pago is null)");
 		q.setParameter("dtInicial", dtInicial)
 		.setParameter("dtFinal", dtFinal)
 		.setParameter("pago", pago);

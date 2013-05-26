@@ -5,22 +5,22 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Pessoa;
 import banco.modelo.TipoFuncionario;
 import banco.utils.PessoaUtils;
 
 import com.google.inject.persist.Transactional;
 
-public class PessoaDAO extends HibernateConnection implements PessoaUtils{
+public class PessoaDAO extends EclipseLinkConnection implements PessoaUtils{
 
 	@Override
 	@Transactional
 	public void saveOrUpdate(Pessoa modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override

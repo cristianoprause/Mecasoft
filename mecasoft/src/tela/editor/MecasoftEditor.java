@@ -146,7 +146,7 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 	}
 	
 	public void closeThisEditor(){
-		getService().commit();
+//		getService().commit();
 		close();
 	}
 	

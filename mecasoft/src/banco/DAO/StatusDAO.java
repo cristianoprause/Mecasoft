@@ -4,23 +4,23 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import banco.connection.HibernateConnection;
+import banco.connection.EclipseLinkConnection;
 import banco.modelo.Status;
 import banco.utils.StatusUtils;
 
-public class StatusDAO extends HibernateConnection implements StatusUtils{
+public class StatusDAO extends EclipseLinkConnection implements StatusUtils{
 
 	@Override
 	public void saveOrUpdate(Status modelo) {
 		if(modelo.getId() != null)
-			getEntityManager().merge(modelo);
+			merge(modelo);
 		else
-			getEntityManager().persist(modelo);
+			persist(modelo);
 	}
 
 	@Override
 	public void delete(Status modelo) {
-		getEntityManager().remove(modelo);
+		remove(modelo);
 	}
 
 	@Override
@@ -40,8 +40,8 @@ public class StatusDAO extends HibernateConnection implements StatusUtils{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Status> findAllByStatusAndFuncao(boolean status, Boolean pausar) {
-		Query q = getEntityManager().createQuery("select s from Status s where s.ativo is :status and " +
-												"(s.pausar is :pausar or :pausar is null)");
+		Query q = getEntityManager().createQuery("select s from Status s where s.ativo = :status and " +
+												"(s.pausar = :pausar or :pausar is null)");
 		q.setParameter("status", status);
 		q.setParameter("pausar", pausar);
 		return q.getResultList();
