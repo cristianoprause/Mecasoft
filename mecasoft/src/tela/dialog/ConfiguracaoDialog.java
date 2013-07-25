@@ -314,7 +314,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			return;
 		}
 
-		File file = new File(FileHelper.caminhoLogoEmpresa());
+		File file = new File(FileHelper.logoPath());
 
 		if (file.exists()) {
 			lblIconStatusLogo.setImage(ResourceManager.getPluginImage(

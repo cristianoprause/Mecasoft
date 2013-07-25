@@ -117,7 +117,7 @@ public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 		
 		String caminho = null;
 		if(UsuarioHelper.getConfiguracaoPadrao() != null && !UsuarioHelper.getConfiguracaoPadrao().getLogoEmpresa().isEmpty()){
-			File file = new File(StringUtils.removeStart(FileHelper.caminhoLogoEmpresa(), "/"));
+			File file = new File(StringUtils.removeStart(FileHelper.logoPath(), "/"));
 			if(file.exists())
 				caminho = file.getPath();
 		}

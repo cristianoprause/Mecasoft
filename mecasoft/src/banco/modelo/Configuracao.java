@@ -16,7 +16,7 @@ import aplicacao.helper.FileHelper;
 public class Configuracao implements Serializable{
 
 	private static final long serialVersionUID = 5712072341645546025L;
-	public static String pastaLogo = FileHelper.caminhoPasta("logo");
+	public static String pastaLogo = FileHelper.directoryPath("logo");
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

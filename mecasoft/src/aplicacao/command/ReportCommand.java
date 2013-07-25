@@ -37,7 +37,7 @@ public abstract class ReportCommand extends AbstractHandler{
 			
 			Connection con = DriverManager.getConnection(urlBanco, "postgres", "admin");
 			
-			return JasperFillManager.fillReport(FileHelper.caminhoPasta("reports").concat(caminhoRelatorio), getParametros(), con);
+			return JasperFillManager.fillReport(FileHelper.directoryPath("reports").concat(caminhoRelatorio), getParametros(), con);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -52,7 +52,7 @@ public abstract class ReportCommand extends AbstractHandler{
 
 		try {
 			JRDataSource jrds = new JRBeanCollectionDataSource(listaObjetos);
-			return JasperFillManager.fillReport(FileHelper.caminhoPasta("reports").concat(caminhoRelatorio), getParametros(), jrds);
+			return JasperFillManager.fillReport(FileHelper.directoryPath("reports").concat(caminhoRelatorio), getParametros(), jrds);
 			
 		} catch (JRException e) {
 			e.printStackTrace();
