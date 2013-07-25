@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -71,6 +72,7 @@ import banco.modelo.StatusServico;
 public class FecharOrdemServicoEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.FecharOrdemServicoEditor"; //$NON-NLS-1$
+	private Logger log = Logger.getLogger(getClass());
 	private Label lblValorTotal;
 	private Table table;
 	private MecasoftText txtTotalServico;
@@ -197,7 +199,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 				new ShowServicoPrestadoAnaliticoClienteCommand(false, service.getServicoPrestado()).execute(new ExecutionEvent());
 			} catch (ExecutionException e) {
 				setErroMessage(e.getMessage());
-				e.printStackTrace();
+				log.error(e);
 			}
 		}
 		

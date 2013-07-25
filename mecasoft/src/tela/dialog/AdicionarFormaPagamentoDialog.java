@@ -364,7 +364,6 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 			gerarDuplicata();
 		}catch(Exception e){
 			openWarning("Informe a data da primeira parcela corretamente.");
-			e.printStackTrace();
 		}
 		
 	}
@@ -427,7 +426,6 @@ public class AdicionarFormaPagamentoDialog extends TitleAreaDialog {
 			tvDuplicatas.refresh();
 		}catch(Exception e){
 			openWarning("Informe a data da primeira parcela corretamente.");
-			e.printStackTrace();
 		}
 	}
 	

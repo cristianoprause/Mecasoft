@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -94,6 +95,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.AbrirOrdemServicoEditor"; //$NON-NLS-1$
 	
+	private Logger log = Logger.getLogger(getClass());
 	private ServicoPrestadoService service = new ServicoPrestadoService();
 	private ProdutoServicoService prodServService = new ProdutoServicoService();
 	private OrcamentoService orcamentoService = new OrcamentoService();
@@ -853,7 +855,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					
 					getSite().getPage().openEditor(fosei, FecharOrdemServicoEditor.ID);
 				} catch (PartInitException e1) {
-					e1.printStackTrace();
+					log.error(e1);
 				} catch (ValidationException e2) {
 					setErroMessage(e2.getMessage());
 				}

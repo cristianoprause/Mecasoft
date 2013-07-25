@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -69,6 +70,7 @@ import banco.modelo.Veiculo;
 public class OrcamentoEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.OrcamentoEditor"; //$NON-NLS-1$
+	private Logger log = Logger.getLogger(getClass());
 	private OrcamentoService service = new OrcamentoService();
 	private PessoaService pessoaService = new PessoaService();
 	private ItemServicoService itemService = new ItemServicoService();
@@ -453,9 +455,10 @@ public class OrcamentoEditor extends MecasoftEditor {
 						
 						getSite().getPage().openEditor(new AbrirOrdemServicoEditorInput(service.getModelo()), AbrirOrdemServicoEditor.ID);
 					} catch (PartInitException e2) {
-						e2.printStackTrace();
+						log.error(e2);
 					} catch (ValidationException e1) {
 						setErroMessage(e1.getMessage());
+						log.error(e1);
 					}
 				}
 			}

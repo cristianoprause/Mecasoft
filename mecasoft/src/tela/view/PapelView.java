@@ -1,5 +1,6 @@
 package tela.view;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -35,6 +36,7 @@ import org.eclipse.swt.events.KeyEvent;
 public class PapelView extends ViewPart {
 
 	public static final String ID = "tela.view.PapelView"; //$NON-NLS-1$
+	private Logger log = Logger.getLogger(getClass());
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Text txtFiltro;
 	private Table table;
@@ -94,7 +96,7 @@ public class PapelView extends ViewPart {
 				try {
 					getSite().getPage().openEditor(new PapelEditorInput((Papel)selecao.getFirstElement()), PapelEditor.ID);
 				} catch (PartInitException e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 			}
 		});
@@ -141,7 +143,7 @@ public class PapelView extends ViewPart {
 					try {
 						getSite().getPage().openEditor(new PapelEditorInput(), PapelEditor.ID);
 					} catch (PartInitException e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 				}
 			};

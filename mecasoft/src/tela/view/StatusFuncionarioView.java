@@ -1,5 +1,6 @@
 package tela.view;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -39,6 +40,7 @@ import banco.modelo.StatusServico;
 public class StatusFuncionarioView extends ViewPart {
 
 	public static final String ID = "tela.view.StatusFuncionarioView"; //$NON-NLS-1$
+	private Logger log = Logger.getLogger(getClass());
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Text txtFiltro;
 	private Table table;
@@ -94,7 +96,7 @@ public class StatusFuncionarioView extends ViewPart {
 					Pessoa p = (Pessoa) selecao.getFirstElement();
 					getSite().getPage().openEditor(new StatusFuncionarioEditorInput(p), StatusFuncionarioEditor.ID);
 				} catch (PartInitException e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 			}
 		});

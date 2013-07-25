@@ -4,6 +4,7 @@ import static aplicacao.helper.MessageHelper.openError;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -44,6 +45,7 @@ import com.ibm.icu.util.Calendar;
 public class ServicoPrestadoView extends ViewPart {
 
 	public static final String ID = "tela.view.ServicoPrestadoView"; //$NON-NLS-1$
+	private Logger log = Logger.getLogger(getClass());
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Text txtFiltro;
 	private Table table;
@@ -126,7 +128,7 @@ public class ServicoPrestadoView extends ViewPart {
 
 					getSite().getPage().openEditor(new AbrirOrdemServicoEditorInput(sp), AbrirOrdemServicoEditor.ID);
 				} catch (PartInitException e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 			}
 		});
@@ -240,7 +242,7 @@ public class ServicoPrestadoView extends ViewPart {
 					try {
 						getSite().getPage().openEditor(new AbrirOrdemServicoEditorInput(), AbrirOrdemServicoEditor.ID);
 					} catch (PartInitException e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 				}
 			};

@@ -14,6 +14,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -24,6 +25,8 @@ import tela.view.ReportView;
 import aplicacao.helper.FileHelper;
 
 public abstract class ReportCommand extends AbstractHandler{
+	
+	private Logger log = Logger.getLogger(getClass());
 
 	public ReportCommand() {
 	}
@@ -40,9 +43,9 @@ public abstract class ReportCommand extends AbstractHandler{
 			return JasperFillManager.fillReport(FileHelper.directoryPath("reports").concat(caminhoRelatorio), getParametros(), con);
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e);
 		} catch (JRException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		return null;
 		
@@ -55,7 +58,7 @@ public abstract class ReportCommand extends AbstractHandler{
 			return JasperFillManager.fillReport(FileHelper.directoryPath("reports").concat(caminhoRelatorio), getParametros(), jrds);
 			
 		} catch (JRException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		return null;
 		
@@ -70,7 +73,7 @@ public abstract class ReportCommand extends AbstractHandler{
 			
 			return reportView;
 		} catch (PartInitException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		return null;

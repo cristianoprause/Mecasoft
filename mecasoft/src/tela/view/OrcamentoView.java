@@ -1,5 +1,6 @@
 package tela.view;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -35,10 +36,11 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 
 public class OrcamentoView extends ViewPart {
 
+	public static final String ID = "tela.view.OrcamentoView"; //$NON-NLS-1$
+	private Logger log = Logger.getLogger(getClass());
 	private OrcamentoService service = new OrcamentoService();
 	private OrcamentoFilter filtro = new OrcamentoFilter();
 	
-	public static final String ID = "tela.view.OrcamentoView"; //$NON-NLS-1$
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Text txtFiltro;
 	private Table table;
@@ -88,7 +90,7 @@ public class OrcamentoView extends ViewPart {
 					Orcamento orcamento = (Orcamento)selecao.getFirstElement();
 					getSite().getPage().openEditor(new OrcamentoEditorInput(orcamento), OrcamentoEditor.ID);
 				} catch (PartInitException e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 			}
 		});
@@ -176,7 +178,7 @@ public class OrcamentoView extends ViewPart {
 					try {
 						getSite().getPage().openEditor(new OrcamentoEditorInput(), OrcamentoEditor.ID);
 					} catch (PartInitException e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 				}
 			};

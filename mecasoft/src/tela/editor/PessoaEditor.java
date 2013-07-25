@@ -6,6 +6,7 @@ import static aplicacao.helper.ValidatorHelper.validar;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.Realm;
@@ -71,6 +72,7 @@ import banco.modelo.Veiculo;
 public class PessoaEditor extends MecasoftEditor {
 
 	public static final String ID = "tela.editor.PessoaEditor"; //$NON-NLS-1$
+	private Logger log = Logger.getLogger(getClass());
 	private Text txtNomeFantasia;
 	private Text txtRazaoSocial;
 	private Text txtEmail;
@@ -370,7 +372,7 @@ public class PessoaEditor extends MecasoftEditor {
 				try {
 					getSite().getPage().openEditor(new VeiculoEditorInput(service), VeiculoEditor.ID);
 				} catch (PartInitException e1) {
-					e1.printStackTrace();
+					log.error(e1);
 				}
 				
 			}

@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -59,6 +60,7 @@ import banco.modelo.Usuario;
 
 public class ConfiguracaoDialog extends TitleAreaDialog {
 
+	private Logger log = Logger.getLogger(getClass());
 	private ConfiguracaoService service = new ConfiguracaoService();
 	private UsuarioService usuarioService = new UsuarioService();
 	private StatusService statusService = new StatusService();
@@ -342,9 +344,9 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			fis.close();
 			fos.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 

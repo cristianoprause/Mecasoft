@@ -1,5 +1,6 @@
 package tela.view;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PartInitException;
@@ -39,6 +40,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 public class StatusView extends ViewPart {
 
 	public static final String ID = "tela.view.StatusView"; //$NON-NLS-1$
+	private Logger log = Logger.getLogger(getClass());
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Text txtFiltro;
 	private Table table;
@@ -93,7 +95,7 @@ public class StatusView extends ViewPart {
 					Status s = (Status)selecao.getFirstElement();
 					getSite().getPage().openEditor(new StatusEditorInput(s), StatusEditor.ID);
 				} catch (PartInitException e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 			}
 		});
@@ -195,7 +197,7 @@ public class StatusView extends ViewPart {
 					try {
 						getSite().getPage().openEditor(new StatusEditorInput(), StatusEditor.ID);
 					} catch (PartInitException e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 				}
 			};

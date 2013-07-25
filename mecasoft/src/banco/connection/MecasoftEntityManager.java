@@ -51,7 +51,7 @@ public class MecasoftEntityManager {
 			
 			emf = Persistence.createEntityManagerFactory("mecasoft", properties);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
 			MessageHelper.openError("Arquivo de configuração não pode ser encontrado.");
 		}
 		

@@ -3,6 +3,7 @@ package tela.editingSupport;
 import java.math.BigDecimal;
 import java.text.ParseException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -14,6 +15,7 @@ import banco.modelo.ItemServico;
 public class ValorUnitarioItemServico extends EditingSupport{
 
 	private TreeViewer viewer;
+	private Logger log = Logger.getLogger(getClass());
 
 	public ValorUnitarioItemServico(TreeViewer tvServicoProduto) {
 		super(tvServicoProduto);
@@ -54,7 +56,7 @@ public class ValorUnitarioItemServico extends EditingSupport{
 				
 				viewer.refresh();
 			} catch (ParseException e) {
-				e.printStackTrace();
+				log.error(e);
 			}
 			
 		}

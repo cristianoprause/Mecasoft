@@ -74,7 +74,6 @@ public abstract class MecasoftEditor extends EditorPart implements ISaveablePart
 					return;
 				}catch(Exception e1){
 					log.error(e1);
-					e1.printStackTrace();
 				}
 			}
 		});

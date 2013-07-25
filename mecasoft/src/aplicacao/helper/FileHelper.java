@@ -11,6 +11,7 @@ import java.util.Map;
 import mecasoft.Activator;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
 
 public class FileHelper {
@@ -18,11 +19,12 @@ public class FileHelper {
 	public static File FILE_PROPERTIES = new File(propertiesPath() + File.separator + "mecasoft.properties");
 	
 	public static String directoryPath(String pasta) {
+		Logger log = Logger.getLogger(FileHelper.class);
 		try {
 			URL confURL = Activator.getDefault().getBundle().getEntry(pasta + "/");
 			return FileLocator.toFileURL(confURL).getFile();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			return "";
 		}
 	}

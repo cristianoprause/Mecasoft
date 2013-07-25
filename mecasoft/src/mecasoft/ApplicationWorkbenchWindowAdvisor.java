@@ -5,6 +5,7 @@ import static aplicacao.helper.MessageHelper.openWarning;
 
 import java.util.Calendar;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -19,6 +20,7 @@ import aplicacao.service.CaixaService;
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 	private CaixaService caixaService = new CaixaService();
+	private Logger log = Logger.getLogger(getClass());
 	
 	public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
 		super(configurer);
@@ -44,7 +46,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		try {
 			handlerService.executeCommand("mecasoft.permissaoUsuarioCommand", null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 	

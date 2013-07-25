@@ -1,5 +1,6 @@
 package tela.view;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PartInitException;
@@ -38,6 +39,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 public class ServicoView extends ViewPart {
 
 	public static final String ID = "tela.view.ServicoView"; //$NON-NLS-1$
+	private Logger log = Logger.getLogger(getClass());
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Text txtFiltro;
 	private Table table;
@@ -96,7 +98,7 @@ public class ServicoView extends ViewPart {
 					ProdutoServico ps = (ProdutoServico)selecao.getFirstElement();
 					getSite().getPage().openEditor(new ServicoEditorInput(ps), ServicoEditor.ID);
 				} catch (PartInitException e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 			}
 		});
@@ -167,7 +169,7 @@ public class ServicoView extends ViewPart {
 					try {
 						getSite().getPage().openEditor(new ServicoEditorInput(), ServicoEditor.ID);
 					} catch (PartInitException e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 				}
 			};
