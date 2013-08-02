@@ -462,14 +462,6 @@
                   style="push">
             </command>
          </menu>
-         <menu
-               label="ajuda">
-            <command
-                  commandId="mecasoft.ExportarBancoCommand"
-                  label="Exportar banco"
-                  style="push">
-            </command>
-         </menu>
       </menuContribution>
    </extension>
    <extension
@@ -553,11 +545,6 @@
             defaultHandler="aplicacao.command.reports.ShowServicoPrestadoAnaliticoClienteCommand"
             id="mecasoft.showServicoAnaliticoClienteCommand"
             name="Relatório de serviços analítico (Cliente)">
-      </command>
-      <command
-            defaultHandler="aplicacao.command.ExportarBancoCommand"
-            id="mecasoft.ExportarBancoCommand"
-            name="Exportar banco">
       </command>
    </extension>
    <extension
