@@ -65,7 +65,7 @@ public class ServicoPrestadoDAO extends EclipseLinkConnection implements
 
 		Query q = getEntityManager().createQuery("select s from ServicoPrestado s where (s.dataAbertura between :dataInicial and :dataFinal) "
 								+ "and (s.ativo = :status or :status is null) "
-								+ "and (s.emExecucao = :emExecucao or :emExecucao is null)");
+								+ "and (s.emExecucao = cast(:emExecucao as boolean) or :emExecucao is null)");
 		q.setParameter("dataInicial", dataInicial);
 		q.setParameter("dataFinal", dataFinal);
 		q.setParameter("status", status);

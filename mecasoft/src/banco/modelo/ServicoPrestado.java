@@ -79,22 +79,8 @@ public class ServicoPrestado implements Serializable{
 	private List<ItemServico> listaServicos = new ArrayList<ItemServico>();
 	
 	@OneToMany(mappedBy="servicoPrestado", cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<StatusServico> listaStatus = new ArrayList<StatusServico>();
-	
-	@OneToMany(mappedBy="servicoPrestado", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<FormaPagtoUtilizada> listaFormaPagto = new ArrayList<FormaPagtoUtilizada>();
 	
-	public StatusServico getUltimoStatus(){
-		StatusServico ultimoStatus = null;
-		
-		for(StatusServico status : listaStatus){
-			if(ultimoStatus == null || status.getData().compareTo(ultimoStatus.getData()) > 0)
-				ultimoStatus = status;
-		}
-		
-		return ultimoStatus;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -197,14 +183,6 @@ public class ServicoPrestado implements Serializable{
 
 	public void setListaServicos(List<ItemServico> listaServicos) {
 		this.listaServicos = listaServicos;
-	}
-
-	public List<StatusServico> getListaStatus() {
-		return listaStatus;
-	}
-
-	public void setListaStatus(List<StatusServico> listaStatus) {
-		this.listaStatus = listaStatus;
 	}
 
 	public List<FormaPagtoUtilizada> getListaFormaPagto() {

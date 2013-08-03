@@ -15,39 +15,25 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.PojoProperties;
-import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -56,22 +42,18 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wb.swt.ResourceManager;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import tela.contentProvider.ItemServicoContentProvider;
 import tela.dialog.ConfiguracaoDialog;
 import tela.dialog.SelecionarItemDialog;
-import tela.editingSupport.DataStatusServicoEditingSupport;
 import tela.editingSupport.FornecedorItemServicoEditingSupport;
 import tela.editingSupport.ItemVisivelItemServicoEditingSupport;
 import tela.editingSupport.QuantidadeItemServicoEditingSupport;
 import tela.editingSupport.ValorUnitarioItemServico;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import tela.editor.editorInput.FecharOrdemServicoEditorInput;
-import tela.viewerSorter.TableStatusServicoViewerSorter;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
-import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ItemServicoService;
 import aplicacao.service.MecasoftService;
@@ -79,16 +61,13 @@ import aplicacao.service.OrcamentoService;
 import aplicacao.service.PessoaService;
 import aplicacao.service.ProdutoServicoService;
 import aplicacao.service.ServicoPrestadoService;
-import aplicacao.service.StatusService;
-import aplicacao.service.StatusServicoService;
+import aplicacao.service.VeiculoService;
 import banco.modelo.ForneceProduto;
 import banco.modelo.ItemServico;
 import banco.modelo.Orcamento;
 import banco.modelo.Pessoa;
 import banco.modelo.ProdutoServico;
 import banco.modelo.ServicoPrestado;
-import banco.modelo.Status;
-import banco.modelo.StatusServico;
 import banco.modelo.Veiculo;
 
 public class AbrirOrdemServicoEditor extends MecasoftEditor {
@@ -99,34 +78,22 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private ServicoPrestadoService service = new ServicoPrestadoService();
 	private ProdutoServicoService prodServService = new ProdutoServicoService();
 	private OrcamentoService orcamentoService = new OrcamentoService();
-	private StatusService statusService = new StatusService();
 	private PessoaService pessoaService = new PessoaService();
-	private StatusServicoService statusServicoService = new StatusServicoService();
 	private ItemServicoService itemService = new ItemServicoService();
-	private List<Status> listaStatus;
+	private VeiculoService veiculoService = new VeiculoService();
 	private List<ItemServico> listaProdutoRemovido;
-	private Pessoa funcionario;
 	private FecharOrdemServicoEditorInput fosei;
 	
 	private Text txtCliente;
 	private Text txtVeiculo;
-	private Text txtFuncionario;
-	private Text txtStatusAtual;
-	private Table tableStatus;
-	private ComboViewer cvNovoStatus;
-	private TableViewer tvStatus;
 	private Button btnSelecionarCliente;
 	private Button btnSelecionarVeiculo;
 	private Button btnAdicionarServio;
 	private Button btnRemoverServio;
 	private Button btnAdicionarItem;
 	private Button btnRemoverItem;
-	private Button btnSelecionar;
-	private Combo cbNovoStatus;
-	private Button btnAlterarStatus;
 	private Button btnCancelarOrdem;
 	private Button btnFecharOrdem;
-	private Button btnRemoverStatus;
 	private Tree tree;
 	private TreeViewer tvServicoProduto;
 	private TreeColumn trclmnDescrio;
@@ -146,7 +113,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	private Button btnSelecionarOrcamento;
 
 	public AbrirOrdemServicoEditor() {
-		listaStatus = statusService.findAllAtivos();
 		listaProdutoRemovido = new ArrayList<ItemServico>();
 	}
 
@@ -491,300 +457,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		btnRemoverItem.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRemoverItem.setText("Remover");
 		
-		Label lblFuncionario = new Label(compositeConteudo, SWT.NONE);
-		lblFuncionario.setText("Funcion\u00E1rio:");
-		
-		txtFuncionario = new Text(compositeConteudo, SWT.BORDER);
-		txtFuncionario.setEnabled(false);
-		txtFuncionario.setEditable(false);
-		txtFuncionario.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
-		
-		btnSelecionar = new Button(compositeConteudo, SWT.NONE);
-		btnSelecionar.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				funcionario = selecionarFuncionario();
-				if(funcionario != null)
-					txtFuncionario.setText(funcionario.getNomeFantasia());
-			}
-		});
-		btnSelecionar.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
-		btnSelecionar.setText("Selecionar");
-		
-		Label lblNovoStatus = new Label(compositeConteudo, SWT.NONE);
-		lblNovoStatus.setText("Novo status:");
-		
-		cvNovoStatus = new ComboViewer(compositeConteudo, SWT.READ_ONLY);
-		cbNovoStatus = cvNovoStatus.getCombo();
-		GridData gd_cbNovoStatus = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_cbNovoStatus.widthHint = 142;
-		cbNovoStatus.setLayoutData(gd_cbNovoStatus);
-		
-		btnAlterarStatus = new Button(compositeConteudo, SWT.NONE);
-		btnAlterarStatus.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection selecao = (IStructuredSelection)cvNovoStatus.getSelection();
-				
-				if(selecao.isEmpty())
-					return;
-				
-				if(funcionario == null){
-					openWarning("Selecione primeiro o funcionário para alterar o status.");
-					return;
-				}
-
-				//pega o novo status
-				Status status = (Status)selecao.getFirstElement();
-				
-				//criado aqui para evitar problemas e conseguir verificar em linhas abaixo
-				StatusServico statusParado = null;
-				StatusServico statusAtualServico = null;
-				
-				if(!service.getServicoPrestado().getListaStatus().isEmpty()){
-					statusAtualServico = service.getServicoPrestado().getUltimoStatus();
-					
-					//não pode adicionar um status de parar 
-					if(!statusAtualServico.getFuncionario().equals(funcionario) && status.isPausar()){
-						openError("Não é permitido adicionar o status \"" + status.getDescricao() + "\" para um funcionário diferente do atual");
-						return;
-					
-					//se forem funcionarios diferentes adicionando status verde neste serviço, tem que ser adicionado
-					//um status vermelho com o funcionario que estava antes
-					}else if(!statusAtualServico.getStatus().isPausar() && !status.isPausar() &&
-							!statusAtualServico.getFuncionario().equals(funcionario)){
-						
-						//verifica se p usuário permite adicionar um status de parado para o funcionario anterior
-						if(openQuestion("O serviço esta em um status continuo para um funcionário diferente. Caso continue, " +
-								"será adicionado o status \"" + UsuarioHelper.getConfiguracaoPadrao().getStatusFinal().getDescricao() + "\" para o funcionário que estava anteriormente.\n" +
-								"Deseja continuar?")){
-							
-							//cria um status de parado para o funcionário anterior
-							statusParado = new StatusServico();
-							statusParado.setFuncionario(statusAtualServico.getFuncionario());
-							statusParado.setServicoPrestado(service.getServicoPrestado());
-							statusParado.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
-							
-						}else
-							return;
-						
-					}
-				}
-				
-				//pega o ultimo status do usuario
-				StatusServico statusFuncionario = statusServicoService.findStatusFuncionario(funcionario);
-				
-				//verifica se nao foi adicionado algum status neste serviço para este funcionario e ainda nao foi salvo
-				//caso tenha sido, esse status é o status atual do funcionario
-				if(statusAtualServico != null && statusFuncionario != null){
-					if(statusAtualServico.getFuncionario().equals(funcionario) 
-						&& statusAtualServico.getData().compareTo(statusFuncionario.getData()) > 0)
-							statusFuncionario = statusAtualServico;
-				}
-				
-				if(statusFuncionario != null && !statusFuncionario.getServicoPrestado().equals(service.getServicoPrestado()) && status.isPausar()){
-					openError("Não é permitido adicionar o status \"" + status.getDescricao() + "\" com este funcionário, pois ele esta em um outro serviço");
-					return;
-					
-				//caso seja um status continuo em um outo serviço, ele mostra uma mensagem informando que tera que ser
-				//adicionado um status de parado ao serviço que ele esta para adicionar um status verde para este usuario neste serviço
-				}else if(statusFuncionario != null && !statusFuncionario.getStatus().isPausar() 
-						&& !statusFuncionario.getServicoPrestado().equals(service.getServicoPrestado())
-						&& !status.isPausar()){
-					
-					//verica se o usuário aprova
-					if(openQuestion("O mecânico selecionado ja esta ativo em outro serviço.\n" +
-							"Caso ele seja adicionado a este serviço, sera adicionado o status \"" + UsuarioHelper.getConfiguracaoPadrao().getStatusFinal().getDescricao() + "\" " +
-							"no serviço anterior.\n" +
-							"Deseja continuar?")){
-						
-						//cria um novo StatusServico para adicionar no serviço em que o funcionario estava
-						StatusServico statusServicoAnterior = new StatusServico();
-						statusServicoAnterior.setFuncionario(statusFuncionario.getFuncionario());
-						statusServicoAnterior.setServicoPrestado(statusFuncionario.getServicoPrestado());
-						statusServicoAnterior.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
-						
-						//salva este novo status
-						statusServicoService.setStatusServico(statusServicoAnterior);
-						statusServicoService.saveOrUpdate();
-						
-					}else
-						return;
-					
-				}
-				
-				//adiciona na lista de status do serviço atual o status caso
-				//o usuario aprovou o 1º if xD
-				if(statusParado != null)
-					service.getServicoPrestado().getListaStatus().add(statusParado);
-				
-				StatusServico ss = new StatusServico();
-				ss.setFuncionario(funcionario);
-				ss.setServicoPrestado(service.getServicoPrestado());
-				ss.setStatus(status);
-				
-				
-				service.getServicoPrestado().getListaStatus().add(ss);
-				txtStatusAtual.setText(status.getDescricao());
-				tvStatus.refresh();
-				txtFuncionario.setText("");
-				funcionario = null;
-				
-				
-			}
-		});
-		btnAlterarStatus.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/find16.png"));
-		btnAlterarStatus.setText("Alterar Status");
-		
-		btnRemoverStatus = new Button(compositeConteudo, SWT.NONE);
-		btnRemoverStatus.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/remove16.png"));
-		btnRemoverStatus.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
-				IStructuredSelection selecao = (IStructuredSelection)tvStatus.getSelection();
-				
-				if(selecao.isEmpty())
-					return;
-				
-				if(openQuestion("Deseja realmente remover este status do serviço?")){
-					StatusServico ss = (StatusServico)selecao.getFirstElement();
-					service.getServicoPrestado().getListaStatus().remove(ss);
-					txtStatusAtual.setText(service.getServicoPrestado().getUltimoStatus().getStatus().getDescricao());
-					tvStatus.refresh();
-				}
-				
-			}
-		});
-		btnRemoverStatus.setText("Remover Status");
-		new Label(compositeConteudo, SWT.NONE);
-		
-		Label lblStatusAtual = new Label(compositeConteudo, SWT.NONE);
-		lblStatusAtual.setText("Status atual:");
-		
-		txtStatusAtual = new Text(compositeConteudo, SWT.BORDER);
-		txtStatusAtual.setEditable(false);
-		txtStatusAtual.setEnabled(false);
-		txtStatusAtual.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
-		
-		StatusServico ultimoStatus = service.getServicoPrestado().getUltimoStatus();
-		if(ultimoStatus != null)
-			txtStatusAtual.setText(ultimoStatus.getStatus().getDescricao());
-		
-		new Label(compositeConteudo, SWT.NONE);
-		
-		Label lblStatus = new Label(compositeConteudo, SWT.NONE);
-		lblStatus.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		lblStatus.setText("Status:");
-		
-		tvStatus = new TableViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION | SWT.NONE);
-		tableStatus = tvStatus.getTable();
-		tableStatus.setLinesVisible(true);
-		tableStatus.setHeaderVisible(true);
-		GridData gd_tableStatus = new GridData(SWT.FILL, SWT.FILL, false, false, 3, 1);
-		gd_tableStatus.widthHint = 593;
-		gd_tableStatus.heightHint = 95;
-		tableStatus.setLayoutData(gd_tableStatus);
-		tvStatus.setSorter(new TableStatusServicoViewerSorter());
-		
-		TableViewerColumn tvcStatus = new TableViewerColumn(tvStatus, SWT.NONE);
-		tvcStatus.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return ((StatusServico)element).getStatus().getDescricao();
-			}
-			
-			@Override
-			public Color getForeground(Object element) {
-				StatusServico ss = (StatusServico)element;
-				
-				if(ss.getStatus().isPausar())
-					return SWTResourceManager.getColor(SWT.COLOR_RED);
-				else
-					return SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
-			}
-		});
-		TableColumn tblclmnStatus = tvcStatus.getColumn();
-		tblclmnStatus.setWidth(184);
-		tblclmnStatus.setText("Status");
-		
-		TableViewerColumn tvcData = new TableViewerColumn(tvStatus, SWT.NONE);
-		tvcData.setEditingSupport(new DataStatusServicoEditingSupport(tvStatus));
-		tvcData.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return FormatterHelper.getDateFormatData("dd/MM/yyyy HH:mm").format(((StatusServico)element).getData());
-			}
-
-			@Override
-			public Color getForeground(Object element) {
-				StatusServico ss = (StatusServico)element;
-				
-				if(ss.getStatus().isPausar())
-					return SWTResourceManager.getColor(SWT.COLOR_RED);
-				else
-					return SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
-			}
-		});
-		TableColumn tblclmnData = tvcData.getColumn();
-		tblclmnData.setWidth(159);
-		tblclmnData.setText("Data");
-		
-		TableViewerColumn tvcFuncionario = new TableViewerColumn(tvStatus, SWT.NONE);
-		tvcFuncionario.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return ((StatusServico)element).getFuncionario().getNomeFantasia();
-			}
-
-			@Override
-			public Color getForeground(Object element) {
-				StatusServico ss = (StatusServico)element;
-				
-				if(ss.getStatus().isPausar())
-					return SWTResourceManager.getColor(SWT.COLOR_RED);
-				else
-					return SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
-			}
-		});
-		TableColumn tblclmnFuncionario = tvcFuncionario.getColumn();
-		tblclmnFuncionario.setWidth(299);
-		tblclmnFuncionario.setText("Funcion\u00E1rio");
-		
-		Menu menu = new Menu(tableStatus);
-		tableStatus.setMenu(menu);
-		
-		MenuItem mntmInverterStatus = new MenuItem(menu, SWT.NONE);
-		mntmInverterStatus.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				StatusServico statusAtual = service.getServicoPrestado().getUltimoStatus();
-				
-				if(statusAtual == null)
-					return;
-				
-				if(UsuarioHelper.getConfiguracaoPadrao() == null){
-					setErroMessage("Para concluir esta operação, primeiro registre os status em Arquivo/Configurações");
-					return;
-				}
-				
-				StatusServico novoStatus = new StatusServico();
-				novoStatus.setFuncionario(statusAtual.getFuncionario());
-				novoStatus.setServicoPrestado(service.getServicoPrestado());
-				
-				if(statusAtual.getStatus().isPausar())
-					novoStatus.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusInicio());
-				else
-					novoStatus.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinal());
-				
-				service.getServicoPrestado().getListaStatus().add(novoStatus);
-				txtStatusAtual.setText(novoStatus.getStatus().getDescricao());
-				tvStatus.refresh();
-			}
-		});
-		mntmInverterStatus.setText("Inverter Status");
-		new Label(compositeConteudo, SWT.NONE);
-		
 		btnCancelarOrdem = createNewButton();
 		btnCancelarOrdem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -801,15 +473,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					
 					service.getServicoPrestado().setAtivo(false);
 					service.getServicoPrestado().setEmExecucao(false);
-					
-					//cria o status de concluido
-					StatusServico statusConcluido = new StatusServico();
-					statusConcluido.setFuncionario(service.getServicoPrestado().getUltimoStatus().getFuncionario());
-					statusConcluido.setServicoPrestado(service.getServicoPrestado());
-					statusConcluido.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinalizarServico());
-			
-					//adiciona o status de concluido na lista de status do serviço
-					service.getServicoPrestado().getListaStatus().add(statusConcluido);
 					
 					calcularTotais();
 					
@@ -842,11 +505,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 					validar(service.getServicoPrestado());
 					
 					calcularTotais();
-					
-					if(service.getServicoPrestado().getListaStatus().isEmpty()){
-						setErroMessage("Adicione ao menos um status.");
-						return;
-					}
 					
 					//caso o editor de fechar ordem esteja aberto
 					IEditorPart iep = getIEPFecharOrdem();
@@ -942,7 +600,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	}
 	
 	private List<Veiculo> possiveisVeiculos(){
-		List<Veiculo> listaVeiculo = service.getServicoPrestado().getCliente().getListaVeiculo();
+		List<Veiculo> listaVeiculo = veiculoService.findAllByPessoa(service.getServicoPrestado().getCliente());
 		List<Veiculo> listaResult = new ArrayList<Veiculo>();
 		List<ServicoPrestado> listaServico = service.findAllNaoConcluidos();
 		
@@ -983,18 +641,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		
 		sid.setElements(prodServService.findAllProdutosAtivos().toArray());
 		return (ProdutoServico)sid.getElementoSelecionado();
-	}
-	
-	private Pessoa selecionarFuncionario(){
-		SelecionarItemDialog sid = new SelecionarItemDialog(LayoutHelper.getActiveShell(), new LabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return ((Pessoa)element).getNomeFantasia();
-			}
-		});
-		sid.setElements(pessoaService.findAllFuncionariosAtivos().toArray());
-		
-		return (Pessoa) sid.getElementoSelecionado();
 	}
 	
 	private Orcamento selecionarOrcamento(){
@@ -1062,7 +708,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 	@Override
 	public void setFocus() {
 		
-		listaStatus = statusService.findAllAtivos();
 		initDataBindings();
 		if(!service.getServicoPrestado().isEmExecucao())
 			disposeSalvar();
@@ -1143,22 +788,6 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		IObservableValue txtVeiculoObserveTextObserveWidget = SWTObservables.observeText(txtVeiculo, SWT.Modify);
 		IObservableValue servicegetServicoPrestadoVeiculomodeloObserveValue = PojoObservables.observeValue(service.getServicoPrestado(), "veiculo.modelo");
 		bindingContext.bindValue(txtVeiculoObserveTextObserveWidget, servicegetServicoPrestadoVeiculomodeloObserveValue, null, null);
-		//
-		ObservableListContentProvider listContentProvider_2 = new ObservableListContentProvider();
-		IObservableMap observeMap = PojoObservables.observeMap(listContentProvider_2.getKnownElements(), Status.class, "descricao");
-		cvNovoStatus.setLabelProvider(new ObservableMapLabelProvider(observeMap));
-		cvNovoStatus.setContentProvider(listContentProvider_2);
-		//
-		WritableList writableList = new WritableList(listaStatus, Status.class);
-		cvNovoStatus.setInput(writableList);
-		//
-		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
-//		IObservableMap[] observeMaps_2 = PojoObservables.observeMaps(listContentProvider_3.getKnownElements(), StatusServico.class, new String[]{"status.descricao", "data", "funcionario.nomeFantasia"});
-//		tvStatus.setLabelProvider(new ObservableMapLabelProvider(observeMaps_2));
-		tvStatus.setContentProvider(listContentProvider_3);
-		//
-		IObservableList servicegetServicoPrestadoListaStatusObserveList = PojoObservables.observeList(Realm.getDefault(), service.getServicoPrestado(), "listaStatus");
-		tvStatus.setInput(servicegetServicoPrestadoListaStatusObserveList);
 		//
 		IObservableValue observeTextTxtOrcamentoObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtOrcamento);
 		IObservableValue orcamentonumeroServicegetServicoPrestadoObserveValue = PojoProperties.value("orcamento.numero").observe(service.getServicoPrestado());

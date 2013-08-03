@@ -22,12 +22,6 @@ public class ServicoPrestadoFilter extends MecasoftFilter{
 		if(sp.getVeiculo().getModelo().toLowerCase().matches(search.toLowerCase()))
 			return true;
 		
-		if(sp.getUltimoStatus().getFuncionario().getNomeFantasia().toLowerCase().matches(search.toLowerCase()))
-			return true;
-		
-		if(sp.getUltimoStatus().getStatus().getDescricao().toLowerCase().matches(search.toLowerCase()))
-			return true;
-		
 		return false;
 	}
 

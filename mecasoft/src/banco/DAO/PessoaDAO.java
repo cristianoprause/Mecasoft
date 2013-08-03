@@ -49,18 +49,17 @@ public class PessoaDAO extends EclipseLinkConnection implements PessoaUtils{
 		boolean fornecedor = false;
 		boolean funcionario = false;
 		
-		if(tipo.equals(Pessoa.CLIENTE))
-			cliente = true;
-		else if(tipo.equals(Pessoa.FORNECEDOR))
-			fornecedor = true;
-		else if(tipo.equals(Pessoa.FUNCIONARIO))
-			funcionario = true;
+		if(tipo != null){
+			cliente = tipo.equals(Pessoa.CLIENTE);
+			fornecedor = tipo.equals(Pessoa.FORNECEDOR);
+			funcionario = tipo.equals(Pessoa.FUNCIONARIO);
+		}
 		
 		Query q = getEntityManager().createQuery("select p from Pessoa p where (p.ativo = cast(:status as boolean) or :status is null) " +
 			"and ((p.tipoCliente = cast(:cliente as boolean) and cast(:cliente as boolean) is true) " +
 			       "or (p.tipoFornecedor = cast(:fornecedor as boolean) and cast(:fornecedor as boolean) is true) " +
 			       "or (p.tipoFuncionario = cast(:funcionario as boolean) and cast(:funcionario as boolean) is true) " +
-			       "or (:tipo = ''))");
+			       "or (:tipo is null))");
 		q.setParameter("status", status)
 		.setParameter("cliente", cliente)
 		.setParameter("fornecedor", fornecedor)

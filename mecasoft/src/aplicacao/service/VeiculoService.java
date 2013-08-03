@@ -2,6 +2,7 @@ package aplicacao.service;
 
 import java.util.List;
 
+import banco.modelo.Pessoa;
 import banco.modelo.Veiculo;
 import banco.utils.VeiculoUtils;
 
@@ -27,6 +28,10 @@ public class VeiculoService extends MecasoftService<Veiculo>{
 	
 	public List<Veiculo> findAll(){
 		return getDAO().findAll();
+	}
+	
+	public List<Veiculo> findAllByPessoa(Pessoa pessoa){
+		return getDAO().findAllByPessoa(pessoa);
 	}
 	
 	public Veiculo getVeiculo() {

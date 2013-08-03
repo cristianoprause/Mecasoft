@@ -29,18 +29,6 @@ public class Configuracao implements Serializable{
 	@NotNull(message="Selecione o representante da empresa")
 	private Pessoa representanteEmpresa;
 	
-	@OneToOne
-	@NotNull(message="Selecione o status para iniciar os serviços no periodo.")
-	private Status statusInicio;
-	
-	@OneToOne
-	@NotNull(message="Selecione o status para finalizar os serviços no periodo.")
-	private Status statusFinal;
-	
-	@OneToOne
-	@NotNull(message="Selecione o status final padrão de cada serviço.")
-	private Status statusFinalizarServico;
-	
 	public Pessoa getRepresentanteEmpresa() {
 		return representanteEmpresa;
 	}
@@ -80,30 +68,6 @@ public class Configuracao implements Serializable{
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Status getStatusInicio() {
-		return statusInicio;
-	}
-
-	public void setStatusInicio(Status statusInicio) {
-		this.statusInicio = statusInicio;
-	}
-
-	public Status getStatusFinal() {
-		return statusFinal;
-	}
-
-	public void setStatusFinal(Status statusFinal) {
-		this.statusFinal = statusFinal;
-	}
-
-	public Status getStatusFinalizarServico() {
-		return statusFinalizarServico;
-	}
-
-	public void setStatusFinalizarServico(Status statusFinalizarServico) {
-		this.statusFinalizarServico = statusFinalizarServico;
 	}
 
 	public String getLogoEmpresa() {

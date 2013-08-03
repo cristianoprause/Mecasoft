@@ -38,7 +38,6 @@ import tela.filter.ServicoPrestadoFilter;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.ServicoPrestado;
-import banco.modelo.StatusServico;
 
 import com.ibm.icu.util.Calendar;
 
@@ -171,44 +170,12 @@ public class ServicoPrestadoView extends ViewPart {
 		});
 		TableColumn tblclmnVeculo = tvcVeiculo.getColumn();
 		tblclmnVeculo.setWidth(148);
-		tblclmnVeculo.setText("Ve\u00EDculo");
+		tblclmnVeculo.setText("Veículo");
 		
-		TableViewerColumn tvcMecanico = new TableViewerColumn(tvServicoPrestado, SWT.NONE);
-		tvcMecanico.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				service.setServicoPrestado((ServicoPrestado)element);
-				StatusServico status = service.getServicoPrestado().getUltimoStatus();
-				
-				if(status != null)
-					return status.getFuncionario().getNomeFantasia();
-				
-				return "Não há mecânico";
-			}
-		});
-		TableColumn tblclmnMecnico = tvcMecanico.getColumn();
-		tblclmnMecnico.setWidth(152);
-		tblclmnMecnico.setText("Mec\u00E2nico");
-		
-		TableViewerColumn tvcStatus = new TableViewerColumn(tvServicoPrestado, SWT.NONE);
-		tvcStatus.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				service.setServicoPrestado((ServicoPrestado)element);
-				StatusServico status = service.getServicoPrestado().getUltimoStatus();
-				
-				if(status != null)
-					return status.getStatus().getDescricao();
-				
-				return "Serviço não iniciado";
-			}
-		});
-		TableColumn tblclmnStatusAtual = tvcStatus.getColumn();
-		tblclmnStatusAtual.setWidth(137);
-		tblclmnStatusAtual.setText("Status Atual");
 		frmServiosPrestados.getToolBarManager().add(actionAtualizar);
 		frmServiosPrestados.getToolBarManager().add(actionNovo);
 		frmServiosPrestados.updateToolBar();
+		
 	}
 
 	/**

@@ -67,7 +67,6 @@ import banco.modelo.ItemServico;
 import banco.modelo.MovimentacaoCaixa;
 import banco.modelo.Orcamento;
 import banco.modelo.ProdutoServico;
-import banco.modelo.StatusServico;
 
 public class FecharOrdemServicoEditor extends MecasoftEditor {
 
@@ -170,15 +169,6 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 		//serviço concluido
 		service.getServicoPrestado().setEmExecucao(false);
 		service.getServicoPrestado().setDataFechamento(new Date());
-		
-		//cria o status de concluido
-		StatusServico statusConcluido = new StatusServico();
-		statusConcluido.setFuncionario(service.getServicoPrestado().getUltimoStatus().getFuncionario());
-		statusConcluido.setServicoPrestado(service.getServicoPrestado());
-		statusConcluido.setStatus(UsuarioHelper.getConfiguracaoPadrao().getStatusFinalizarServico());
-
-		//adiciona o status de concluido na lista de status do serviço
-		service.getServicoPrestado().getListaStatus().add(statusConcluido);
 		
 		//remove todos os produtos com quantidade 0 da ordem de serviço antes de fecha-la
 		List<ItemServico> listaItens = new ArrayList<ItemServico>();
@@ -422,6 +412,7 @@ public class FecharOrdemServicoEditor extends MecasoftEditor {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		setShowExcluir(false);
+		setShowSalvar(false);
 		
 		FecharOrdemServicoEditorInput fosei = (FecharOrdemServicoEditorInput)input;
 		

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import banco.connection.EclipseLinkConnection;
+import banco.modelo.Pessoa;
 import banco.modelo.Veiculo;
 import banco.utils.VeiculoUtils;
 
@@ -32,6 +33,14 @@ public class VeiculoDAO extends EclipseLinkConnection implements VeiculoUtils{
 	@Override
 	public List<Veiculo> findAll() {
 		Query q = getEntityManager().createQuery("select v from Veiculo v");
+		return q.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Veiculo> findAllByPessoa(Pessoa pessoa) {
+		Query q = getEntityManager().createQuery("select v from Veiculo v where v.cliente = :cliente");
+		q.setParameter("cliente", pessoa);
 		return q.getResultList();
 	}
 }

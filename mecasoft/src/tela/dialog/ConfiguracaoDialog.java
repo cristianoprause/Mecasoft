@@ -9,23 +9,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.PojoProperties;
-import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -34,7 +27,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
@@ -50,34 +42,22 @@ import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.UsuarioHelper;
 import aplicacao.service.ConfiguracaoService;
 import aplicacao.service.PessoaService;
-import aplicacao.service.StatusService;
 import aplicacao.service.UsuarioService;
 import banco.modelo.Configuracao;
 import banco.modelo.Papel;
 import banco.modelo.Pessoa;
-import banco.modelo.Status;
 import banco.modelo.Usuario;
 
 public class ConfiguracaoDialog extends TitleAreaDialog {
-
 	private Logger log = Logger.getLogger(getClass());
 	private ConfiguracaoService service = new ConfiguracaoService();
 	private UsuarioService usuarioService = new UsuarioService();
-	private StatusService statusService = new StatusService();
-	private List<Status> statusIniciais;
-	private List<Status> statusFinais;
 	private Usuario user;
 	
 	private Text txtEmpresa;
 	private Text txtSenhaAtual;
 	private Text txtNovaSenha;
 	private Text txtConfirmarSenha;
-	private ComboViewer cvStatusInicio;
-	private ComboViewer cvStatusFinal;
-	private Combo cbStatusInicio;
-	private Combo cbStatusFinal;
-	private ComboViewer cvFinalizarServico;
-	private Combo cbFinalizarServico;
 	private Text txtLogoEmpresa;
 	private Label lblStatusLogo;
 	private Label lblIconStatusLogo;
@@ -90,10 +70,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 			service.setConfiguracao(new Configuracao());
 		else
 			service.setConfiguracao(service.find(UsuarioHelper.getConfiguracaoPadrao().getId()));
-		
-		//busca os status
-		statusIniciais = statusService.findAllAtivosByFuncao(false);
-		statusFinais = statusService.findAllAtivosByFuncao(true);
 		
 		//permissao do usuário
 		if(UsuarioHelper.getUsuarioLogado() == null){
@@ -188,37 +164,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		lblStatusLogo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 		new Label(grpEmpresa, SWT.NONE);
 		verificaLogo();
-		
-		Group grpStatusParaPeriodos = new Group(grpEmpresa, SWT.NONE);
-		grpStatusParaPeriodos.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 6, 2));
-		grpStatusParaPeriodos.setText("Status para per\u00EDodos");
-		grpStatusParaPeriodos.setLayout(new GridLayout(2, false));
-		
-		Label lblStatusInicio = new Label(grpStatusParaPeriodos, SWT.NONE);
-		lblStatusInicio.setText("Iniciar:");
-		
-		cvStatusInicio = new ComboViewer(grpStatusParaPeriodos, SWT.READ_ONLY);
-		cbStatusInicio = cvStatusInicio.getCombo();
-		cbStatusInicio.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblStatusFinal = new Label(grpStatusParaPeriodos, SWT.NONE);
-		lblStatusFinal.setText("Finalizar:");
-		
-		cvStatusFinal = new ComboViewer(grpStatusParaPeriodos, SWT.READ_ONLY);
-		cbStatusFinal = cvStatusFinal.getCombo();
-		cbStatusFinal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Group grpStatusParaServios = new Group(grpEmpresa, SWT.NONE);
-		grpStatusParaServios.setLayout(new GridLayout(2, false));
-		grpStatusParaServios.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 6, 2));
-		grpStatusParaServios.setText("Status para servi\u00E7os");
-		
-		Label lblFinalizarServico = new Label(grpStatusParaServios, SWT.NONE);
-		lblFinalizarServico.setText("Finalizar:");
-		
-		cvFinalizarServico = new ComboViewer(grpStatusParaServios, SWT.READ_ONLY);
-		cbFinalizarServico = cvFinalizarServico.getCombo();
-		cbFinalizarServico.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Group grpSenha = new Group(area, SWT.NONE);
 		grpSenha.setLayout(new GridLayout(2, false));
@@ -352,7 +297,7 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(488, 511);
+		return new Point(488, 399);
 	}
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
@@ -360,51 +305,6 @@ public class ConfiguracaoDialog extends TitleAreaDialog {
 		IObservableValue txtEmpresaObserveTextObserveWidget = SWTObservables.observeText(txtEmpresa, SWT.Modify);
 		IObservableValue servicegetConfiguracaoRepresentanteEmpresanomeFantasiaObserveValue = PojoObservables.observeValue(service.getConfiguracao(), "representanteEmpresa.nomeFantasia");
 		bindingContext.bindValue(txtEmpresaObserveTextObserveWidget, servicegetConfiguracaoRepresentanteEmpresanomeFantasiaObserveValue, null, null);
-		//
-		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-		IObservableMap observeMap = PojoObservables.observeMap(listContentProvider.getKnownElements(), Status.class, "descricao");
-		cvStatusInicio.setLabelProvider(new ObservableMapLabelProvider(observeMap));
-		cvStatusInicio.setContentProvider(listContentProvider);
-		//
-		WritableList writableList = new WritableList(statusIniciais, Status.class);
-		cvStatusInicio.setInput(writableList);
-		//
-		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-		IObservableMap observeMap_1 = PojoObservables.observeMap(listContentProvider_1.getKnownElements(), Status.class, "descricao");
-		cvStatusFinal.setLabelProvider(new ObservableMapLabelProvider(observeMap_1));
-		cvStatusFinal.setContentProvider(listContentProvider_1);
-		//
-		WritableList writableList_1 = new WritableList(statusFinais, Status.class);
-		cvStatusFinal.setInput(writableList_1);
-		//
-		IObservableValue cvStatusInicioObserveSingleSelection = ViewersObservables.observeSingleSelection(cvStatusInicio);
-		IObservableValue servicegetConfiguracaoStatusInicioObserveValue = PojoObservables.observeValue(service.getConfiguracao(), "statusInicio");
-		bindingContext.bindValue(cvStatusInicioObserveSingleSelection, servicegetConfiguracaoStatusInicioObserveValue, null, null);
-		//
-		IObservableValue cvStatusFinalObserveSingleSelection = ViewersObservables.observeSingleSelection(cvStatusFinal);
-		IObservableValue servicegetConfiguracaoStatusFinalObserveValue = PojoObservables.observeValue(service.getConfiguracao(), "statusFinal");
-		bindingContext.bindValue(cvStatusFinalObserveSingleSelection, servicegetConfiguracaoStatusFinalObserveValue, null, null);
-		//
-		ObservableListContentProvider listContentProvider_3 = new ObservableListContentProvider();
-		IObservableMap observeMap_3 = PojoObservables.observeMap(listContentProvider_3.getKnownElements(), Status.class, "descricao");
-		cvFinalizarServico.setLabelProvider(new ObservableMapLabelProvider(observeMap_3));
-		cvFinalizarServico.setContentProvider(listContentProvider_3);
-		//
-		cvFinalizarServico.setInput(writableList_1);
-		//
-		IObservableValue cvFinalizarServicoObserveSingleSelection = ViewersObservables.observeSingleSelection(cvFinalizarServico);
-		IObservableValue servicegetConfiguracaoStatusFinalizarServicoObserveValue = PojoObservables.observeValue(service.getConfiguracao(), "statusFinalizarServico");
-		bindingContext.bindValue(cvFinalizarServicoObserveSingleSelection, servicegetConfiguracaoStatusFinalizarServicoObserveValue, null, null);
-		//
-		IObservableValue observeEnabledCbStatusInicioObserveWidget = WidgetProperties.enabled().observe(cbStatusInicio);
-		IObservableValue gerServicoUsergetPapelObserveValue = PojoProperties.value("gerServico").observe(user.getPapel());
-		bindingContext.bindValue(observeEnabledCbStatusInicioObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
-		//
-		IObservableValue observeEnabledCbStatusFinalObserveWidget = WidgetProperties.enabled().observe(cbStatusFinal);
-		bindingContext.bindValue(observeEnabledCbStatusFinalObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
-		//
-		IObservableValue observeEnabledCbFinalizarServicoObserveWidget = WidgetProperties.enabled().observe(cbFinalizarServico);
-		bindingContext.bindValue(observeEnabledCbFinalizarServicoObserveWidget, gerServicoUsergetPapelObserveValue, null, null);
 		//
 		IObservableValue observeTextTxtLogoEmpresaObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtLogoEmpresa);
 		IObservableValue logoEmpresaServicegetConfiguracaoObserveValue = PojoProperties.value("logoEmpresa").observe(service.getConfiguracao());

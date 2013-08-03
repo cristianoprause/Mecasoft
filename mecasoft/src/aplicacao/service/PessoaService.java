@@ -62,7 +62,7 @@ public class PessoaService extends MecasoftService<Pessoa>{
 	}
 	
 	public List<Pessoa> findAllAtivos(){
-		return getDAO().findAllByTipoAndStatus("", true);
+		return getDAO().findAllByTipoAndStatus(null, true);
 	}
 
 	public Pessoa getPessoa() {

@@ -64,12 +64,6 @@
             name="Serviço">
       </editor>
       <editor
-            class="tela.editor.StatusEditor"
-            icon="assents/status/status16.png"
-            id="tela.editor.StatusEditor"
-            name="Status">
-      </editor>
-      <editor
             class="tela.editor.AbrirOrdemServicoEditor"
             icon="assents/servicoPrestado/servicoPrestado16.png"
             id="tela.editor.AbrirOrdemServicoEditor"
@@ -86,12 +80,6 @@
             icon="assents/formaPagamento/formaPagamento16.png"
             id="tela.editor.FormaPagamentoEditor"
             name="Forma de pagamento">
-      </editor>
-      <editor
-            class="tela.editor.StatusFuncionarioEditor"
-            icon="assents/statusFuncionario/statusFuncionario16.png"
-            id="tela.editor.StatusFuncionarioEditor"
-            name="Status geral do funcionário">
       </editor>
       <editor
             class="tela.editor.OrcamentoEditor"
@@ -145,12 +133,6 @@
             name="Lista de serviços">
       </view>
       <view
-            class="tela.view.StatusView"
-            icon="assents/status/status16.png"
-            id="tela.view.StatusView"
-            name="Lista de status">
-      </view>
-      <view
             class="tela.view.ServicoPrestadoView"
             icon="assents/servicoPrestado/servicoPrestado16.png"
             id="tela.view.ServicoPrestadoView"
@@ -181,12 +163,6 @@
             name="Lista de duplicatas pagas">
       </view>
       <view
-            class="tela.view.StatusFuncionarioView"
-            icon="assents/statusFuncionario/statusFuncionario16.png"
-            id="tela.view.StatusFuncionarioView"
-            name="Status atual dos funcionários">
-      </view>
-      <view
             class="tela.view.MovimentacaoCaixaView"
             icon="assents/caixa/movimentacaoCaixa16.png"
             id="tela.view.MovimentacaoCaixaView"
@@ -209,11 +185,6 @@
                   commandId="mecasoft.configuracaoCommand"
                   icon="assents/funcoes/config16.png"
                   label="Configurações"
-                  style="push">
-            </command>
-            <command
-                  commandId="mecasoft.pontoCommand"
-                  label="Sistema de ponto"
                   style="push">
             </command>
             <separator
@@ -306,16 +277,6 @@
             </command>
             <command
                   commandId="org.eclipse.ui.views.showView"
-                  icon="assents/status/status16.png"
-                  id="mecasoft.menuStatus"
-                  label="Status">
-               <parameter
-                     name="org.eclipse.ui.views.showView.viewId"
-                     value="tela.view.StatusView">
-               </parameter>
-            </command>
-            <command
-                  commandId="org.eclipse.ui.views.showView"
                   icon="assents/formaPagamento/formaPagamento16.png"
                   id="mecasoft.menuFormaPagamento"
                   label="Forma de pagamento">
@@ -346,16 +307,6 @@
                <parameter
                      name="org.eclipse.ui.views.showView.viewId"
                      value="tela.view.ServicoPrestadoView">
-               </parameter>
-            </command>
-            <command
-                  commandId="org.eclipse.ui.views.showView"
-                  icon="assents/statusFuncionario/statusFuncionario16.png"
-                  id="mecasoft.menuStatusFuncionario"
-                  label="Status dos funcionários">
-               <parameter
-                     name="org.eclipse.ui.views.showView.viewId"
-                     value="tela.view.StatusFuncionarioView">
                </parameter>
             </command>
          </menu>
@@ -442,11 +393,6 @@
                   style="push">
             </command>
             <command
-                  commandId="mecasoft.showFluxoTrabalhoCommand"
-                  label="Fluxo de trabalho"
-                  style="push">
-            </command>
-            <command
                   commandId="mecasoft.showMovimentacaoCaixaCommand"
                   label="Movimentação de caixa"
                   style="push">
@@ -502,11 +448,6 @@
             name="Relatório de duplicatas">
       </command>
       <command
-            defaultHandler="aplicacao.command.reports.ShowFluxoTrabalhoCommand"
-            id="mecasoft.showFluxoTrabalhoCommand"
-            name="Relatório de fluxo de trabalho">
-      </command>
-      <command
             defaultHandler="aplicacao.command.AbrirFecharCaixaCommand"
             id="mecasoft.abrirFecharCaixaCommand"
             name="Abrir/Fechar caixa">
@@ -535,11 +476,6 @@
             defaultHandler="aplicacao.command.reports.ShowLivroCaixaCommand"
             id="mecasoft.showLivroCaixaCommand"
             name="Livro de caixa">
-      </command>
-      <command
-            defaultHandler="aplicacao.command.PontoCommand"
-            id="mecasoft.pontoCommand"
-            name="Sistema de ponto">
       </command>
       <command
             defaultHandler="aplicacao.command.reports.ShowServicoPrestadoAnaliticoClienteCommand"
