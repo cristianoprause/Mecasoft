@@ -21,46 +21,47 @@ public class PermissaoUsuarioCommand extends AbstractHandler{
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		List<String> permissoes = new ArrayList<String>();
 		
-		Papel papel = UsuarioHelper.getUsuarioLogado().getPapel();
+		Papel papel = null;
+		papel = UsuarioHelper.getUsuarioLogado().getPapel();
 		
 		IWorkbenchActivitySupport activitySupport = PlatformUI.getWorkbench().getActivitySupport();
 		IActivityManager activityManager = activitySupport.getActivityManager();
 		Set<String> enabledActivities = new HashSet<String>();
 		
-		if(papel.getCadUsuario()){
+		if(papel == null || papel.getCadUsuario()){
 			permissoes.add("tela.view.activityUsuario");
 			permissoes.add("tela.view.activityPapel");
 		}
 		
-		if(papel.getCadPessoa()){
+		if(papel == null || papel.getCadPessoa()){
 			permissoes.add("tela.view.activityPessoa");
 			permissoes.add("tela.view.activityTipoFuncionario");
 		}
 		
-		if(papel.getCadVeiculo())
+		if(papel == null || papel.getCadVeiculo())
 			permissoes.add("tela.view.activityVeiculo");
 		
-		if(papel.getCadProduto())
+		if(papel == null || papel.getCadProduto())
 			permissoes.add("tela.view.activityProduto");
 		
-		if(papel.getCadServico())
+		if(papel == null || papel.getCadServico())
 			permissoes.add("tela.view.activityServico");
 		
-		if(papel.getCadFormaPagto())
+		if(papel == null || papel.getCadFormaPagto())
 			permissoes.add("tela.view.activityFormaPagto");
 		
-		if(papel.getGerServico()){
+		if(papel == null || papel.getGerServico()){
 			permissoes.add("tela.view.activityStatus");
 			permissoes.add("tela.view.activityServicoPrestado");
 		}
 		
-		if(papel.getGerDuplicata())
+		if(papel == null || papel.getGerDuplicata())
 			permissoes.add("tela.view.activityGerarDuplicata");
 		
-		if(papel.getGerCaixa())
+		if(papel == null || papel.getGerCaixa())
 			permissoes.add("tela.view.activityCaixa");
 		
-		if(papel.getGerarRelatorio())
+		if(papel == null || papel.getGerarRelatorio())
 			permissoes.add("tela.view.activityRelatorio");
 
 		for(String permissao : permissoes)

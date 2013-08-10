@@ -11,6 +11,7 @@ import org.eclipse.ui.PlatformUI;
 
 import tela.dialog.LoginDialog;
 import aplicacao.helper.UsuarioHelper;
+import aplicacao.service.BloqueioService;
 import aplicacao.service.ConfiguracaoService;
 import banco.connection.MecasoftEntityManager;
 import banco.modelo.Configuracao;
@@ -31,6 +32,11 @@ public class Application implements IApplication {
 			MecasoftEntityManager.init();
 			LoginDialog ld = new LoginDialog(display.getActiveShell());
 			if(ld.open() == IDialogConstants.OK_ID){
+				
+				//verifica se esta permitido no site
+				if(!BloqueioService.verificar())
+					System.exit(0);
+				
 				verificacaoConfiguracoes();
 				int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
 				if (returnCode == PlatformUI.RETURN_RESTART) {
