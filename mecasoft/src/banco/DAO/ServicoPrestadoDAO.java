@@ -76,13 +76,11 @@ public class ServicoPrestadoDAO extends EclipseLinkConnection implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ServicoPrestado> findAllByStatusAndConclusao(Boolean status,
-			Boolean emExecucao) {
-		Query q = getEntityManager()
-				.createQuery(
-						"select s from ServicoPrestado s where (s.ativo = :status or :status is null) "
-								+ "and (s.emExecucao = :emExecucao or :emExecucao is null)");
-		q.setParameter("status", status).setParameter("emExecucao", emExecucao);
+	public List<ServicoPrestado> findAllByStatusAndConclusao(Boolean status, Boolean emExecucao) {
+		Query q = getEntityManager().createQuery("select s from ServicoPrestado s where (s.ativo = cast(:status as boolean) or cast(:status as boolean) " +
+				"is null) and (s.emExecucao = cast(:emExecucao as boolean) or cast(:emExecucao as boolean) is null)");
+		q.setParameter("status", status)
+		.setParameter("emExecucao", emExecucao);
 		return q.getResultList();
 	}
 

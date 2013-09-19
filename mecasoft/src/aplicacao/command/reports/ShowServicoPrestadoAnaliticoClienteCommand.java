@@ -22,6 +22,7 @@ import aplicacao.command.ReportCommand;
 import aplicacao.helper.FileHelper;
 import aplicacao.helper.ReportHelper;
 import aplicacao.helper.UsuarioHelper;
+import banco.modelo.Configuracao;
 import banco.modelo.ItemServico;
 import banco.modelo.ServicoPrestado;
 import banco.modelo.report.ServicoPrestadoAnaliticoCliente;
@@ -58,8 +59,7 @@ public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 		}
 
 		List<ServicoPrestadoAnaliticoCliente> listaLinha = gerarLinhaRelatorio(servico);
-		JasperPrint jPrint = getReport(ReportHelper.SERVICO_ANALITICO_CLIENTE,
-				listaLinha);
+		JasperPrint jPrint = getReport(ReportHelper.SERVICO_ANALITICO_CLIENTE, listaLinha);
 
 		if (!jPrint.getPages().isEmpty())
 			getView().setReport(jPrint, "Relatório de serviços (Analitico)");
@@ -116,7 +116,8 @@ public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		String caminho = null;
-		if(UsuarioHelper.getConfiguracaoPadrao() != null && !UsuarioHelper.getConfiguracaoPadrao().getLogoEmpresa().isEmpty()){
+		Configuracao configuracao = UsuarioHelper.getConfiguracaoPadrao();
+		if(configuracao != null && configuracao.getLogoEmpresa() != null && !configuracao.getLogoEmpresa().isEmpty()){
 			File file = new File(StringUtils.removeStart(FileHelper.logoPath(), "/"));
 			if(file.exists())
 				caminho = file.getPath();

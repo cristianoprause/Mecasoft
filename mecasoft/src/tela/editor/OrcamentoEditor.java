@@ -451,8 +451,8 @@ public class OrcamentoEditor extends MecasoftEditor {
 					try {
 						ValidatorHelper.validar(service.getModelo());
 						calcularTotais();
-						closeThisEditor();
 						
+						closeThisEditor();
 						getSite().getPage().openEditor(new AbrirOrdemServicoEditorInput(service.getModelo()), AbrirOrdemServicoEditor.ID);
 					} catch (PartInitException e2) {
 						log.error(e2);

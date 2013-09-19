@@ -72,7 +72,7 @@ public class ServicoPrestado implements Serializable{
 	@NotNull(message="Selecione o veículo")
 	private Veiculo veiculo;
 	
-	@OneToOne
+	@OneToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST})
 	private Orcamento orcamento;
 	
 	@OneToMany(mappedBy="servicoPrestado", cascade=CascadeType.ALL, orphanRemoval=true)

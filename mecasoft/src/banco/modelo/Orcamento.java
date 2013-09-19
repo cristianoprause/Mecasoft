@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,7 +55,7 @@ public class Orcamento implements Serializable{
 	@NotNull(message="Selecione o veículo.")
 	private Veiculo veiculo;
 	
-	@OneToOne
+	@OneToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST})
 	private ServicoPrestado servico;
 	
 	@OneToMany(mappedBy="orcamento", cascade=javax.persistence.CascadeType.ALL, orphanRemoval=true)
