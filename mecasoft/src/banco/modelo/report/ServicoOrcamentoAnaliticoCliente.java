@@ -7,7 +7,7 @@ import aplicacao.helper.UsuarioHelper;
 import banco.modelo.Pessoa;
 import banco.modelo.Veiculo;
 
-public class ServicoPrestadoAnaliticoCliente {
+public class ServicoOrcamentoAnaliticoCliente {
 
 	public static String SERVICOEXECUTADO = "Serviço já executado";
 	public static String SERVICOEMEXECUCAO = "Serviço em execução";

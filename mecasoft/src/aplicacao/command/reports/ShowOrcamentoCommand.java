@@ -1,6 +1,5 @@
 package aplicacao.command.reports;
 
-import static aplicacao.helper.LayoutHelper.getActiveShell;
 import static aplicacao.helper.MessageHelper.openError;
 import static aplicacao.helper.MessageHelper.openWarning;
 
@@ -17,77 +16,61 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 
-import tela.dialog.ParametroRelatorioServicoAnaliticoClienteDialog;
+import tela.dialog.ParametroRelatorioOrcamentoDialog;
 import aplicacao.command.ReportCommand;
 import aplicacao.helper.FileHelper;
+import aplicacao.helper.LayoutHelper;
 import aplicacao.helper.ReportHelper;
 import aplicacao.helper.UsuarioHelper;
 import banco.modelo.Configuracao;
 import banco.modelo.ItemServico;
-import banco.modelo.ServicoPrestado;
+import banco.modelo.Orcamento;
 import banco.modelo.report.ServicoOrcamentoAnaliticoCliente;
 
-public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
+public class ShowOrcamentoCommand extends ReportCommand{
 
-	private boolean openConfirmation;
-	private ServicoPrestado servico;
-	private ParametroRelatorioServicoAnaliticoClienteDialog prsacd;
-
-	public ShowServicoPrestadoAnaliticoClienteCommand(boolean openConfirmation, ServicoPrestado servico) {
-		this.openConfirmation = openConfirmation;
-		this.servico = servico;
-	}
-	
-	public ShowServicoPrestadoAnaliticoClienteCommand() {
-		this.openConfirmation = true;
-		servico = null;
-	}
+	private Orcamento orcamento;
+	private ParametroRelatorioOrcamentoDialog prod;
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		prsacd = new ParametroRelatorioServicoAnaliticoClienteDialog(getActiveShell());
+		prod = new ParametroRelatorioOrcamentoDialog(LayoutHelper.getActiveShell());
 		
-		if(openConfirmation)
-			if(prsacd.open() != IDialogConstants.OK_ID)
-				return null;
+		if(prod.open() != IDialogConstants.OK_ID)
+			return null;
 		
-		servico = openConfirmation ? prsacd.getServico() : servico;
-
-		if (servico == null || servico.getListaServicos().isEmpty()) {
+		orcamento = prod.getOrcamento();
+		
+		if (orcamento == null || orcamento.getListaServico().isEmpty()) {
 			openWarning("Não há informações para mostrar no relatório.");
 			return null;
 		}
-
-		List<ServicoOrcamentoAnaliticoCliente> listaLinha = gerarLinhaRelatorio(servico);
-		JasperPrint jPrint = getReport(ReportHelper.SERVICO_ANALITICO_CLIENTE, listaLinha);
+		
+		List<ServicoOrcamentoAnaliticoCliente> listaLinha = gerarLinhaRelatorio(orcamento);
+		JasperPrint jPrint = getReport(ReportHelper.ORCAMENTO_ANALITICO_CLIENTE, listaLinha);
 
 		if (!jPrint.getPages().isEmpty())
-			getView().setReport(jPrint, "Relatório de serviços (Analitico)");
+			getView().setReport(jPrint, "Relatório de orçamento");
 		else
-			openError("Não há informações suficientes para gerar o relatório.");	
-			
+			openError("Não há informações suficientes para gerar o relatório.");
 		
 		return null;
 	}
 	
-	public List<ServicoOrcamentoAnaliticoCliente> gerarLinhaRelatorio(ServicoPrestado servicoPrestado){
+	private List<ServicoOrcamentoAnaliticoCliente> gerarLinhaRelatorio(Orcamento orcamento){
 		List<ServicoOrcamentoAnaliticoCliente> listaLinha = new ArrayList<ServicoOrcamentoAnaliticoCliente>();
 		
-		for(ItemServico servico : servicoPrestado.getListaServicos()){
-			//servico
+		for(ItemServico servico : orcamento.getListaServico()){
+			//orcamento
 			ServicoOrcamentoAnaliticoCliente linhaServico = new ServicoOrcamentoAnaliticoCliente();
 			linhaServico.setDescricao(servico.getDescricao());
 			linhaServico.setValorTotal(servico.getTotal());
-			linhaServico.setDataAbertura(servico.getServicoPrestado().getDataAbertura());
-			linhaServico.setDataFechamento(servico.getServicoPrestado().getDataFechamento());
-			linhaServico.setServicoExecutado(!servicoPrestado.isEmExecucao());
-			linhaServico.setVeiculo(servicoPrestado.getVeiculo());
+			linhaServico.setDataAbertura(orcamento.getDtLancamento());
+			linhaServico.setVeiculo(orcamento.getVeiculo());
 			listaLinha.add(linhaServico);
+			linhaServico.setNumeroOrcamento(orcamento.getNumero());
 			
-			if(servico.getServicoPrestado().getOrcamento() != null)
-				linhaServico.setNumeroOrcamento(servico.getServicoPrestado().getOrcamento().getNumero());
-			
-			//produtos do servico
+			//produtos do orcamento
 			for(ItemServico produto : servico.getListaItem()){
 				
 				if(!produto.isFornecedorVisivel())
@@ -96,10 +79,8 @@ public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 					ServicoOrcamentoAnaliticoCliente linhaProduto = new ServicoOrcamentoAnaliticoCliente();
 					linhaProduto.setDescricao(produto.getDescricao());
 					linhaProduto.setValorTotal(produto.getTotal());
-					linhaProduto.setDataAbertura(servicoPrestado.getDataAbertura());
-					linhaProduto.setDataFechamento(servicoPrestado.getDataFechamento());
-					linhaProduto.setServicoExecutado(!servicoPrestado.isEmExecucao());
-					linhaProduto.setVeiculo(servicoPrestado.getVeiculo());
+					linhaProduto.setDataAbertura(orcamento.getDtLancamento());
+					linhaProduto.setVeiculo(orcamento.getVeiculo());
 					linhaProduto.setNumeroOrcamento(linhaServico.getNumeroOrcamento());
 					
 					listaLinha.add(linhaProduto);

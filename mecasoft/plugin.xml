@@ -407,6 +407,11 @@
                   label="Serviço analítico (Cliente)"
                   style="push">
             </command>
+            <command
+                  commandId="mecasoft.showOrcamentoCommand"
+                  label="Orçamento"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -481,6 +486,11 @@
             defaultHandler="aplicacao.command.reports.ShowServicoPrestadoAnaliticoClienteCommand"
             id="mecasoft.showServicoAnaliticoClienteCommand"
             name="Relatório de serviços analítico (Cliente)">
+      </command>
+      <command
+            defaultHandler="aplicacao.command.reports.ShowOrcamentoCommand"
+            id="mecasoft.showOrcamentoCommand"
+            name="Relatório de orçamento">
       </command>
    </extension>
    <extension

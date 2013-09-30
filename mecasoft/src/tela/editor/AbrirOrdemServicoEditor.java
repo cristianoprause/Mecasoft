@@ -234,7 +234,7 @@ public class AbrirOrdemServicoEditor extends MecasoftEditor {
 		lblItemServico.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		lblItemServico.setText("Itens do servi\u00E7o:");
 		
-		tvServicoProduto = new TreeViewer(compositeConteudo, SWT.BORDER);
+		tvServicoProduto = new TreeViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
 		tree = tvServicoProduto.getTree();
 		tree.setLinesVisible(true);
 		tree.setHeaderVisible(true);

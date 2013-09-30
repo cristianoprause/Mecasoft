@@ -192,7 +192,7 @@ public class OrcamentoEditor extends MecasoftEditor {
 		Label lblItensDoOramento = new Label(compositeConteudo, SWT.NONE);
 		lblItensDoOramento.setText("Itens do or\u00E7amento:");
 		
-		tvItem = new TreeViewer(compositeConteudo, SWT.BORDER);
+		tvItem = new TreeViewer(compositeConteudo, SWT.BORDER | SWT.FULL_SELECTION);
 		tree = tvItem.getTree();
 		tree.setLinesVisible(true);
 		tree.setHeaderVisible(true);

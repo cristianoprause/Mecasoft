@@ -36,7 +36,6 @@ public class ParametroRelatorioServicoAnaliticoClienteDialog extends TitleAreaDi
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setMessage("Informe os campos para filtrar os resultados");
 		setTitle("Relat\u00F3rio de servi\u00E7o anal\u00EDtico para o cliente");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
@@ -48,7 +47,7 @@ public class ParametroRelatorioServicoAnaliticoClienteDialog extends TitleAreaDi
 		lblServico.setText("Servi\u00E7o:");
 		
 		txtNumeroServico = new MecasoftText(container, SWT.NONE);
-		txtNumeroServico.text.setEnabled(false);
+		txtNumeroServico.text.setEditable(false);
 		txtNumeroServico.setOptions(MecasoftText.NUMEROS, -1);
 		txtNumeroServico.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		

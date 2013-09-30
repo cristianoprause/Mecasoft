@@ -172,6 +172,18 @@ public class ServicoPrestadoView extends ViewPart {
 		tblclmnVeculo.setWidth(148);
 		tblclmnVeculo.setText("Veículo");
 		
+		TableViewerColumn tvcStatus = new TableViewerColumn(tvServicoPrestado, SWT.NONE);
+		tvcStatus.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				boolean executando = ((ServicoPrestado)element).isEmExecucao();
+				return executando ? "Aberta" : "Fechada";
+			}
+		});
+		TableColumn tblclmnStatus = tvcStatus.getColumn();
+		tblclmnStatus.setWidth(100);
+		tblclmnStatus.setText("Status");
+		
 		frmServiosPrestados.getToolBarManager().add(actionAtualizar);
 		frmServiosPrestados.getToolBarManager().add(actionNovo);
 		frmServiosPrestados.updateToolBar();
