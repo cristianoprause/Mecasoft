@@ -402,16 +402,6 @@
                   label="Livro de caixa"
                   style="push">
             </command>
-            <command
-                  commandId="mecasoft.showServicoAnaliticoClienteCommand"
-                  label="Serviço analítico (Cliente)"
-                  style="push">
-            </command>
-            <command
-                  commandId="mecasoft.showOrcamentoCommand"
-                  label="Orçamento"
-                  style="push">
-            </command>
          </menu>
       </menuContribution>
    </extension>

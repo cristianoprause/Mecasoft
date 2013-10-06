@@ -31,15 +31,28 @@ public class ShowOrcamentoCommand extends ReportCommand{
 
 	private Orcamento orcamento;
 	private ParametroRelatorioOrcamentoDialog prod;
+	private boolean openDialog;
+	
+	public ShowOrcamentoCommand() {
+		openDialog = true;
+	}
+	
+	public ShowOrcamentoCommand(Orcamento orcamento){
+		this.orcamento = orcamento;
+		openDialog = false;
+	}
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		prod = new ParametroRelatorioOrcamentoDialog(LayoutHelper.getActiveShell());
 		
-		if(prod.open() != IDialogConstants.OK_ID)
-			return null;
+		if(openDialog){
+			prod = new ParametroRelatorioOrcamentoDialog(LayoutHelper.getActiveShell());
+			
+			if(prod.open() != IDialogConstants.OK_ID)
+				return null;
+		}
 		
-		orcamento = prod.getOrcamento();
+		orcamento = openDialog ? prod.getOrcamento() : orcamento;
 		
 		if (orcamento == null || orcamento.getListaServico().isEmpty()) {
 			openWarning("Não há informações para mostrar no relatório.");

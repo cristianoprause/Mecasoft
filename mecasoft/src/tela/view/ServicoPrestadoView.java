@@ -5,6 +5,7 @@ import static aplicacao.helper.MessageHelper.openError;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -16,12 +17,16 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -35,6 +40,7 @@ import tela.componentes.MecasoftText;
 import tela.editor.AbrirOrdemServicoEditor;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import tela.filter.ServicoPrestadoFilter;
+import aplicacao.command.reports.ShowServicoPrestadoAnaliticoClienteCommand;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.service.ServicoPrestadoService;
 import banco.modelo.ServicoPrestado;
@@ -184,6 +190,28 @@ public class ServicoPrestadoView extends ViewPart {
 		tblclmnStatus.setWidth(100);
 		tblclmnStatus.setText("Status");
 		
+		Menu menu = new Menu(table);
+		table.setMenu(menu);
+		
+		MenuItem mntmGerarRelatorio = new MenuItem(menu, SWT.NONE);
+		mntmGerarRelatorio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					IStructuredSelection selecao = (IStructuredSelection) tvServicoPrestado.getSelection();
+					
+					if(selecao.isEmpty())
+						return;
+					
+					new ShowServicoPrestadoAnaliticoClienteCommand(false,((ServicoPrestado)selecao.getFirstElement())).execute(null);
+				} catch (ExecutionException e1) {
+					log.error(e1);
+				}
+			}
+		});
+		mntmGerarRelatorio.setImage(ResourceManager.getPluginImage("mecasoft", "assents/relatorio/relatorio16.png"));
+		mntmGerarRelatorio.setText("Gerar relat\u00F3rio");
+		
 		frmServiosPrestados.getToolBarManager().add(actionAtualizar);
 		frmServiosPrestados.getToolBarManager().add(actionNovo);
 		frmServiosPrestados.updateToolBar();
@@ -233,5 +261,4 @@ public class ServicoPrestadoView extends ViewPart {
 	public void setFocus() {
 		actionAtualizar.run();
 	}
-
 }

@@ -1,6 +1,7 @@
 package tela.view;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -26,6 +27,7 @@ import org.eclipse.ui.part.ViewPart;
 import tela.editor.OrcamentoEditor;
 import tela.editor.editorInput.OrcamentoEditorInput;
 import tela.filter.OrcamentoFilter;
+import aplicacao.command.reports.ShowOrcamentoCommand;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.service.OrcamentoService;
 import banco.modelo.Orcamento;
@@ -33,6 +35,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class OrcamentoView extends ViewPart {
 
@@ -156,6 +162,28 @@ public class OrcamentoView extends ViewPart {
 		TableColumn tblclmnStatus = tvcStatus.getColumn();
 		tblclmnStatus.setWidth(100);
 		tblclmnStatus.setText("Status");
+		
+		Menu menu = new Menu(table);
+		table.setMenu(menu);
+		
+		MenuItem mntmGerarRelatorio = new MenuItem(menu, SWT.NONE);
+		mntmGerarRelatorio.setImage(ResourceManager.getPluginImage("mecasoft", "assents/relatorio/relatorio16.png"));
+		mntmGerarRelatorio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					IStructuredSelection selecao = (IStructuredSelection) tvOrcamento.getSelection();
+					
+					if(selecao.isEmpty())
+						return;
+					
+					new ShowOrcamentoCommand(((Orcamento)selecao.getFirstElement())).execute(null);
+				} catch (ExecutionException e1) {
+					log.error(e1);
+				}
+			}
+		});
+		mntmGerarRelatorio.setText("Gerar relat\u00F3rio");
 		frmOrcamento.getToolBarManager().add(actionAtualizar);
 		frmOrcamento.getToolBarManager().add(actionNovo);
 		frmOrcamento.updateToolBar();
