@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -49,6 +50,7 @@ import tela.editingSupport.QuantidadeItemServicoEditingSupport;
 import tela.editingSupport.ValorUnitarioItemServico;
 import tela.editor.editorInput.AbrirOrdemServicoEditorInput;
 import tela.editor.editorInput.OrcamentoEditorInput;
+import aplicacao.command.reports.ShowOrcamentoCommand;
 import aplicacao.exception.ValidationException;
 import aplicacao.helper.FormatterHelper;
 import aplicacao.helper.UsuarioHelper;
@@ -466,6 +468,24 @@ public class OrcamentoEditor extends MecasoftEditor {
 		btnAprovarOrcamento.setImage(ResourceManager.getPluginImage("mecasoft", "assents/funcoes/confirm32.png"));
 		if(!service.getModelo().isPendente())
 			btnAprovarOrcamento.dispose();
+		
+		Button btnGerarRelatorio = createNewButton("Gerar relatório");
+		btnGerarRelatorio.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					ValidatorHelper.validar(service.getModelo());
+					calcularTotais();
+					new ShowOrcamentoCommand(service.getModelo()).execute(null);
+				} catch (ValidationException e1) {
+					setErroMessage(e1.getMessage());
+					log.error(e1);
+				} catch (ExecutionException e2) {
+					log.error(e2);
+				}
+			}
+		});
+		btnGerarRelatorio.setImage(ResourceManager.getPluginImage("mecasoft", "assents/relatorio/relatorio32.png"));
 		
 		initDataBindings();
 		

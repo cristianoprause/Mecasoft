@@ -82,6 +82,7 @@ public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 			linhaServico.setDataFechamento(servico.getServicoPrestado().getDataFechamento());
 			linhaServico.setServicoExecutado(!servicoPrestado.isEmExecucao());
 			linhaServico.setVeiculo(servicoPrestado.getVeiculo());
+			linhaServico.setIss(servicoPrestado.getIss());
 			listaLinha.add(linhaServico);
 			
 			if(servico.getServicoPrestado().getOrcamento() != null)
@@ -100,6 +101,7 @@ public class ShowServicoPrestadoAnaliticoClienteCommand extends ReportCommand{
 					linhaProduto.setDataFechamento(servicoPrestado.getDataFechamento());
 					linhaProduto.setServicoExecutado(!servicoPrestado.isEmExecucao());
 					linhaProduto.setVeiculo(servicoPrestado.getVeiculo());
+					linhaProduto.setIss(servicoPrestado.getIss());
 					linhaProduto.setNumeroOrcamento(linhaServico.getNumeroOrcamento());
 					
 					listaLinha.add(linhaProduto);
